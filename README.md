@@ -1,2 +1,4 @@
 # exceldata
-A suite of functions to read and check files created with the DataDictionary.xlsm template
+A suite of functions to read in the data dictionary and the
+corresponding data table from a macro-enabled Excel file created using
+the DataDictionary.xlsm template.
