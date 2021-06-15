@@ -1,0 +1,15 @@
+Package: exceldata
+Type: Package
+Title: A suite of functions to read and check files created with the DataDictionary.xlsm template
+Version: 0.1.0
+Author: Lisa Avery
+Maintainer: Lisa Avery <lisa.avery@uhnresearch.ca>
+Description: A suite of functions to read in the data dictionary and the
+    corresponding data table from a macro-enabled Excel file created using
+    the DataDictionary.xlsm template.
+License: MIT + file LICENSE
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 7.1.1
+Imports: 
+    readxl
