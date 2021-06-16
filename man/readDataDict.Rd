@@ -4,12 +4,24 @@
 \alias{readDataDict}
 \title{Read in the data dictionary}
 \usage{
-readDataDict(excelFile, dictionarySheet = "DataDictionary")
+readDataDict(
+  excelFile,
+  dictionarySheet = "DataDictionary",
+  range,
+  colnames,
+  origin
+)
 }
 \arguments{
-\item{excelFile}{path and filename of the data file}
+\item{excelFile}{Character, Path and filename of the data file}
 
-\item{dictionarySheet}{name of the dictionary sheet within the file, defaults to 'DataDictionary'}
+\item{dictionarySheet}{Character, Name of the dictionary sheet within the file, defaults to 'DataDictionary'}
+
+\item{range}{Optional, Range of Excel sheet to restrict import to (ie. range="A1:F6")}
+
+\item{colnames}{Optional, Column names of the DataDictionary, defaults to those used in the Excel template c('VariableName', 'Description (optional)', 'Type', 'Minimum', 'Maximum', 'Levels')}
+
+\item{origin}{Optional, the date origin of Excel dates, defaults to 30 December 1899}
 }
 \description{
 This function reads in a data dictionary that was set up with the

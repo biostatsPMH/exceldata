@@ -1,23 +1,219 @@
-# TODO:
-# A function for data import and checking based on the data dictionary
-# Allow variable names to be changed
-# import based on data types
-# perform checks on max and min values
-# perform logit checks:
-# review prelim check rmd file
-# check_that_x_before_y
-# check for duplicates on all (+most) variables
-# check that values are between max and min
-# check that values are only of the specified allowed values
-# option to report missing values by rowID, subjectID separately for each column
-# create factor variables from codes and categories
-# # read the codes for variables that are categorical or numeric codes
-# for (v in which(dict[['Type']] %in% c('category','codes'))){
-#   dict[['Lookup']][v] = importCodes(dict[['Levels']][v])
-# }
+
 
 # maybe output a data check report in the style of Hmisc summary?
 #-------------------------------
+
+#' Read Excel Data
+#'
+#' This function reads in an excel data table created by the DataDictionary.xlsm
+#' template file according to the specifications in the dataDictionary
+#'
+#' Prior to reading in the data, the dataDictionary file must be imported using
+#' readDataDict.
+#'
+#' NOTE: This function will only read in those columns present in the DataDictionary
+#' @param dataDictionary a data frame returned by readDataDict
+#' @param excelFile path and filename of the data file
+#' @param dataSheet name of the data entry sheet within the file, defaults to 'DataEntry'
+#' @param range Optional, Range of Excel sheet to restrict import to (ie. range="A1:F6")
+#' @param origin Optional, the date origin of Excel dates, defaults to 30 December 1899
+#' @export
+readExcelData <- function(dataDictionary,excelFile,dataSheet='DataEntry',range,origin){
+  #  dataDictionary = readDataDict(excelFile = '../DataCollection/DataDictionary0.3.xlsm')
+  if (all(names(dataDictionary) != c('VariableName', 'Description', 'Type', 'Minimum', 'Maximum', 'Levels'))) {
+    stop('The specified dictionary does not have the expected columns. \nTry running readDataDict again.')
+  }
+  if (missing(range)) range = NULL
+  if (missing(origin)) origin = "1899-12-30"
+  col_types = sapply(dataDictionary[["Type"]],function(x){
+    if (x %in% c('integer','numeric','codes')) x <-'numeric'
+    if (x %in% c('category','character','calculated')) x <-'text'
+    return(x)},simplify = T)
+  varLookup = data.frame(VariableName = dataDictionary[['VariableName']],
+                         col_type = col_types)
+  # Read in the Excel data
+  dat <- try(readxl::read_excel(excelFile,sheet=dataSheet,col_names = T,range=range),silent = T)
+  if (class(dat)[1]=='try-error') stop(paste('File access failure. \n Check that sheet',dataSheet,'exists in file:\n',excelFile,
+                                             '\n\nNOTE: It may be necessary to close Excel for this \nfunction to work.'))
+
+  # check that the variables match the data dictionary
+  if (!all(dataDictionary[['VariableName']] %in% names(dat))){
+    warning(paste('The following variable are missing from the datafile:\n',
+                  setdiff(dataDictionary[['VariableName']], names(dat))))
+  }
+
+  # Assign the col_type of any variables missing in the dataDictionary to 'guess'
+  dataFileColumns = data.frame(VariableName = names(dat),position=1:length(names(dat)))
+  dataFileColumns = merge(dataFileColumns,varLookup,all.x = T)
+  dataFileColumns = dataFileColumns[order(dataFileColumns[["position"]]),]
+  import_types = dataFileColumns[["col_type"]]
+  import_types[is.na(import_types)] <- 'guess'
+  dat <- try(readxl::read_excel(excelFile,sheet=dataSheet,col_names = T,range=range,col_types = import_types),silent = T)
+  if (class(dat)[1]=='try-error') stop(paste('File import failure.'))
+
+  # remove all columns not in the data dictionary
+  dat <- dat[,which(import_types!='guess')]
+}
+
+#' Create factor variables from data dictionary
+#'
+#' This function will replace the code and category variables
+#' with factors based on the factor levels provided in the data
+#' dictionary. The original variables are retained with the suffix
+#' '_orig'
+#'
+#' @param dataDictionary a data frame returned by readDataDict
+#' @param dataTable a data frame returned by readExcelData
+#' @return a data frame with the updated variables
+#'
+addFactorVariables <-function(dataDictionary,dataTable){
+  if (!('data.frame' %in% class(dataDictionary))) stop('dataDictionary must be a data dictionary imported using readDataDict')
+  if (!('data.frame' %in% class(dataTable))) stop('dataTable must be a data entry table imported using readExcelData')
+  if (all(names(dataDictionary) != c('VariableName', 'Description', 'Type', 'Minimum', 'Maximum', 'Levels'))) {
+    stop('The specified dictionary does not have the expected columns. \nTry running readDataDict again.')
+  }
+
+  if (!all(names(dataTable) %in% dataDictionary[['VariableName']])){
+    stop(paste('Variables missing from the dataDictionary:\n',
+               setdiff(names(dataTable),dataDictionary[['VariableName']])))
+  }
+
+  if (!all(dataDictionary[['VariableName']] %in% names(dataTable) )){
+    warning(paste('Variables missing from the data table:\n',
+                  paste(setdiff(dataDictionary[['VariableName']],names(dataTable)),collapse = ',')))
+  }
+  varsWithCodes <- intersect(dataDictionary[['VariableName']][dataDictionary[['Type']] %in% c('codes','category')],names(dataTable))
+  for (v in varsWithCodes){
+    factorLevels = try(importCodes(dataDictionary[["Levels"]][dataDictionary[['VariableName']]==v]),silent = T)
+    if (!class(factorLevels)[1]=='try-error'){
+      dataTable[[paste0(v,'_orig')]] <- dataTable[[v]]
+      if (dataDictionary[['Type']][dataDictionary[['VariableName']]==v]=='codes'){
+        factorVar <- factor(dataTable[[v]],levels=factorLevels$code,labels=factorLevels$label)
+      } else {
+        factorVar <- factor(dataTable[[v]],levels=factorLevels$code)
+      }
+      dataTable[[v]] <-factorVar
+    } else warning(paste('Factor could not be created for',v))
+  }
+  return(dataTable)
+}
+
+#' Check the entered data against the data dictionary
+#'
+#' This function compares the data in the data entry table against the
+#' specifications in the DataDictionary.
+#'
+#' Prior to reading in the data, the dataDictionary must be imported using
+#' readDataDict and the dataTable must be imported using readExcelData.
+#'
+#' The function will check all variables in the dataDictionary.
+#' If variables are missing from the dataDictionary an error will occur.
+#' If variables are missing from the data table a warning will be shown.
+#'
+#'
+#' @param dataDictionary a data frame returned by readDataDict
+#' @param dataTable a data frame returned by readExcelData
+#' @param id a string indicating the ID variable, to display errors by ID instead of row number
+#' @return A list with three data frames: one with all errors, one with errors by row
+#' (or ID if supplied) and one with errors by variable. Also returns a check for duplicate rows.
+#' @examples
+#' \dontrun{
+# myDictionary = readDataDict(excelFile = 'DataDictionary.xlsm')
+# myTable = readExcelData(myDictionary,excelFile = 'DataDictionary.xlsm',dataSheet = 'DataEntry')
+#' datachecks <- checkData(myDictionary,myData)
+#' # To show the rows with bad entries
+#' datachecks$errors_by_row
+#' # To show the variables with bad entries
+#' datachecks$errors_by_variable
+#' # To show a complete data frame of the errors
+#' datachecks$error_dataframe
+#' }
+#' @export
+#'
+checkData <-function(dataDictionary,dataTable,id){
+  # dataDictionary = readDataDict(excelFile = '../DataCollection/DataDictionary0.3.xlsm')
+  # dataTable = readExcelData(dataDictionary,excelFile = '../DataCollection/DataDictionary0.3.xlsm',dataSheet = 'new')
+  if (!('data.frame' %in% class(dataDictionary))) stop('dataDictionary must be a data dictionary imported using readDataDict')
+  if (!('data.frame' %in% class(dataTable))) stop('dataTable must be a data entry table imported using readExcelData')
+  if (!missing(id)) if (!id %in% names(dataTable)) stop(paste(id,'not found in the dataTable. Specify a valid ID variable.'))
+  if (all(names(dataDictionary) != c('VariableName', 'Description', 'Type', 'Minimum', 'Maximum', 'Levels'))) {
+    stop('The specified dictionary does not have the expected columns. \nTry running readDataDict again.')
+  }
+
+  if (!all(names(dataTable) %in% dataDictionary[['VariableName']])){
+    stop(paste('Variables missing from the dataDictionary:\n',
+               setdiff(names(dataTable),dataDictionary[['VariableName']])))
+  }
+
+  if (!all(dataDictionary[['VariableName']] %in% names(dataTable) )){
+    warning(paste('Variables missing from the data table:\n',
+                  paste(setdiff(dataDictionary[['VariableName']],names(dataTable)),collapse = ',')))
+  }
+
+  # check for duplicate rows
+  if (any(duplicated(dataTable))){
+    dupl = ifelse(missing(id),(1:nrow(dataTable))[duplicated(dataTable)],dataTable[[id]][duplicated(dataTable)])
+    dupl= paste0('The following rows (IDs) are duplicated: ',paste(dupl,collapse = ","))
+  } else {
+    dupl = 'No duplicated rows'
+  }
+
+  # Range checks
+  varsToCheck <- intersect(dataDictionary[['VariableName']][dataDictionary[['Type']] %in% c('numeric','codes','category','integer','date')],names(dataTable))
+  df_checks <- NULL
+  for (v in varsToCheck){
+    if (dataDictionary[['Type']][dataDictionary[['VariableName']]==v] %in% c('integer','numeric')){
+      minVal = dataDictionary[['Minimum']][dataDictionary[['VariableName']]==v]
+      if (minVal %in% dataDictionary[["VariableName"]]) minVal = dataTable[[minVal]] else minVal = as.numeric(minVal)
+      maxVal = dataDictionary[['Maximum']][dataDictionary[['VariableName']]==v]
+      if (maxVal %in% dataDictionary[["VariableName"]]) maxVal = dataTable[[maxVal]] else maxVal = as.numeric(maxVal)
+
+      check = minVal <= dataTable[[v]] & dataTable[[v]] < maxVal
+    }
+
+    if (dataDictionary[['Type']][dataDictionary[['VariableName']]==v] =='date'){
+      minVal = dataDictionary[['Minimum']][dataDictionary[['VariableName']]==v]
+      if (minVal %in% dataDictionary[["VariableName"]]) minVal = as.Date(dataTable[[minVal]]) else if (minVal=='today') minVal=Sys.Date() else  minVal = as.Date(minVal)
+      maxVal = dataDictionary[['Maximum']][dataDictionary[['VariableName']]==v]
+      if (maxVal %in% dataDictionary[["VariableName"]]) maxVal = as.Date(dataTable[[maxVal]]) else if (maxVal=='today') maxVal=Sys.Date() else maxVal = as.Date(maxVal)
+
+      check = as.numeric(minVal) <= as.numeric(as.Date(dataTable[[v]])) & as.numeric(as.Date(dataTable[[v]])) < as.numeric(maxVal)
+    }
+
+    if (dataDictionary[['Type']][dataDictionary[['VariableName']]==v] %in% c('category','codes')){
+      allowedCodes = importCodes(dataDictionary[['Levels']][dataDictionary[['VariableName']]==v])[['code']]
+      if (dataDictionary[['Type']][dataDictionary[['VariableName']]==v] =='codes') allowedCodes = as.numeric(allowedCodes)
+      check = dataTable[[v]]  %in% allowedCodes
+    }
+
+    if (any(check==FALSE)) df_checks[[v]] = check
+  }
+  entry_errors = as.data.frame(!do.call(cbind, df_checks))
+  rowsToKeep = rowSums(entry_errors)>0
+  # keep only rows with errors
+  if (missing(id)){
+    id = 'originalRowID'
+    rowIDs = 1:nrow(entry_errors)
+  } else{
+    rowIDs = dataTable[[id]]
+  }
+  entry_errors<- cbind(rowIDs,entry_errors)
+  names(entry_errors)[1] <- id
+  entry_errors <- entry_errors[rowsToKeep,]
+  row_errors = data.frame(originalRowID = entry_errors[[id]],
+                          Errors = sapply(1:nrow(entry_errors),function(i){
+                            paste(names(entry_errors)[-1][as.logical(as.vector(entry_errors[i,-1]))],collapse = ",")
+                          }))
+  names(row_errors)[1] <- id
+  var_errors = data.frame(Variable = names(entry_errors)[-1],
+                          Row_Errors = sapply(names(entry_errors)[-1],function(v){
+                            paste(entry_errors[[id]][as.logical(as.vector(entry_errors[[v]]))],collapse = ",")
+                          }))
+  rownames(var_errors) <- NULL
+  colnames(var_errors)[2] <- ifelse(missing(id),'Row_Errors','IDs_With_Errors')
+  return(error_dataframe = entry_errors, errors_by_row=row_errors,errors_by_variable=var_errors,duplicated_entries=dupl)
+}
+
 
 #' Read in the data dictionary
 #'
@@ -32,10 +228,13 @@
 #'
 #' To read in only part of the excel sheet specify the desrired range (ie range="A1:F6")
 #'
-#' @param excelFile path and filename of the data file
-#' @param dictionarySheet name of the dictionary sheet within the file, defaults to 'DataDictionary'
-#'
-readDataDict <- function(excelFile,dictionarySheet ='DataDictionary'){
+#' @param excelFile Character, Path and filename of the data file
+#' @param dictionarySheet Character, Name of the dictionary sheet within the file, defaults to 'DataDictionary'
+#' @param colnames Optional, Column names of the DataDictionary, defaults to those used in the Excel template c('VariableName', 'Description (optional)', 'Type', 'Minimum', 'Maximum', 'Levels')
+#' @param range Optional, Range of Excel sheet to restrict import to (ie. range="A1:F6")
+#' @param origin Optional, the date origin of Excel dates, defaults to 30 December 1899
+#' @export
+readDataDict <- function(excelFile,dictionarySheet ='DataDictionary',range,colnames,origin){
   if (missing(range)) range = NULL
   dict <- try(readxl::read_excel(excelFile,sheet=dictionarySheet,col_names = T,range=range),silent = T)
   if (class(dict)[1]=='try-error') stop(paste('File access failure. \n Check that sheet',dictionarySheet,'exists in file:',excelFile,
@@ -55,22 +254,24 @@ readDataDict <- function(excelFile,dictionarySheet ='DataDictionary'){
                 'are missing names. \nUse the range argument to read in only part of the Excel sheet'))
   }
 
-  # Every variable must have a Type and that it is an allowed value
+  # Every variable must have a Type that is an allowed value
   types <- c('calculated','category','character','codes','date','integer','numeric')
-  if (sum(is.na(dict[['Type']]))!=0) {
-    stop (paste('Every variable must have a type declared. \nVariables:', paste(which(is.na(dict[['Type']])),collapse=', '),
-                'are missing types. \nUse the range argument to read in only part of the Excel sheet'))
+  if (!(all(dict[['Type']] %in% types) & sum(is.na(dict[["Type"]]))==0)) {
+    stop (paste('Every variable must have a valid type declared. ',
+                ifelse(length(setdiff(dict[['Type']],types))==0,'',
+                       paste('\nInvalid Types:',paste(setdiff(dict[['Type']],types),collapse = ','))),
+                ifelse(sum(is.na(dict[["Type"]]))==0,'',
+                       paste('\nMissing Types:',paste(which(is.na(dict[['Type']])),collapse=', '),
+                             '\nUse the range argument to read in only part of the Excel sheet'))
+    ))
   }
 
 
   # Check that dates, integers and numeric variables have min and max values set
   minCheck = dict[['VariableName']][is.na(dict[['Minimum']]) &dict[['Type']] %in% c('integer','numeric','date')]
   maxCheck = dict[['VariableName']][is.na(dict[['Maximum']]) &dict[['Type']] %in% c('integer','numeric','date')]
-  # minCheck = sum(is.na(dict[['Minimum']][dict[['Type']] %in% c('integer','numeric','date')]))
-  #   maxCheck = sum(is.na(dict[['Maximum']][dict[['Type']] %in% c('integer','numeric','date')]))
-  #  if (minCheck!=0 | maxcheck!=0) stop('All integer, numeric and date variables must have ranges set.')
-  if (!(is.null(minCheck) & is.null(maxCheck))) stop(paste('All integer, numeric and date variables must have ranges set.',
-                                                           '\n\nCheck these variables:',ifelse(is.null(minCheck),'',minCheck),ifelse(is.null(maxCheck),'',maxCheck)))
+  if (!(length(minCheck)==0 & length(maxCheck)==0)) stop(paste('All integer, numeric and date variables must have ranges set.',
+                                                               '\n\nCheck these variables:',ifelse(length(minCheck)==0,'',minCheck),ifelse(length(maxCheck)==0,'',maxCheck)))
 
   # Check that categories and codes can be read by importCodes
   # read the codes for variables that are categorical or numeric codes
