@@ -29,14 +29,3 @@ The function will check all variables in the dataDictionary.
 If variables are missing from the dataDictionary an error will occur.
 If variables are missing from the data table a warning will be shown.
 }
-\examples{
-\dontrun{
-datachecks <- checkData(myDictionary,myData)
-# To show the rows with bad entries
-datachecks$errors_by_row
-# To show the variables with bad entries
-datachecks$errors_by_variable
-# To show a complete data frame of the errors
-datachecks$error_dataframe
-}
-}

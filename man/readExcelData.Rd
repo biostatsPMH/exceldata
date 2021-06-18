@@ -5,19 +5,25 @@
 \title{Read Excel Data}
 \usage{
 readExcelData(
-  dataDictionary,
   excelFile,
+  dataDictionary,
   dataSheet = "DataEntry",
+  saveWarnings = FALSE,
+  setErrorsMissing = FALSE,
   range,
   origin
 )
 }
 \arguments{
-\item{dataDictionary}{a data frame returned by readDataDict}
-
 \item{excelFile}{path and filename of the data file}
 
+\item{dataDictionary}{a data frame returned by readDataDict}
+
 \item{dataSheet}{name of the data entry sheet within the file, defaults to 'DataEntry'}
+
+\item{saveWarnings}{Boolean, if TRUE and there are any warnings then the function will return a list with the data frame and the import warnings}
+
+\item{setErrorsMissing}{Boolean, if TRUE all values out of range will be set to NA}
 
 \item{range}{Optional, Range of Excel sheet to restrict import to (ie. range="A1:F6")}
 
@@ -30,6 +36,8 @@ template file according to the specifications in the dataDictionary
 \details{
 Prior to reading in the data, the dataDictionary file must be imported using
 readDataDict.
+
+Warning: If SetErrorsMissing = TRUE then a subsequent call to checkData will not return any errors, because the errors have been set to missing.
 
 NOTE: This function will only read in those columns present in the DataDictionary
 }
