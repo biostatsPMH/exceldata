@@ -1,0 +1,11 @@
+workflow-and-biostatistics
+the-datadictionary.xlsm-file
+data-dictionary
+data-entry
+multiple-data-sheets
+the-exceldata-package
+import-the-data-dictionary
+import-the-data
+perform-checks
+create-factor-variables
+variable-types

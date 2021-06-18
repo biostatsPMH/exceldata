@@ -4,3 +4,5 @@
 .Ruserdata
 *.xlsm
 inst/doc
+*.Rmd
+_bookdown.yml
