@@ -12,3 +12,8 @@ To download the most recent version (in development)
 To view the documentation: 
 
 https://biostatspmh.github.io/exceldata/
+
+--- 
+To download the Excel Template:
+
+https://biostatspmh.github.io/exceldata/vignettes/DataDictionary0.4.xlsm 
