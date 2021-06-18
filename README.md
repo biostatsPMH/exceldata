@@ -19,3 +19,4 @@ To download the Excel Template:
 - At the top left of the screen click on **<> Code**
 - Open the vignettes directory
 - Click on DataDictionary0.4.xlsm 
+- Click the `Download` button
