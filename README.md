@@ -16,6 +16,6 @@ https://biostatspmh.github.io/exceldata/
 --- 
 To download the Excel Template:
 
-- Scroll up the Screen and Open the vignettes directory
+- Scroll up and open the vignettes directory
 - Click on DataDictionary0.4.xlsm 
 - Click the `Download` button
