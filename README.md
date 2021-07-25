@@ -13,6 +13,10 @@ To view the documentation:
 
 https://biostatspmh.github.io/exceldata/
 
+---
+Link to the YouTube tutorial:
+ https://youtu.be/6iPJcbW1dZ0 
+ 
 --- 
 To download the Excel Template:
 
