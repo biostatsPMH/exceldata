@@ -15,7 +15,7 @@ https://biostatspmh.github.io/exceldata/
 
 ---
 Link to the YouTube tutorial:
-https://youtu.be/BsEmKdrKcR0
+https://youtu.be/l9gZ-9lWNd8
  
 --- 
 To download the Excel Template:
