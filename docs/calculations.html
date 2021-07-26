@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>3.1 Import the Data Dictionary | Using the DataDictionary template and the exceldata package</title>
-  <meta name="description" content="3.1 Import the Data Dictionary | Using the DataDictionary template and the exceldata package" />
+  <title>4.2 Calculations | Using the DataDictionary template and the exceldata package</title>
+  <meta name="description" content="4.2 Calculations | Using the DataDictionary template and the exceldata package" />
   <meta name="generator" content="bookdown 0.22 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="3.1 Import the Data Dictionary | Using the DataDictionary template and the exceldata package" />
+  <meta property="og:title" content="4.2 Calculations | Using the DataDictionary template and the exceldata package" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="3.1 Import the Data Dictionary | Using the DataDictionary template and the exceldata package" />
+  <meta name="twitter:title" content="4.2 Calculations | Using the DataDictionary template and the exceldata package" />
   
   
   
@@ -29,8 +29,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="the-exceldata-package.html"/>
-<link rel="next" href="import-the-data.html"/>
+<link rel="prev" href="data-dictionary-1.html"/>
+<link rel="next" href="revising-data.html"/>
 <script src="libs/header-attrs-2.9/header-attrs.js"></script>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -124,25 +124,25 @@
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="import-the-data-dictionary" class="section level2" number="3.1">
-<h2><span class="header-section-number">3.1</span> Import the Data Dictionary</h2>
-<p>The <code>readDataDict</code> function will import the dictionary file. This is slightly more useful than just using <code>readxl::read_excel</code> because checks will be performed to ensure the dictionary is complete and dates will be converted to easy to read text strings.</p>
-<p>The file and sheetname must be specified.</p>
-<p>Optional Arguments:</p>
+<div id="calculations" class="section level2" number="4.2">
+<h2><span class="header-section-number">4.2</span> Calculations</h2>
+<p>All calculations can be performed by the biostatistics department. These will be done in code and are easily reproduced and re-calculated if there are changes to the data. This saves time and increases data quality.</p>
+<p>Examples of some variables that can be easily calculated:</p>
 <ul>
-<li><code>colnames</code> Column names of the DataDictionary, defaults to those used in the Excel template</li>
-<li><code>range</code> allows a specified range of the sheet to be imported (ie range = “A1:F10”)</li>
-<li><code>origin</code> enables the origin of Excel dates to be set (defaults to 30 December 1899)</li>
+<li>Age (from Date of Birth and Assessment Date)</li>
+<li>Overall Survival (from Date of Diagnosis and Date of Death)</li>
+<li>Survival Status (from Date of Death and Last Follow-up)</li>
+<li>Age or BMI categories from raw data</li>
 </ul>
-<p><strong>!<code>readDataDict</code> must be run before <code>readExcelData</code></strong></p>
+<p>Do not do calculations in Excel. Instead, specify re-codings and calculations in your statistical analysis plan and/or the data dictionary</p>
 </div>
             </section>
 
           </div>
         </div>
       </div>
-<a href="the-exceldata-package.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="import-the-data.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="data-dictionary-1.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="revising-data.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

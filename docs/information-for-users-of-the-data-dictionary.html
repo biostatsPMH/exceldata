@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>3.1 Import the Data Dictionary | Using the DataDictionary template and the exceldata package</title>
-  <meta name="description" content="3.1 Import the Data Dictionary | Using the DataDictionary template and the exceldata package" />
+  <title>4 Information for Users of the Data Dictionary | Using the DataDictionary template and the exceldata package</title>
+  <meta name="description" content="4 Information for Users of the Data Dictionary | Using the DataDictionary template and the exceldata package" />
   <meta name="generator" content="bookdown 0.22 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="3.1 Import the Data Dictionary | Using the DataDictionary template and the exceldata package" />
+  <meta property="og:title" content="4 Information for Users of the Data Dictionary | Using the DataDictionary template and the exceldata package" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="3.1 Import the Data Dictionary | Using the DataDictionary template and the exceldata package" />
+  <meta name="twitter:title" content="4 Information for Users of the Data Dictionary | Using the DataDictionary template and the exceldata package" />
   
   
   
@@ -29,8 +29,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="the-exceldata-package.html"/>
-<link rel="next" href="import-the-data.html"/>
+<link rel="prev" href="create-factor-variables.html"/>
+<link rel="next" href="data-dictionary-1.html"/>
 <script src="libs/header-attrs-2.9/header-attrs.js"></script>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -124,25 +124,29 @@
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="import-the-data-dictionary" class="section level2" number="3.1">
-<h2><span class="header-section-number">3.1</span> Import the Data Dictionary</h2>
-<p>The <code>readDataDict</code> function will import the dictionary file. This is slightly more useful than just using <code>readxl::read_excel</code> because checks will be performed to ensure the dictionary is complete and dates will be converted to easy to read text strings.</p>
-<p>The file and sheetname must be specified.</p>
-<p>Optional Arguments:</p>
+<div id="information-for-users-of-the-data-dictionary" class="section level1" number="4">
+<h1><span class="header-section-number">4</span> Information for Users of the Data Dictionary</h1>
+<p>Good science requires good data!</p>
+<p>This is a guide to using the Excel macro-enabled template <code>DataDictionary.xlsm</code></p>
+<p>What isn’t entered can’t be analysed, but conversely, there is no need to provide multiple variables containing the same information (ie age and age categories).</p>
+<p>The over-arching principles are simple:</p>
 <ul>
-<li><code>colnames</code> Column names of the DataDictionary, defaults to those used in the Excel template</li>
-<li><code>range</code> allows a specified range of the sheet to be imported (ie range = “A1:F10”)</li>
-<li><code>origin</code> enables the origin of Excel dates to be set (defaults to 30 December 1899)</li>
+<li>Enter data as completely and accurately as possible</li>
+<li>Don’t enter data twice</li>
 </ul>
-<p><strong>!<code>readDataDict</code> must be run before <code>readExcelData</code></strong></p>
+<p>The data dictionary describes the data in your data file.</p>
+<div class="figure">
+<img src="vignettes/dictionary.PNG" alt="" />
+<p class="caption">Example Data Dictionary</p>
+</div>
 </div>
             </section>
 
           </div>
         </div>
       </div>
-<a href="the-exceldata-package.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="import-the-data.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="create-factor-variables.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="data-dictionary-1.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
