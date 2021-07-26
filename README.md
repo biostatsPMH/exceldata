@@ -11,7 +11,9 @@ https://github.com/biostatsPMH/exceldata/blob/main/vignettes/DataDictionary0.5.x
 ---
 To download the most recent exceldata R package
 
+``` r
 `devtools::install_github("biostatsPMH/exceldata")`
+```
 
 ---
 To view the documentation
