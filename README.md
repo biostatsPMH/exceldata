@@ -14,11 +14,12 @@ To download the most recent exceldata R package
 `devtools::install_github("biostatsPMH/exceldata")`
 
 ---
-To view the documentation: 
+To view the documentation
 
 https://biostatspmh.github.io/exceldata/
 
 ---
-Link to the YouTube tutorial:
+Link to the YouTube tutorial
+
 https://youtu.be/l9gZ-9lWNd8
  
