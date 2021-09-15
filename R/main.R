@@ -19,6 +19,9 @@
 #' @export
 readDataDict <- function(excelFile,dictionarySheet ='DataDictionary',range,colnames,origin){
   if (missing(range)) range = NULL
+  if (!file.exists(excelFile)){
+    stop('The specified file can not be found. Check that the file exists in the specified directory.')
+  }
   dict <- try(readxl::read_excel(excelFile,sheet=dictionarySheet,col_names = T,range=range,col_types = 'text'),silent = T)
   if (class(dict)[1]=='try-error') stop(paste('File access failure. \n Check that sheet',dictionarySheet,'exists in file:',excelFile,
                                               '\n\nNOTE: It may be necessary to close Excel for this function to work.'))
@@ -373,6 +376,21 @@ importCodes<-function(labelStr,delim=',',codeName='code',lblName='label'){
   if (isTRUE(all.equal(as.character(suppressWarnings(as.numeric(tbl[[1]]))),tbl[[1]]))) tbl[[1]] <- as.numeric(tbl[[1]])
   names(tbl)=c(codeName,lblName)
   return(tbl)
+}
+
+#' Create univariate plots to check range, distribution, outliers
+#'
+#' Needs options to show in Viewer or to output as multiple plots or a plot grid
+#'
+#' In Development, not yet exported
+#' @param data a data frame containing the variables to be plotted
+#' @param varlist an optional list of variables to plot, defaults to all non-character variables in data
+plotVariables <-function(data,varlist){
+  if (missing(varlist)) {
+    varTypes <- sapply(daf,function(x) class(x)[1])
+    varlist = names(varTypes)[varTypes!='character']
+  }
+
 }
 
 
