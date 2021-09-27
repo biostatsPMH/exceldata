@@ -378,19 +378,5 @@ importCodes<-function(labelStr,delim=',',codeName='code',lblName='label'){
   return(tbl)
 }
 
-#' Create univariate plots to check range, distribution, outliers
-#'
-#' Needs options to show in Viewer or to output as multiple plots or a plot grid
-#'
-#' In Development, not yet exported
-#' @param data a data frame containing the variables to be plotted
-#' @param varlist an optional list of variables to plot, defaults to all non-character variables in data
-plotVariables <-function(data,varlist){
-  if (missing(varlist)) {
-    varTypes <- sapply(daf,function(x) class(x)[1])
-    varlist = names(varTypes)[varTypes!='character']
-  }
-
-}
 
 
