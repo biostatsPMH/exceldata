@@ -4,15 +4,17 @@
 \alias{addFactorVariables}
 \title{Create factor variables from data dictionary}
 \usage{
-addFactorVariables(dataDictionary, dataTable)
+addFactorVariables(dataDictionary, dataTable, keepOriginal = FALSE)
 }
 \arguments{
 \item{dataDictionary}{a data frame returned by readDataDict}
 
 \item{dataTable}{a data frame returned by readExcelData}
+
+\item{keepOriginal}{Boolean indicating if the original character variables should be kept}
 }
 \value{
-a data frame with the updated variables
+a data frame with the updated factor variables
 }
 \description{
 This function will replace the code and category variables
