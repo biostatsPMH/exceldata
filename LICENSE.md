@@ -1,6 +1,6 @@
 # MIT License
 
-Copyright (c) 2021 exceldata authors
+Copyright (c) 2021 Lisa Avery
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
