@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>2.4 Data Entry | Using the DataDictionary template and the exceldata package</title>
-  <meta name="description" content="2.4 Data Entry | Using the DataDictionary template and the exceldata package" />
+  <title>3.2 importExcelData Sub- Functions | Using the DataDictionary template and the exceldata package</title>
+  <meta name="description" content="3.2 importExcelData Sub- Functions | Using the DataDictionary template and the exceldata package" />
   <meta name="generator" content="bookdown 0.22 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="2.4 Data Entry | Using the DataDictionary template and the exceldata package" />
+  <meta property="og:title" content="3.2 importExcelData Sub- Functions | Using the DataDictionary template and the exceldata package" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="2.4 Data Entry | Using the DataDictionary template and the exceldata package" />
+  <meta name="twitter:title" content="3.2 importExcelData Sub- Functions | Using the DataDictionary template and the exceldata package" />
   
   
   
@@ -29,8 +29,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="calculated-variables.html"/>
-<link rel="next" href="multiple-data-sheets.html"/>
+<link rel="prev" href="importexceldata.html"/>
+<link rel="next" href="plotvariables.html"/>
 <script src="libs/header-attrs-2.9/header-attrs.js"></script>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -118,18 +118,61 @@
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="data-entry" class="section level2" number="2.4">
-<h2><span class="header-section-number">2.4</span> Data Entry</h2>
-<div class="figure">
-<img src="vignettes/dataentry.PNG" alt="" />
-<p class="caption">A Data Entry Table</p>
+<div id="importexceldata-sub--functions" class="section level2" number="3.2">
+<h2><span class="header-section-number">3.2</span> importExcelData Sub- Functions</h2>
+<div id="import-the-data-dictionary" class="section level3" number="3.2.1">
+<h3><span class="header-section-number">3.2.1</span> Import the Data Dictionary</h3>
+<p>The <code>readDataDict</code> function will import the dictionary file. This is slightly more useful than just using <code>readxl::read_excel</code> because checks will be performed to ensure the dictionary is complete and dates will be converted to easy to read text strings.</p>
+<p>The file and sheet name must be specified.</p>
+<p>Optional Arguments:</p>
+<ul>
+<li><code>colnames</code> Column names of the DataDictionary, defaults to those used in the Excel template</li>
+<li><code>range</code> allows a specified range of the sheet to be imported (ie range = “A1:F10”)</li>
+<li><code>origin</code> enables the origin of Excel dates to be set (defaults to 30 December 1899)</li>
+</ul>
+<p><strong>!<code>readDataDict</code> must be run before <code>readExcelData</code></strong></p>
 </div>
-<p>The data entry table contains data validation rules (with prompts) and conditional formatting to highlight cells that fall outside the allowed range of the variable.</p>
-<p>Users can not enter data outside the allowed range, but they can copy it in from another source. If a user performs a regular paste (Ctrl+V) then the validation and formatting will be over-written. If this happens, then users should click the <code>Re-format Existing Sheet</code> button on the data dictionary sheet. This will re-read all the values in the dictionary and re-apply formatting to the data entry sheet. This is also useful if the user changes the ranges of variables.</p>
-<p>Once the data entry is complete, the user should click <code>Re-format Existing Sheet</code> to ensure all formats are up to date and all values are checked before sending to the Biostatistics department.</p>
-<div class="figure">
-<img src="vignettes/excel.png" alt="" />
-<p class="caption">Workflow of the DataDictionary.xlsm file</p>
+<div id="import-the-data" class="section level3" number="3.2.2">
+<h3><span class="header-section-number">3.2.2</span> Import the Data</h3>
+<p>The <code>readExcelData</code> function will import the data, using the specifications provided in the data dictionary. Again, this should be slightly more useful than a readxl::read_excel because:</p>
+<ul>
+<li>dates will be imported nicely</li>
+<li>variables not in the data dictionary will be removed</li>
+<li>there is an option to store any import warnings, which may be useful to send to the user</li>
+<li>the data can be read in ‘strictly’, setting all values that fall outside the allowed range to <code>NA</code> (This can be useful if users insist on using missing value codes)</li>
+</ul>
+<p>The file and sheetname, as well as the object returned by the <code>readDataDict</code> function must be specified.</p>
+<p>Optional Arguments:</p>
+<ul>
+<li><code>range</code> allows a specified range of the sheet to be imported (ie range = “A1:AB102”)</li>
+<li><code>origin</code> enables the origin of Excel dates to be set (defaults to 30 December 1899)</li>
+<li><code>saveWarnings</code> will return a list with the data frame and the import warnings (if there are any)</li>
+<li><code>setErrorsMissing</code> will set all values out of range to <code>NA</code> <strong>this should only be done if no warnings are given</strong></li>
+</ul>
+</div>
+<div id="perform-checks" class="section level3" number="3.2.3">
+<h3><span class="header-section-number">3.2.3</span> Perform Checks</h3>
+<p>The <code>checkData</code> function will simply check the data against the data dictionary. This requires the outputs of <code>readDataDict</code> and <code>readExcelData</code>.</p>
+<p>The <code>checkData</code> function will check for duplicate rows and check that all numeric, integer, date, code and category variables meet the requirements of the data dictionary. It does not check the data types, because these are enforced by the <code>readExcelData</code> function.</p>
+<p>The outputs from <code>readDataDict</code> and <code>readExcelData</code> are required.</p>
+<p>Optional Argument:</p>
+<ul>
+<li>id can be used to indicate the patient identifier (ie id =‘SubjectID’) which will provide errors for each id, instead of by row number</li>
+</ul>
+<p><code>checkData</code> returns a list with three elements:</p>
+<ul>
+<li><p>a data frame containiny all the errors (rows and columns without errors are removed)</p></li>
+<li><p>a two-column data frame with Variable Names in one column and the location of errors in the second (either row numbers or IDs if provided)</p></li>
+<li><p>a two-column data frame with Row Numbers (or IDs) in one columns and the variable containing errors in the second column.</p></li>
+</ul>
+</div>
+<div id="create-factor-variables" class="section level3" number="3.2.4">
+<h3><span class="header-section-number">3.2.4</span> Create Factor Variables</h3>
+<p>The <code>addFactorVariables</code> function will rename all the code and category variables suffixed with <code>_orig</code> (so <em>ecog</em> becomes <em>ecog_orig</em>) and create factor variables using the codes provided in the data dictionary as the factor levels and labels.</p>
+</div>
+<div id="create-calculated-variables" class="section level3" number="3.2.5">
+<h3><span class="header-section-number">3.2.5</span> Create Calculated Variables</h3>
+<p>The ‘createCalculated’ function calculated variables according the specifications given in the data dictionary. For recoded variables a contingency table is exported to the log file to ensure the categories have been created as expected. For categorised variables a table with the minimum and maximum values on the continuous variable is given for each category and also exported to the log file.</p>
 </div>
 </div>
             </section>
@@ -137,8 +180,8 @@
           </div>
         </div>
       </div>
-<a href="calculated-variables.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="multiple-data-sheets.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="importexceldata.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="plotvariables.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

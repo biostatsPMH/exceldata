@@ -14,7 +14,8 @@ RoxygenNote: 7.1.1
 Imports: 
     dplyr,
     ggplot2,
-    readxl
+    readxl,
+    scales
 Suggests: 
     knitr,
     rmarkdown

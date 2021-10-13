@@ -195,14 +195,21 @@ readExcelData <- function(excelFile,dataDictionary,dataSheet='DataEntry',saveWar
   # remove all columns not in the data dictionary
   dat <- dat[,which(import_types!='guess')]
 
-  # Set all out of range entries to missing if specified
+  # assign integer types to integer fields
+  for (v in dataDictionary$VariableName[dataDictionary$Type=='integer']) dat[[v]] <- as.integer(dat[[v]])
+
+  # assign date types to date fields
+  for (v in dataDictionary$VariableName[dataDictionary$Type=='date']) dat[[v]] <- as.Date(dat[[v]])
+
+    # Set all out of range entries to missing if specified
   if (setErrorsMissing){
+
     # Range checks
     varsToCheck <- intersect(dataDictionary[['VariableName']][dataDictionary[['Type']] %in% c('numeric','codes','category','integer','date')],names(dat))
-    for (v in varsToCheck){
-      if (dataDictionary[['Type']][dataDictionary[['VariableName']]==v] %in% c('integer','numeric')){
-        if (dataDictionary[['Type']][dataDictionary[['VariableName']]==v] =='integer') data[[v]] <- as.integer(data[[v]])
 
+    for (v in varsToCheck){
+      # Numeric Data
+      if (dataDictionary[['Type']][dataDictionary[['VariableName']]==v] %in% c('integer','numeric')){
         minVal = dataDictionary[['Minimum']][dataDictionary[['VariableName']]==v]
         if (minVal %in% dataDictionary[["VariableName"]]) minVal = dat[[minVal]] else minVal = as.numeric(minVal)
         maxVal = dataDictionary[['Maximum']][dataDictionary[['VariableName']]==v]
@@ -211,6 +218,7 @@ readExcelData <- function(excelFile,dataDictionary,dataSheet='DataEntry',saveWar
         check = minVal <= dat[[v]] & dat[[v]] <= maxVal
       }
 
+      # Dates
       if (dataDictionary[['Type']][dataDictionary[['VariableName']]==v] =='date'){
         minVal = dataDictionary[['Minimum']][dataDictionary[['VariableName']]==v]
         if (minVal %in% dataDictionary[["VariableName"]]) minVal = as.Date(dat[[minVal]]) else if (minVal=='today') minVal=Sys.Date() else  minVal = as.Date(minVal)
@@ -220,6 +228,7 @@ readExcelData <- function(excelFile,dataDictionary,dataSheet='DataEntry',saveWar
         check = as.numeric(minVal) <= as.numeric(as.Date(dat[[v]])) & as.numeric(as.Date(dat[[v]])) <= as.numeric(maxVal)
       }
 
+      # Factors
       if (dataDictionary[['Type']][dataDictionary[['VariableName']]==v] %in% c('category','codes')){
         allowedCodes = importCodes(dataDictionary[['Levels']][dataDictionary[['VariableName']]==v])[['code']]
         if (dataDictionary[['Type']][dataDictionary[['VariableName']]==v] =='codes') allowedCodes = as.numeric(allowedCodes)
@@ -472,13 +481,13 @@ createCalculated<-function(data,dictTable,timeUnit='month'){
       newVarName <- v
     }
 
-    instructions <- unlist(strsplit(dictTable$Levels[dictTable$VariableName==v],','))
+    instructions <- trimws(unlist(strsplit(dictTable$Levels[dictTable$VariableName==v],',')))
 
     # Determine what type of calculation to do
     if (substr(dictTable$Levels[dictTable$VariableName==v],1,5)=='start') {
       if (length(instructions)!=3) {
         warning(paste(newVarName,' not created. For a survival variable, a start date, event date and last date followd must be specified. Check dictTableionary.'))
-        survVars <- sapply(instructions,function(x) unlist(strsplit(x,'='))[2])
+        survVars <- sapply(instructions,function(x) trimws(unlist(strsplit(x,'='))[2]))
         if (!all(survVars %in% names(data))) {
           warning(paste(paste(survVars[!survVars %in% names(data)],collapse=','),' not in the data. Variable names are case sensitive.\n',newVarName,' not created.'))
         }} else{
@@ -522,13 +531,14 @@ createSurvVar <- function(data,newVarName,survVars,timeUnit='month'){
     }}
 
   # Determine if the event occured
-  status <- ifelse(is.na(data[[survVars[2]]]),0,1)
+  status <- ifelse(is.na(data[[survVars[2]]]),0L,1L)
 
   # Determine the end date for calculating the interval NOTE: requires dplyr::if_else
   end_date <- dplyr::if_else(is.na(data[[survVars[2]]]),data[[survVars[3]]],data[[survVars[2]]])
 
   # Determine time to event
   TTE <- lubridate::time_length(lubridate::interval(data[[survVars[1]]],end_date),timeUnit)
+  attributes(TTE)$timeUnit <- timeUnit
 
   # Add the new variables to the data
   data[[newVarName]] <- TTE
@@ -559,7 +569,7 @@ createRecodedVar <- function(data,newVarName,instructions){
   originalVar <- instructions[1]
 
   codeReps <-diff(  c(grep("=",instructions),length(instructions)+1))
-  newCodes <- sapply(instructions[grep("=",instructions)],function(x) unlist(strsplit(x,"="))[1])
+  newCodes <- sapply(instructions[grep("=",instructions)],function(x) trimws(unlist(strsplit(x,"="))[1]))
   labels = unlist(mapply(rep,x=newCodes,times=codeReps))
 
   oldCodes <- gsub('.*=','',instructions[-1])
@@ -571,7 +581,7 @@ createRecodedVar <- function(data,newVarName,instructions){
 
   WriteToLog(paste('New recoded variables created: ',newVarName,' from ',instructions[1]))
   tbl_check <- capture.output(table(data[[newVarName]],data[[originalVar]]))
-   WriteToLog(tbl_check)
+  WriteToLog(tbl_check)
 
   return(data)
 }
@@ -590,8 +600,8 @@ createCategorisedVar <- function(data,newVarName,instructions){
 
   contData <- data[[originalVar]]
 
-  categories <- gsub('=.*','',instructions[-1])
-  rules <- sub('.*=','',instructions[-1])[grep("=",instructions[-1])]
+  categories <- trimws(gsub('=.*','',instructions[-1]))
+  rules <- trimws(sub('.*=','',instructions[-1])[grep("=",instructions[-1])])
 
   # There should be one more category than rule
   if (length(categories)!=(length(rules)+1)) {
@@ -643,9 +653,9 @@ WriteToLog <- function(msg,append=T,timestamp=F){
 #' @param vars is an optional character vector of the names of variables to plot
 #' @param nAsBar the number of unique values to display as a bar plot for non-factor data, default is 6
 #' @import ggplot2
+#' @importFrom scales dateformat
 #' @export
 plotVariables<-function(data,IDvar,vars,nAsBar=6){
-  ggplot2::theme_set(ggplot2::theme_bw())
   varTypes = sapply(data,function(x) class(x)[1])
   if (missing(vars)){
     vars = names(data)[varTypes!='character']
@@ -659,21 +669,25 @@ plotVariables<-function(data,IDvar,vars,nAsBar=6){
     # For each variable choose an appropriate plot based on sample size and variable type and save to the list
 
 
-    if ('factor' %in% class(data[[v]]) ){ #| length(unique(data[[v]]))<=nAsBar
+    if ('factor' %in% class(data[[v]]) | 'integer' %in% class(data[[v]]) ){
       p <- ggplot2::ggplot(data=data,aes(x=.data[[v]])) +
-        geom_bar()
+        geom_bar() +
+       theme_bw()
     } else {
-      if (N<50){
-        p <- ggplot2::ggplot(data=data,aes(x=.data[[v]])) +
-          geom_dotplot() +
-          theme(axis.title.y = element_blank(),axis.ticks.y=element_blank(),axis.text.y = element_blank())
-      } else{
-        p <- ggplot2::ggplot(data=data,aes(x=.data[[v]])) +
-          geom_dotplot(size=.5) +
-          theme(axis.title.y = element_blank(),axis.ticks.y=element_blank(),axis.text.y = element_blank())
+      # make dots smaller for larger files
+      dotsize = ifelse(N<30,1,ifelse(N<200,.5,.25))
 
-      }
+      p <- ggplot2::ggplot(data=data,aes(x=.data[[v]])) +
+        geom_dotplot(dotsize=dotsize) +
+         theme_bw() +
+        theme(axis.title.y = element_blank(),axis.ticks.y=element_blank(),axis.text.y = element_blank())
     }
+
+    # Show date axis a month-year for date variables
+    if ("Date" %in% class(data[[v]])) p <- p +  scale_x_date(labels = scales::date_format("%m-%Y"))
+
+    # Add a time unit to the x-lab if there is one
+    if (!is.null(attributes(data[[v]])$timeUnit)) p <- p + xlab(paste0(v," (",attributes(data[[v]])$timeUnit,'s)'))
     plots[[v]] <- p
   }
 
