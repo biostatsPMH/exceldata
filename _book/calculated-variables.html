@@ -81,6 +81,7 @@
 <li class="chapter" data-level="2.3.1" data-path="calculated-variables.html"><a href="calculated-variables.html#survival-variables"><i class="fa fa-check"></i><b>2.3.1</b> Survival Variables</a></li>
 <li class="chapter" data-level="2.3.2" data-path="calculated-variables.html"><a href="calculated-variables.html#recoded-variables"><i class="fa fa-check"></i><b>2.3.2</b> Recoded Variables</a></li>
 <li class="chapter" data-level="2.3.3" data-path="calculated-variables.html"><a href="calculated-variables.html#categorised-variables"><i class="fa fa-check"></i><b>2.3.3</b> Categorised Variables</a></li>
+<li class="chapter" data-level="2.3.4" data-path="calculated-variables.html"><a href="calculated-variables.html#combined-variables"><i class="fa fa-check"></i><b>2.3.4</b> Combined Variables</a></li>
 </ul></li>
 <li class="chapter" data-level="2.4" data-path="data-entry.html"><a href="data-entry.html"><i class="fa fa-check"></i><b>2.4</b> Data Entry</a></li>
 <li class="chapter" data-level="2.5" data-path="multiple-data-sheets.html"><a href="multiple-data-sheets.html"><i class="fa fa-check"></i><b>2.5</b> Multiple Data Sheets</a></li>
@@ -154,6 +155,16 @@
 <p>Example of categorising a continuous variable in the Data Dictionary:</p>
 <p><img src="vignettes/categoriseVar.png" alt="Example of a recoded variable" />
 This will create the AgeGroup variable from Age with four levels: "under50’,‘50-60’,‘60-69’,‘70plus’</p>
+</div>
+<div id="combined-variables" class="section level3" number="2.3.4">
+<h3><span class="header-section-number">2.3.4</span> Combined Variables</h3>
+<p>Combined variables are used to detect patterns in sets of dichotomous variables. For example, if a survey has a number of yes/no or checklist questions about a single topic a combined variable can be created and used to determine the most common response patterns when the variables are plotted. Combined variables will be plotted a Pareto graph with up to the ten most common response patterns plotted.</p>
+<p><img src="vignettes/combinedVar.png" alt="Example of a combined variable" />
+running <code>PlotVariables(data,vars='InfoSources')</code> will produce the following plot:</p>
+<div class="figure">
+<img src="vignettes/pareto.png" alt="" />
+<p class="caption">Pareto graph of a combined variable</p>
+</div>
 </div>
 </div>
             </section>

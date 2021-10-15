@@ -18,3 +18,4 @@ importexceldata
 importexceldata-sub--functions
 create-calculated-variables
 plotvariables
+combined-variables
