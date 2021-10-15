@@ -4,16 +4,30 @@
 \alias{plotVariables}
 \title{Return a list of univariate ggplots for each non-character variable}
 \usage{
-plotVariables(data, IDvar, vars, nAsBar = 6)
+plotVariables(
+  data,
+  vars,
+  dictTable,
+  IDvar,
+  showOutliers = FALSE,
+  nOut = NULL,
+  qOut = 0.05
+)
 }
 \arguments{
 \item{data}{is a data frame containing the variables to be plotted}
 
-\item{IDvar}{an optional string indicating the name of an identifying variable to highlight outliers}
-
 \item{vars}{is an optional character vector of the names of variables to plot}
 
-\item{nAsBar}{the number of unique values to display as a bar plot for non-factor data, default is 6}
+\item{dictTable}{optional, the data dictionary returned by importExcelData or readDataDict functions to provide plot titles}
+
+\item{IDvar}{an optional string indicating the name of an identifying variable to highlight outliers}
+
+\item{showOutliers}{boolean, should outliers be labelled}
+
+\item{nOut}{integer only used if showOutliers=TRUE the most extreme nOut values are highlighted, takes precedent over qOut}
+
+\item{qOut}{proportion between 0 and 1 only used if showOutliers=TRUE the most extreme qOut values are highlighted}
 }
 \description{
 This function should be run as the final step after the data have been

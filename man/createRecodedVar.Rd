@@ -4,10 +4,12 @@
 \alias{createRecodedVar}
 \title{Create survival variables (survival duration + status)}
 \usage{
-createRecodedVar(data, newVarName, instructions)
+createRecodedVar(data, dictTable, newVarName, instructions)
 }
 \arguments{
 \item{data}{is data returned by the importExcelData or readExcelData functions}
+
+\item{dictTable}{is the data dictionary returned by importExcelData or readDataDict functions}
 
 \item{newVarName}{the name of the new variable.}
 

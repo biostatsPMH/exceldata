@@ -4,16 +4,12 @@
 \alias{importCodes}
 \title{Return a data frame of codes}
 \usage{
-importCodes(labelStr, delim = ",", codeName = "code", lblName = "label")
+importCodes(labelStr, delim = ",")
 }
 \arguments{
 \item{labelStr}{in the format code1=label1,code2=label2}
 
 \item{delim}{delimeter separating codes in labelStr, defaults to ','}
-
-\item{codeName}{column name for codes, defaults to code}
-
-\item{lblName}{column name for labels, defaults to label}
 }
 \description{
 Accepts a string input in the form "code1=label1,code2=label2,.." and

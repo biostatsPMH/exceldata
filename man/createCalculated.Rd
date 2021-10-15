@@ -9,7 +9,9 @@ createCalculated(data, dictTable, timeUnit = "month")
 \arguments{
 \item{data}{is data returned by the importExcelData or readExcelData functions}
 
-\item{dict}{is the data dictionary returned by importExcelData or readDataDict functions}
+\item{dictTable}{is the data dictionary returned by importExcelData or readDataDict functions}
+
+\item{timeUnit}{a string containing the desired unit of time for survival variables}
 }
 \description{
 This function will create survival and recoded variables according to the

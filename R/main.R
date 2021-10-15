@@ -534,6 +534,7 @@ createCalculated<-function(data,dictTable,timeUnit='month'){
 #' @param newVarName the name of the new survival variable. The status variable will be suffixed with '_status'
 #' @param survVars are, in order the start date, event date and date of last followup
 #' @param timeUnit string, the unit of time to calculate survival variables for (day week month year)
+#' @importFrom lubridate time_length interval
 createSurvVar <- function(data,newVarName,survVars,timeUnit='month'){
 
   # ensure that the status variable doesn't already exist, if it does create a new one with a suffix
@@ -769,10 +770,11 @@ WriteToLog <- function(msg,append=T,timestamp=F){
 #' @param showOutliers boolean, should outliers be labelled
 #' @param nOut integer only used if showOutliers=TRUE the most extreme nOut values are highlighted, takes precedent over qOut
 #' @param qOut proportion between 0 and 1 only used if showOutliers=TRUE the most extreme qOut values are highlighted
+#' @importFrom ggrepel geom_text_repel
 #' @import ggplot2
-#' @importFrom scales dateformat
+#' @importFrom scales date_format
 #' @export
-plotVariables<-function(data,vars,dictTable,IDvar,nAsBar=6,showOutliers=FALSE,nOut=NULL,qOut=.05){
+plotVariables<-function(data,vars,dictTable,IDvar,showOutliers=FALSE,nOut=NULL,qOut=.05){
   varTypes = sapply(data,function(x) class(x)[1])
   if (missing(vars)){
     char_vars = names(data)[varTypes=='character']
