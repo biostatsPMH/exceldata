@@ -2,7 +2,7 @@
 % Please edit documentation in R/main.R
 \name{importExcelData}
 \alias{importExcelData}
-\title{Import Excel Data from a DataDictionary file}
+\title{Import Excel Data from a dictTable file}
 \usage{
 importExcelData(
   excelFile,
@@ -18,7 +18,7 @@ importExcelData(
 \arguments{
 \item{excelFile}{path and filename of the data file}
 
-\item{dictionarySheet}{the name of the sheet containing the data dictionary, defaults to 'DataDictionary'}
+\item{dictionarySheet}{the name of the sheet containing the data dictionary, defaults to 'dictTable'}
 
 \item{dataSheet}{name of the data entry sheet within the file, defaults to 'DataEntry'}
 
@@ -38,14 +38,14 @@ a list containing two data frames: the data dictionary and the data table
 \description{
 This function reads in a data dictionary and data entry table and converts
 code and category variables to factors as outlined in the dictionary. This
-code is to be used in conjection with the DataDictionary.xlsm template
-template file according to the specifications in the dataDictionary
+code is to be used in conjection with the dictTable.xlsm template
+template file according to the specifications in the dictTable
 }
 \details{
-Prior to reading in the data, the dataDictionary file must be imported using
+Prior to reading in the data, the dictTable file must be imported using
 readDataDict.
 
 Warning: If SetErrorsMissing = TRUE then a subsequent call to checkData will not return any errors, because the errors have been set to missing.
 
-NOTE: This function will only read in those columns present in the DataDictionary
+NOTE: This function will only read in those columns present in the dictTable
 }

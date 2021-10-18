@@ -4,12 +4,12 @@
 \alias{checkData}
 \title{Check the entered data against the data dictionary}
 \usage{
-checkData(dataDictionary, dataTable, id)
+checkData(dictTable, data, id)
 }
 \arguments{
-\item{dataDictionary}{a data frame returned by readDataDict}
+\item{dictTable}{a data frame returned by readDataDict}
 
-\item{dataTable}{a data frame returned by readExcelData}
+\item{data}{a data frame returned by readExcelData}
 
 \item{id}{a string indicating the ID variable, to display errors by ID instead of row number}
 }
@@ -19,13 +19,13 @@ A list with three data frames: one with all errors, one with errors by row
 }
 \description{
 This function compares the data in the data entry table against the
-specifications in the DataDictionary.
+specifications in the dictTable.
 }
 \details{
-Prior to reading in the data, the dataDictionary must be imported using
-readDataDict and the dataTable must be imported using readExcelData.
+Prior to reading in the data, the dictTable must be imported using
+readDataDict and the data must be imported using readExcelData.
 
-The function will check all variables in the dataDictionary.
-If variables are missing from the dataDictionary an error will occur.
+The function will check all variables in the dictTable.
+If variables are missing from the dictTable an error will occur.
 If variables are missing from the data table a warning will be shown.
 }

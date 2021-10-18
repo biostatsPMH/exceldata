@@ -15,17 +15,17 @@ readDataDict(
 \arguments{
 \item{excelFile}{Character, Path and filename of the data file}
 
-\item{dictionarySheet}{Character, Name of the dictionary sheet within the file, defaults to 'DataDictionary'}
+\item{dictionarySheet}{Character, Name of the dictionary sheet within the file, defaults to 'dictTable'}
 
 \item{range}{Optional, Range of Excel sheet to restrict import to (ie. range="A1:F6")}
 
-\item{colnames}{Optional, Column names of the DataDictionary, defaults to those used in the Excel template c('VariableName', 'Description (optional)', 'Type', 'Minimum', 'Maximum', 'Levels')}
+\item{colnames}{Optional, Column names of the dictTable, defaults to those used in the Excel template c('VariableName', 'Description (optional)', 'Type', 'Minimum', 'Maximum', 'Levels')}
 
 \item{origin}{Optional, the date origin of Excel dates, defaults to 30 December 1899}
 }
 \description{
 This function reads in a data dictionary that was set up with the
-PMH DataDictionary.xlsm spreadsheet to a data frame.
+PMH dictTable.xlsm spreadsheet to a data frame.
 }
 \details{
 It assumes that the columns names  have not been altered and are:

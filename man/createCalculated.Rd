@@ -15,5 +15,5 @@ createCalculated(data, dictTable, timeUnit = "month")
 }
 \description{
 This function will create survival and recoded variables according to the
-rules in the DataDictionary.xlsm file. See the Example sheet for an example.
+rules in the dictTable.xlsm file. See the Example sheet for an example.
 }

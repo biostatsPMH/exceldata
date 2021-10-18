@@ -6,7 +6,7 @@
 \usage{
 readExcelData(
   excelFile,
-  dataDictionary,
+  dictTable,
   dataSheet = "DataEntry",
   saveWarnings = FALSE,
   setErrorsMissing = FALSE,
@@ -17,7 +17,7 @@ readExcelData(
 \arguments{
 \item{excelFile}{path and filename of the data file}
 
-\item{dataDictionary}{a data frame returned by readDataDict}
+\item{dictTable}{a data frame returned by readDataDict}
 
 \item{dataSheet}{name of the data entry sheet within the file, defaults to 'DataEntry'}
 
@@ -33,14 +33,14 @@ readExcelData(
 a data frame containing the imported data
 }
 \description{
-This function reads in an excel data table created by the DataDictionary.xlsm
-template file according to the specifications in the dataDictionary
+This function reads in an excel data table created by the dictTable.xlsm
+template file according to the specifications in the dictTable
 }
 \details{
-Prior to reading in the data, the dataDictionary file must be imported using
+Prior to reading in the data, the dictTable file must be imported using
 readDataDict.
 
 Warning: If SetErrorsMissing = TRUE then a subsequent call to checkData will not return any errors, because the errors have been set to missing.
 
-NOTE: This function will only read in those columns present in the DataDictionary
+NOTE: This function will only read in those columns present in the dictTable
 }

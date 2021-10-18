@@ -4,14 +4,14 @@
 \alias{addFactorVariables}
 \title{Create factor variables from data dictionary}
 \usage{
-addFactorVariables(dataDictionary, dataTable, keepOriginal = FALSE)
+addFactorVariables(data, dictTable, keepOriginal = TRUE)
 }
 \arguments{
-\item{dataDictionary}{a data frame returned by readDataDict}
+\item{data}{a data frame returned by readExcelData}
 
-\item{dataTable}{a data frame returned by readExcelData}
+\item{dictTable}{a data frame returned by readDataDict}
 
-\item{keepOriginal}{Boolean indicating if the original character variables should be kept}
+\item{keepOriginal}{Boolean indicating if the original character variables should be kept, default is TRUE with _original appended to variable names}
 }
 \value{
 a data frame with the updated factor variables
