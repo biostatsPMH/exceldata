@@ -16,12 +16,14 @@ To download the most recent exceldata R package
 ```
 
 ---
-To view the documentation
+Documentation
 
-https://biostatspmh.github.io/exceldata/
+[Tutorial For Excel Users](https://biostatspmh.github.io/exceldata/information-for-users-of-the-data-dictionary.html)
+
+[For Biostatisticians](https://biostatspmh.github.io/exceldata/)
 
 ---
-Link to the YouTube tutorial
+Link to the YouTube tutorial (a bit dated now)
 
 https://youtu.be/l9gZ-9lWNd8
  

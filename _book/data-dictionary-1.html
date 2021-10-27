@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>2.2 Variable Types | Using the DataDictionary template and the exceldata package</title>
-  <meta name="description" content="2.2 Variable Types | Using the DataDictionary template and the exceldata package" />
+  <title>4.1 Data Dictionary | Using the DataDictionary template and the exceldata package</title>
+  <meta name="description" content="4.1 Data Dictionary | Using the DataDictionary template and the exceldata package" />
   <meta name="generator" content="bookdown 0.22 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="2.2 Variable Types | Using the DataDictionary template and the exceldata package" />
+  <meta property="og:title" content="4.1 Data Dictionary | Using the DataDictionary template and the exceldata package" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="2.2 Variable Types | Using the DataDictionary template and the exceldata package" />
+  <meta name="twitter:title" content="4.1 Data Dictionary | Using the DataDictionary template and the exceldata package" />
   
   
   
@@ -29,8 +29,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="data-dictionary.html"/>
-<link rel="next" href="calculated-variables.html"/>
+<link rel="prev" href="information-for-users-of-the-data-dictionary.html"/>
+<link rel="next" href="calculations.html"/>
 <script src="libs/header-attrs-2.9/header-attrs.js"></script>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -144,31 +144,105 @@
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="variable-types" class="section level2" number="2.2">
-<h2><span class="header-section-number">2.2</span> Variable Types</h2>
-<p>There are seven allowed types of variables:</p>
+<div id="data-dictionary-1" class="section level2" number="4.1">
+<h2><span class="header-section-number">4.1</span> Data Dictionary</h2>
+<div id="variable-names" class="section level3" number="4.1.1">
+<h3><span class="header-section-number">4.1.1</span> Variable names:</h3>
 <ul>
-<li><em>calculated</em> for variables where users specify calculations to be performed (age groups, overall survival)</li>
-<li><em>category</em> for variables which can take only pre-specified values</li>
-<li><em>character</em> for variables such as the id, or any variable not to be analysed</li>
-<li><em>codes</em> for variables where short forms are entered (ie 1=male, 2=female)</li>
-<li><em>date</em> for all dates</li>
-<li><em>integer</em> for values which can take only whole numbers (ECOG score)</li>
-<li><em>numeric</em> for all other numeric values</li>
+<li>Must be unique</li>
+<li>Should be short and meaningful, descriptions can be put in the Description column</li>
+<li>Must begin with a letter</li>
+<li>Should not contain special characters or spaces, except for an underscore ’_’.</li>
+<li>Long survey questions should be placed in the description. For the variable name use either a shortened version, or simply Q1, Q2, etc.</li>
 </ul>
-<p>For the <em>date</em>, <em>integer</em> and <em>numeric</em> types the user must specify both a minimum and a maximum value. The minimum and maximum values can be numeric, the names of other variables in the data (if you want to make sure death is after diagnosis) or, for date types, ‘today’ can be used to allow all dates up to the time of entry.</p>
-<p>For the <em>codes</em> and <em>category</em> variables the user needs to specify the allowed categories, or the codes, in the order they would like them presented. If they struggle with this for data that has already been entered, then the UNIQUE function in Excel may be of use to them, it will list all the unique variables in a range.</p>
-<p>Once the dictionary is complete clicking the the <code>Create Data Entry Sheet</code> button will create the data entry table.</p>
-<p>If the user wishes to change any of the ranges or codes after entering data then they can change the dictionary and click <code>Re-format Exising Sheet</code> to update the validaion rules.</p>
-<p>If code or category variables are present then a <code>_codes_</code> sheet will be created to contain the allowed values for data validation. This sheet contains the same name as the data entry sheet, suffixed by <em><em>codes</em></em>. This sheet is hidden from the user.</p>
+<table>
+<thead>
+<tr class="header">
+<th align="center">Bad Variable Names</th>
+<th align="center">Good Variable Names</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center">patient date in clinic</td>
+<td align="center">clinic_date</td>
+</tr>
+<tr class="even">
+<td align="center">pre-treatment ECOG</td>
+<td align="center">ECOG_pre</td>
+</tr>
+<tr class="odd">
+<td align="center">Q1. What is your relationship to…</td>
+<td align="center">Q1_relationship</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="types-of-data" class="section level3" number="4.1.2">
+<h3><span class="header-section-number">4.1.2</span> Types of Data</h3>
+<div id="identifiers" class="section level4" number="4.1.2.1">
+<h4><span class="header-section-number">4.1.2.1</span> Identifiers</h4>
+<ul>
+<li>No personally identifying data should appear, including EMR numbers</li>
+<li>Instead, keep a sheet separate to the data linking Study IDs to patient IDs</li>
+</ul>
+</div>
+<div id="numeric-data" class="section level4" number="4.1.2.2">
+<h4><span class="header-section-number">4.1.2.2</span> Numeric Data</h4>
+<ul>
+<li>Enter continuous data, such as Age or Weight as a single numeric field without any extra text (ie enter 50 instead of 50kg)</li>
+<li>Do not enter both Age and Age Category. Instead, enter age and specify AgeCat as a calculated variable</li>
+<li>Entering data once reduces the amount of data entry and the potential for errors.</li>
+</ul>
+</div>
+<div id="categorical-data" class="section level4" number="4.1.2.3">
+<h4><span class="header-section-number">4.1.2.3</span> Categorical Data</h4>
+<ul>
+<li>Enter the Levels of categorical and code variables in the order you would like them presented (ie CR=complete recovery, PR=partial recovery,SD=stable disease,PD=progressive disease)</li>
+<li>Categorical data can be entered as numbers, letters or abbreviations instead of text</li>
+<li>Categories are entered separate by commas</li>
+<li>Example:
+<ul>
+<li>T1,T2,T3,T4</li>
+</ul></li>
+<li>Codes are entered in the data dictionary in the format code=label separated by commas</li>
+<li>Examples:
+<ul>
+<li>1=Female, 2=Male</li>
+<li>CR= Complete Recovery, PR= Partial Recovery, SD = Stable Disease, PD = Progressive Disease</li>
+</ul></li>
+</ul>
+</div>
+<div id="dates" class="section level4" number="4.1.2.4">
+<h4><span class="header-section-number">4.1.2.4</span> Dates</h4>
+<ul>
+<li>Should be entered in an unambiguous format ie “01-Jan-2020”</li>
+<li>Should not begin with the Year (formatting and validation won’t work properly)</li>
+<li>Dates can be copied in that begin with a year, but data checks need to be performed manually</li>
+<li>Dates after the current date will be highlighted in red as a warning</li>
+</ul>
+</div>
+</div>
+<div id="variable-ranges" class="section level3" number="4.1.3">
+<h3><span class="header-section-number">4.1.3</span> Variable Ranges</h3>
+<ul>
+<li>All date, integer and numeric values should have ranges specified. These should correspond to inclusion and exclusion criteria for your study, or natural values the variable can take. If you don’t know the upper limit (ie of a biomarker), then put in the maximum reasonable value. Values above this will be flagged and you can adjust the maximum to include them if you wish.</li>
+</ul>
+<p>The Minimum and Maximum can be:</p>
+<ul>
+<li>values (ie 40)</li>
+<li>variables names (if you want the minimum date of death to be DxDate for example)</li>
+<li>for date variables you can enter <code>today</code> to allow all dates up to the date of data entry</li>
+</ul>
+</div>
 </div>
             </section>
 
           </div>
         </div>
       </div>
-<a href="data-dictionary.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="calculated-variables.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="information-for-users-of-the-data-dictionary.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="calculations.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

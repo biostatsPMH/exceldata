@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>2.2 Variable Types | Using the DataDictionary template and the exceldata package</title>
-  <meta name="description" content="2.2 Variable Types | Using the DataDictionary template and the exceldata package" />
+  <title>4.7 Revising Data | Using the DataDictionary template and the exceldata package</title>
+  <meta name="description" content="4.7 Revising Data | Using the DataDictionary template and the exceldata package" />
   <meta name="generator" content="bookdown 0.22 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="2.2 Variable Types | Using the DataDictionary template and the exceldata package" />
+  <meta property="og:title" content="4.7 Revising Data | Using the DataDictionary template and the exceldata package" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="2.2 Variable Types | Using the DataDictionary template and the exceldata package" />
+  <meta name="twitter:title" content="4.7 Revising Data | Using the DataDictionary template and the exceldata package" />
   
   
   
@@ -29,8 +29,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="data-dictionary.html"/>
-<link rel="next" href="calculated-variables.html"/>
+<link rel="prev" href="multiple-data-sheets-1.html"/>
+<link rel="next" href="frequently-asked-questions.html"/>
 <script src="libs/header-attrs-2.9/header-attrs.js"></script>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -144,31 +144,36 @@
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="variable-types" class="section level2" number="2.2">
-<h2><span class="header-section-number">2.2</span> Variable Types</h2>
-<p>There are seven allowed types of variables:</p>
-<ul>
-<li><em>calculated</em> for variables where users specify calculations to be performed (age groups, overall survival)</li>
-<li><em>category</em> for variables which can take only pre-specified values</li>
-<li><em>character</em> for variables such as the id, or any variable not to be analysed</li>
-<li><em>codes</em> for variables where short forms are entered (ie 1=male, 2=female)</li>
-<li><em>date</em> for all dates</li>
-<li><em>integer</em> for values which can take only whole numbers (ECOG score)</li>
-<li><em>numeric</em> for all other numeric values</li>
-</ul>
-<p>For the <em>date</em>, <em>integer</em> and <em>numeric</em> types the user must specify both a minimum and a maximum value. The minimum and maximum values can be numeric, the names of other variables in the data (if you want to make sure death is after diagnosis) or, for date types, ‘today’ can be used to allow all dates up to the time of entry.</p>
-<p>For the <em>codes</em> and <em>category</em> variables the user needs to specify the allowed categories, or the codes, in the order they would like them presented. If they struggle with this for data that has already been entered, then the UNIQUE function in Excel may be of use to them, it will list all the unique variables in a range.</p>
-<p>Once the dictionary is complete clicking the the <code>Create Data Entry Sheet</code> button will create the data entry table.</p>
-<p>If the user wishes to change any of the ranges or codes after entering data then they can change the dictionary and click <code>Re-format Exising Sheet</code> to update the validaion rules.</p>
-<p>If code or category variables are present then a <code>_codes_</code> sheet will be created to contain the allowed values for data validation. This sheet contains the same name as the data entry sheet, suffixed by <em><em>codes</em></em>. This sheet is hidden from the user.</p>
+<div id="revising-data" class="section level2" number="4.7">
+<h2><span class="header-section-number">4.7</span> Revising Data</h2>
+<div id="revising-ranges" class="section level3" number="4.7.1">
+<h3><span class="header-section-number">4.7.1</span> Revising Ranges</h3>
+<p>If you need to change the maximum, minimum or allowed levels or codes for a variable simply make the changes in the DataDictionary sheet and click the <code>Re-format Existing Sheet</code> button. This will update the validation rules and conditional formatting to reflect the new ranges.</p>
+</div>
+<div id="revising-data-1" class="section level3" number="4.7.2">
+<h3><span class="header-section-number">4.7.2</span> Revising Data</h3>
+<p>If you notice an error, this should be corrected in your file and re-sent to us with the date in the filename. This ensures all the data is correct and up to date.</p>
+<p>Do not change the layout of the data entry table.</p>
+</div>
+<div id="adding-a-new-column" class="section level3" number="4.7.3">
+<h3><span class="header-section-number">4.7.3</span> Adding a New Column</h3>
+<p>If you would like to add new columns to your data it is quite easy:</p>
+<ol style="list-style-type: decimal">
+<li>Add the variable(s) to the DataDictionary sheet</li>
+<li>Enter a new name for the DataEntry sheet when prompted (maybe DataEntry2)</li>
+<li>Copy the existing data from the original DataEntry sheet to your new sheet</li>
+<li>On the DataDictionary sheet click <strong>Re-Format Existing Sheet</strong></li>
+<li>You can now enter data into your new sheet.</li>
+</ol>
+</div>
 </div>
             </section>
 
           </div>
         </div>
       </div>
-<a href="data-dictionary.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="calculated-variables.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="multiple-data-sheets-1.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="frequently-asked-questions.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

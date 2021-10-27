@@ -22,7 +22,7 @@ readDataDict <- function(excelFile,dictionarySheet ='DataDictionary',range,colna
   if (!file.exists(excelFile)){
     stop('The specified file can not be found. Check that the file exists in the specified directory.')
   }
-  dict <- try(readxl::read_excel(excelFile,sheet=dictionarySheet,col_names = T,range=range,col_types = 'text'),silent = T)
+  dict <- suppressMessages( try(readxl::read_excel(excelFile,sheet=dictionarySheet,col_names = T,range=range,col_types = 'text'),silent = T))
   if (class(dict)[1]=='try-error') stop(paste('File access failure. \n Check that sheet',dictionarySheet,'exists in file:',excelFile,
                                               '\n\nNOTE: It may be necessary to close Excel for this function to work.'))
   if (missing(colnames)) colnames <-  c('VariableName', 'Description (optional)', 'Type', 'Minimum', 'Maximum', 'Levels')
@@ -473,6 +473,7 @@ createCalculated<-function(data,dictTable,timeUnit='month'){
   calcVars <- dictTable$VariableName[dictTable$Type=='calculated']
 
   # Calculation instructions should start with 'start' for survival type variable or a variable name for recoding
+  logMessages <- NULL
   for (v in calcVars){
 
     # first make sure nothing has been entered for the calculated variable
@@ -490,12 +491,13 @@ createCalculated<-function(data,dictTable,timeUnit='month'){
     instructions <- trimws(unlist(strsplit(dictTable$Levels[dictTable$VariableName==v],',')))
 
     # Determine what type of calculation to do
+    wrnMessage <- NULL
     if (substr(dictTable$Levels[dictTable$VariableName==v],1,5)=='start') {
       if (length(instructions)!=3) {
-        warning(paste(newVarName,' not created. For a survival variable, a start date, event date and last date followd must be specified. Check dictTableionary.'))
+        wrnMessage <- paste(newVarName,' not created. For a survival variable, a start date, event date and last date followd must be specified. Check dictTableionary.')
         survVars <- sapply(instructions,function(x) trimws(unlist(strsplit(x,'='))[2]))
         if (!all(survVars %in% names(data))) {
-          warning(paste(paste(survVars[!survVars %in% names(data)],collapse=','),' not in the data. Variable names are case sensitive.\n',newVarName,' not created.'))
+          wrnMessage <-paste(paste(survVars[!survVars %in% names(data)],collapse=','),' not in the data. Variable names are case sensitive.\n',newVarName,' not created.')
         }} else{
           data <- createSurvVar(data,newVarName,survVars,timeUnit)
         }
@@ -503,11 +505,11 @@ createCalculated<-function(data,dictTable,timeUnit='month'){
       varsToCombine <- unlist(strsplit(trimws(gsub('combine|to','',instructions[1])),' '))
       varsToCombine <- varsToCombine[varsToCombine!=""]
       if (!all(varsToCombine %in% names(data))) {
-        warning(paste(paste(varsToCombine[!varsToCombine %in% names(data)],collapse=','),' not in the data. Variable names are case sensitive.\n',newVarName,' not created.'))
+        wrnMessage <- paste(paste(varsToCombine[!varsToCombine %in% names(data)],collapse=','),' not in the data. Variable names are case sensitive.\n',newVarName,' not created.')
       } else if (length(varsToCombine)!=2) {
-        warning(paste0(newVarName,' not created, check instructions. Must be in the format: combine var1 to var2, response=value'))
+        wrnMessage <- paste0(newVarName,' not created, check instructions. Must be in the format: combine var1 to var2, response=value')
       }  else if (substr(instructions[2],1,8)!='response'){
-        warning(paste0(newVarName,' not created, check instructions. Must be in the format: combine var1 to var2, response=value'))
+        wrnMessage <- paste0(newVarName,' not created, check instructions. Must be in the format: combine var1 to var2, response=value')
       } else{
         responseVal <- trimws(gsub('response|=','',instructions[2]))
         data <- createCombinedVar(data,dictTable,newVarName,varsToCombine,responseVal)
@@ -515,7 +517,7 @@ createCalculated<-function(data,dictTable,timeUnit='month'){
     } else {
 
       if (!instructions[1] %in% names(data)) {
-        warning(paste(instructions[1],' not in the data. Variable names are case sensitive.\n',newVarName,' not created.'))
+        wrnMessage <- paste(instructions[1],' is not a recognised instruction. Variable names are case sensitive.\n',newVarName,' not created.')
       } else {
         if (dictTable$Type[dictTable$VariableName==instructions[1]] %in% c('integer','numeric')) {
           data <- createCategorisedVar(data,newVarName,instructions)
@@ -525,7 +527,17 @@ createCalculated<-function(data,dictTable,timeUnit='month'){
         }
       }
     }
+    if (!is.null(wrnMessage)){
+      logMessages[['Messages']] <- c(logMessages[['Messages']],wrnMessage)
+      logMessages[['variables']] <- c(logMessages[['variables']],newVarName)
+    }
 
+  }
+  if (!is.null(logMessages)){
+    wrnMessage = paste('The following calculated variables need to be created manually:',paste0(logMessages[['variables']],collapse=", "))
+    message(wrnMessage)
+    WriteToLog(msg=wrnMessage)
+    for (i in seq_along(logMessages[['Messages']])) WriteToLog(msg=logMessages[['Messages']][i])
   }
   return(data)
 }

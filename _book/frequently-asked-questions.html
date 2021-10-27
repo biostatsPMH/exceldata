@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>2.2 Variable Types | Using the DataDictionary template and the exceldata package</title>
-  <meta name="description" content="2.2 Variable Types | Using the DataDictionary template and the exceldata package" />
+  <title>4.8 Frequently Asked Questions | Using the DataDictionary template and the exceldata package</title>
+  <meta name="description" content="4.8 Frequently Asked Questions | Using the DataDictionary template and the exceldata package" />
   <meta name="generator" content="bookdown 0.22 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="2.2 Variable Types | Using the DataDictionary template and the exceldata package" />
+  <meta property="og:title" content="4.8 Frequently Asked Questions | Using the DataDictionary template and the exceldata package" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="2.2 Variable Types | Using the DataDictionary template and the exceldata package" />
+  <meta name="twitter:title" content="4.8 Frequently Asked Questions | Using the DataDictionary template and the exceldata package" />
   
   
   
@@ -29,8 +29,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="data-dictionary.html"/>
-<link rel="next" href="calculated-variables.html"/>
+<link rel="prev" href="revising-data.html"/>
+
 <script src="libs/header-attrs-2.9/header-attrs.js"></script>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -144,31 +144,25 @@
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="variable-types" class="section level2" number="2.2">
-<h2><span class="header-section-number">2.2</span> Variable Types</h2>
-<p>There are seven allowed types of variables:</p>
-<ul>
-<li><em>calculated</em> for variables where users specify calculations to be performed (age groups, overall survival)</li>
-<li><em>category</em> for variables which can take only pre-specified values</li>
-<li><em>character</em> for variables such as the id, or any variable not to be analysed</li>
-<li><em>codes</em> for variables where short forms are entered (ie 1=male, 2=female)</li>
-<li><em>date</em> for all dates</li>
-<li><em>integer</em> for values which can take only whole numbers (ECOG score)</li>
-<li><em>numeric</em> for all other numeric values</li>
-</ul>
-<p>For the <em>date</em>, <em>integer</em> and <em>numeric</em> types the user must specify both a minimum and a maximum value. The minimum and maximum values can be numeric, the names of other variables in the data (if you want to make sure death is after diagnosis) or, for date types, ‘today’ can be used to allow all dates up to the time of entry.</p>
-<p>For the <em>codes</em> and <em>category</em> variables the user needs to specify the allowed categories, or the codes, in the order they would like them presented. If they struggle with this for data that has already been entered, then the UNIQUE function in Excel may be of use to them, it will list all the unique variables in a range.</p>
-<p>Once the dictionary is complete clicking the the <code>Create Data Entry Sheet</code> button will create the data entry table.</p>
-<p>If the user wishes to change any of the ranges or codes after entering data then they can change the dictionary and click <code>Re-format Exising Sheet</code> to update the validaion rules.</p>
-<p>If code or category variables are present then a <code>_codes_</code> sheet will be created to contain the allowed values for data validation. This sheet contains the same name as the data entry sheet, suffixed by <em><em>codes</em></em>. This sheet is hidden from the user.</p>
+<div id="frequently-asked-questions" class="section level2" number="4.8">
+<h2><span class="header-section-number">4.8</span> Frequently Asked Questions</h2>
+<p><strong>My data is already in an Excel list from an online capture system, do I still need to enter the specifications?</strong></p>
+<p>Yes, but this should be a quick process. The reason that we need the specifications is to know how the data should look so that we can check for inconsistencies before analysing the data. Also, to know the appropriate ordering for the data. When the data is imported, a variable with levels such as 0-2 years, 3-5 years, 5-10 years and 10+ years can’t be ordered correctly without a specification. You can use the UNIQUE function in Excel to extract all the unique values from a column (ie =UNIQUE(A2:A50) to get the unique values in column A up to row 50).</p>
+<p><strong>I have a lot of variables and I don’t want to enter specifications for all of them!</strong></p>
+<p>It is essential to provide specification for all the variables you send to Biostatistics, but here are some tips to help:
+1. Include only the variables you would like analysed in your DataDictionary.
+1. If you still have a lot of variables, it is likely that a number of them will have the same type and range, so you can copy and paste those to save time.
+1. If you have a lot of variables with spaces or special characters, place the original variable name in the description field, and give your variables simple names - these can be as simple as q1, q2, etc (you don’t need to type those, Excel will allow you to highlight a few and then drag down automatically renaming to q3, q4 etc).</p>
+
 </div>
+<!-- </div> -->
             </section>
 
           </div>
         </div>
       </div>
-<a href="data-dictionary.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="calculated-variables.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="revising-data.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
