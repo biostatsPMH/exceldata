@@ -22,6 +22,15 @@ Documentation
 
 [For Biostatisticians](https://biostatspmh.github.io/exceldata/)
 
+
+<!-- NOTE:
+
+For this to automatically update there must be a _bookdown.yml file in the project directory containing this line:
+output_dir: "docs"
+
+Github hosts the project pages from the docs directory. If this is not specified in the yml file then the updated 
+documentation is sent to the _books folder and is not visible on GitHub.
+-->
 ---
 Link to the YouTube tutorial (a bit dated now)
 
