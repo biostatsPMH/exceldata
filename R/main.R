@@ -479,7 +479,7 @@ createCalculated<-function(data,dictTable,timeUnit='month'){
   for (v in calcVars){
 
     # first make sure nothing has been entered for the calculated variable
-    if (sum(is.na(data[[v]])) !=nrow(data)) {
+    if (!is.null(data[[v]]) & sum(is.na(data[[v]])) !=nrow(data)) {
       suffix <- 1
       repeat{
         newVarName <- paste0(v,'_',suffix)
