@@ -159,6 +159,7 @@ importExcelData <- function(excelFile,dictionarySheet='DataDictionary',dataSheet
 #' @param range Optional, Range of Excel sheet to restrict import to (ie. range="A1:F6")
 #' @param origin Optional, the date origin of Excel dates, defaults to 30 December 1899
 #' @return a data frame containing the imported data
+#' @importFrom lubridate as_date
 #' @export
 readExcelData <- function(excelFile,dictTable,dataSheet='DataEntry',saveWarnings=FALSE,setErrorsMissing=FALSE,range,origin){
   if (missing(excelFile) | missing(dictTable)) stop(paste('Both the excel data file and the data dictionary are required arguments.\n',
@@ -227,11 +228,12 @@ readExcelData <- function(excelFile,dictTable,dataSheet='DataEntry',saveWarnings
       # Dates
       if (dictTable[['Type']][dictTable[['VariableName']]==v] =='date'){
         minVal = dictTable[['Minimum']][dictTable[['VariableName']]==v]
-        if (minVal %in% dictTable[["VariableName"]]) minVal = as.Date(dat[[minVal]]) else if (minVal=='today') minVal=Sys.Date() else  minVal = as.Date(minVal)
-        maxVal = dictTable[['Maximum']][dictTable[['VariableName']]==v]
-        if (maxVal %in% dictTable[["VariableName"]]) maxVal = as.Date(dat[[maxVal]]) else if (maxVal=='today') maxVal=Sys.Date() else maxVal = as.Date(maxVal)
 
-        check = as.numeric(minVal) <= as.numeric(as.Date(dat[[v]])) & as.numeric(as.Date(dat[[v]])) <= as.numeric(maxVal)
+        if (minVal %in% dictTable[["VariableName"]]) minVal = lubridate::as_date(dat[[minVal]]) else if (minVal=='today') minVal=Sys.Date() else  minVal = lubridate::as_date(minVal)
+        maxVal = dictTable[['Maximum']][dictTable[['VariableName']]==v]
+        if (maxVal %in% dictTable[["VariableName"]]) maxVal = lubridate::as_date(dat[[maxVal]]) else if (maxVal=='today') maxVal=Sys.Date() else maxVal = lubridate::as_date(maxVal)
+
+        check = as.numeric(minVal) <= as.numeric(lubridate::as_date(dat[[v]])) & as.numeric(lubridate::as_date(dat[[v]])) <= as.numeric(maxVal)
       }
 
       # Factors
