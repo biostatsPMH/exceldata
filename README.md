@@ -5,7 +5,7 @@ the DataDictionary.xlsm template.
 
 ---
 To download the Excel Template
-[Click Here](https://github.com/biostatsPMH/exceldata/blob/main/vignettes/DataDictionary0.9.1.xlsm) and then click on Download ![Download button](vignettes/downloadButton.png)
+[Click Here](https://github.com/biostatsPMH/exceldata/blob/main/vignettes/DataDictionary0.9.1.xlsm) and then click on `Download`
 
 ---
 To download the most recent exceldata R package
