@@ -39,3 +39,4 @@ categorised-variables-1
 entering-data
 multiple-data-sheets-1
 adding-a-new-column
+long-format

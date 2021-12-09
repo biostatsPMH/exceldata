@@ -4,9 +4,7 @@ corresponding data table from a macro-enabled Excel file created using
 the DataDictionary.xlsm template.
 
 ---
-To download the Excel Template
-
-https://github.com/biostatsPMH/exceldata/blob/main/vignettes/DataDictionary0.9.1.xlsm
+[Click to download the Excel Template](https://github.com/biostatsPMH/exceldata/blob/main/vignettes/DataDictionary0.9.1.xlsm)
 
 ---
 To download the most recent exceldata R package
@@ -16,9 +14,11 @@ To download the most recent exceldata R package
 ```
 
 ---
-Documentation
+## Documentation
 
-[Tutorial For Excel Users](https://biostatspmh.github.io/exceldata/information-for-users-of-the-data-dictionary.html)
+[Online Documentation For Excel Users](https://biostatspmh.github.io/exceldata/information-for-users-of-the-data-dictionary.html)
+[PDF Documentation](https://github.com/biostatsPMH/exceldata/blob/main/docs/ExcelDictionaryUserManual.pdf)
+<!-- Note - this is created in a separate directory - Teaching/excelData Instructions -->
 
 [For Biostatisticians](https://biostatspmh.github.io/exceldata/)
 
