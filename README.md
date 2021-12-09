@@ -19,7 +19,7 @@ To download the most recent exceldata R package
 
 [Online Documentation For Excel Users](https://biostatspmh.github.io/exceldata/information-for-users-of-the-data-dictionary.html)
 
-[PDF Documentation](https://github.com/biostatsPMH/exceldata/blob/main/docs/ExcelDictionaryUserManual.pdf)
+PDF Documentation: [Click Here](https://github.com/biostatsPMH/exceldata/blob/main/docs/ExcelDictionaryUserManual.pdf) and then click on `Download`
 <!-- Note - this is created in a separate directory - Teaching/excelData Instructions -->
 
 [For Biostatisticians](https://biostatspmh.github.io/exceldata/)
