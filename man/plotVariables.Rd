@@ -4,30 +4,18 @@
 \alias{plotVariables}
 \title{Return a list of univariate ggplots for each non-character variable}
 \usage{
-plotVariables(
-  data,
-  vars,
-  dictTable,
-  IDvar,
-  showOutliers = FALSE,
-  nOut = NULL,
-  qOut = 0.05
-)
+plotVariables(data, dictTable, IDvar, vars, showOutliers = TRUE)
 }
 \arguments{
 \item{data}{is a data frame containing the variables to be plotted}
-
-\item{vars}{is an optional character vector of the names of variables to plot}
 
 \item{dictTable}{optional, the data dictionary returned by importExcelData or readDataDict functions to provide plot titles}
 
 \item{IDvar}{an optional string indicating the name of an identifying variable to highlight outliers}
 
-\item{showOutliers}{boolean, should outliers be labelled}
+\item{vars}{is an optional character vector of the names of variables to plot}
 
-\item{nOut}{integer only used if showOutliers=TRUE the most extreme nOut values are highlighted, takes precedent over qOut}
-
-\item{qOut}{proportion between 0 and 1 only used if showOutliers=TRUE the most extreme qOut values are highlighted}
+\item{showOutliers}{boolean, should outliers be labelled? Outliers are defined by the 1.5xIQR rule (as with boxplots)}
 }
 \description{
 This function should be run as the final step after the data have been

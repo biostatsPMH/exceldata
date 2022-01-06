@@ -163,7 +163,7 @@
 <p>where <code>OriginalVar</code> is the variable in the data to be recoded and newCodes=oldCodes gives the new category followed by comma-separated original categories.</p>
 <p>Example of recoding a variable in the Data Dictionary:</p>
 <div class="figure">
-<img src="vignettes/recodedVar.png" alt="" />
+<img src="images/recodedVar.png" alt="" />
 <p class="caption">Example of a recoded variable</p>
 </div>
 <p>This will create the T0_Stg variable from T_Stage. T0_Stg will be T0 if T_Stage is T0 and T1up for all other values of T_Stage.</p>
@@ -174,7 +174,7 @@
 <p><strong>Syntax:</strong> <code>OrginalVar</code>,category1=&lt;cutoff1,category2=&lt;cutoff2,category3</p>
 <p>where <code>OriginalVar</code> is the variable in the data to be categorised and category1,category2 etc are the names of the new categories (these will become factor levels) amd cutoff1,cutoff2 are the cut-offs for each category and the final category (in this case category3) does not have a cutoff, only a name, because all people not meeting earlier criteria will be in this level. Note that at this point it is only possible to create categories by specifying the upper bounds.</p>
 <p>Example of categorising a continuous variable in the Data Dictionary:</p>
-<p><img src="vignettes/categoriseVar.png" alt="Example of a recoded variable" />
+<p><img src="images/categoriseVar.png" alt="Example of a recoded variable" />
 This will create the AgeGroup variable from Age with four levels: "under50’,‘50-60’,‘60-69’,‘70plus’</p>
 </div>
 </div>

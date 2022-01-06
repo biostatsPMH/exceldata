@@ -2,7 +2,3 @@
 .Rhistory
 .RData
 .Ruserdata
-inst/doc
-*.Rmd
-_bookdown.yml
-Tutorial.mov

@@ -1,0 +1,110 @@
+---
+title: "Untitled"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+library(readxl)
+#library(exceldata)
+library(devtools)
+load_all()
+library(exceldata)
+```
+
+```{r}
+exampleDataFile <- system.file("extdata", "exampleData.xlsx", package = "exceldata")
+importData <- importExcelData(exampleDataFile,dictionarySheet = 'DataDictionary',dataSheet = 'DataEntry')
+
+# The imported data dictionary 
+dictionary <- import$dictionary
+head(dictionary)
+
+# The imported data, with calculated variables
+data <- importData$data
+head(data)
+
+# Simple variable plots with outliers 
+plots <- plotVariables(data=data,dictTable=dictionary,IDvar = 'ID',showOutliers = T)
+plots <- plotVariables(data,dictionary,showOutliers = T)
+plots # Show plots in viewer
+```
+
+```{r}
+
+excelFile <- '../reportRxTestData/surveyData.xlsm'
+excelFile <- '../reportRxTestData/testData.xlsm'
+exceldata::importExcelData(excelFile)
+```
+
+```{r}
+excelFile = 'C:/Users/lisa/OneDrive - UHN/reportRxTestData/surveyData.xlsm'
+
+import<-importExcelData(excelFile)
+names(import$data)
+
+plots <- plotVariables(import$data,dictTable = import$dictionary,showOutliers = T)
+plots$InfoSources
+plots$Age
+
+data= import$data
+sort(table(data$InfoSources),decreasing = T)
+
+
+```
+
+```{r}
+excelFile = 'C:/Users/lisa/OneDrive - UHN/reportRxTestData/testData.xlsm'
+
+import<-importExcelData(excelFile, dataSheet = 'DataEntry2')
+names(import$data)
+
+    dictTable <- readDataDict(excelFile,dictionarySheet ='DataDictionary')
+
+    data <- readExcelData(excelFile,dictTable =  dictTable,dataSheet='DataEntry2',saveWarnings=saveWarnings,setErrorsMissing=setErrorsMissing,range,origin)
+
+    factorData <- addFactorVariables(data,dictTable,keepOriginal = FALSE)
+
+    fullData <- createCalculated(factorData,dictTable,timeUnit='month')
+
+
+plots <- plotVariables(import$data,dictTable = import$dictionary,showOutliers = T)
+plots$InfoSources
+plots$Age
+
+data= import$data
+sort(table(data$InfoSources),decreasing = T)
+
+```
+
+```{r}
+library(exceldata)
+filename <- 'C:/Users/lisa/OneDrive - UHN/Diamondis/ProteomeWorkflow/Copy of Data dictionary_MS_AutoAB (2021-10-26).xlsm'
+
+    dictTable <- readDataDict(excelFile=filename,dictionarySheet ='DataDictionary')
+
+
+    import<-importExcelData(excelFile=filename,dictionarySheet ='DataDictionary',dataSheet = 'Clinical Data')
+    
+    data <- readExcelData(excelFile=filename,dictTable =  dictTable,
+                          dataSheet='Clinical Data',
+                          saveWarnings=saveWarnings,setErrorsMissing=setErrorsMissing,range,origin)
+
+    factorData <- addFactorVariables(data,dictTable,keepOriginal = FALSE)
+
+    fullData <- createCalculated(factorData,dictTable,timeUnit='month')
+
+```
+
+```{r}
+filename <- 'C:/Users/lisa/OneDrive - UHN/Diamondis/ProteomeWorkflow/clinData_MS.xlsm'
+
+    dictTable <- readDataDict(excelFile=filename,dictionarySheet ='DataDictionary')
+    data <- readExcelData(excelFile=filename,dictTable =  dictTable,
+                          dataSheet='DataEntry',
+                          saveWarnings=saveWarnings,setErrorsMissing=setErrorsMissing,range,origin)
+
+    import<-importExcelData(excelFile=filename)
+    
+```
+

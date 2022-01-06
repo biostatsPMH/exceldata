@@ -788,15 +788,13 @@ WriteToLog <- function(msg,append=T,timestamp=F){
 #' @param dictTable optional, the data dictionary returned by importExcelData or readDataDict functions to provide plot titles
 #' @param IDvar an optional string indicating the name of an identifying variable to highlight outliers
 #' @param vars is an optional character vector of the names of variables to plot
-#' @param showOutliers boolean, should outliers be labelled
-#' @param nOut integer only used if showOutliers=TRUE the most extreme nOut values are highlighted, takes precedent over qOut
-#' @param qOut proportion between 0 and 1 only used if showOutliers=TRUE the most extreme qOut values are highlighted
+#' @param showOutliers boolean, should outliers be labelled? Outliers are defined by the 1.5xIQR rule (as with boxplots)
 #' @importFrom ggrepel geom_text_repel
 #' @import ggplot2
 #' @importFrom scales date_format
-#' @importFrom stats quantile
+#' @importFrom graphics boxplot
 #' @export
-plotVariables<-function(data,vars,dictTable,IDvar,showOutliers=FALSE,nOut=NULL,qOut=.05){
+plotVariables<-function(data,dictTable,IDvar,vars,showOutliers=TRUE){
   varTypes = sapply(data,function(x) class(x)[1])
   if (missing(vars)){
     char_vars = names(data)[varTypes=='character']
@@ -835,25 +833,23 @@ plotVariables<-function(data,vars,dictTable,IDvar,showOutliers=FALSE,nOut=NULL,q
         theme(axis.title.y = element_blank(),axis.ticks.y=element_blank(),axis.text.y = element_blank())
 
       if (showOutliers){
-        if (is.null(nOut)) {
-          nOut = floor(qOut*nrow(data))
-        } else{
-          qOut = nOut/nrow(data)
-        }
-        highlights <- stats::quantile(data[[v]],probs = c(qOut/2,1-qOut/2))
-        data$highlight <- ifelse(data[[v]]<highlights[1]|data[[v]]>highlights[2],TRUE,FALSE)
-        if (missing(IDvar)) {
-          data$outLabel <- 1:nrow(data)
-        } else  if (!IDvar %in% names(data)) {
-          data$outLabel <- 1:nrow(data)
-        } else {
-          data$outLabel <- data[[IDvar]]
-        }
+        bp <- graphics::boxplot(as.numeric(data[[v]]),plot=FALSE)
+        highlights <- bp$out
+        if (length(highlights)>0){
+          data$highlight <- ifelse(as.numeric(data[[v]]) %in% highlights,TRUE,FALSE)
+          if (missing(IDvar)) {
+            data$outLabel <- 1:nrow(data)
+          } else  if (!IDvar %in% names(data)) {
+            data$outLabel <- 1:nrow(data)
+          } else {
+            data$outLabel <- data[[IDvar]]
+          }
 
-        p <- p + geom_dotplot(data=subset(data,data$highlight),
-                              dotsize = dotsize,
-                              fill='red')
-        p <- p + ggrepel::geom_text_repel(data=subset(data,data$highlight),aes(x=.data[[v]],y=0,label=.data[['outLabel']]),position = position_nudge(y=.2))
+          p <- p + geom_dotplot(data=subset(data,data$highlight),
+                                dotsize = dotsize,
+                                fill='red')
+          p <- p + ggrepel::geom_text_repel(data=subset(data,data$highlight),aes(x=.data[[v]],y=0,label=.data[['outLabel']]),position = position_nudge(y=.2))
+        }
       }
 
     }

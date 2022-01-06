@@ -1,3 +1,10 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
 ^LICENSE\.md$
+^docs$
+^images$
+^index\.Rmd$
+^README\.Rmd$
+^.log$
+^.nojekyll$
+^_bookdown\.yml$

@@ -155,7 +155,7 @@
 <p>where <code>startVar</code>, <code>eventVar</code> and <code>endVar</code> are variable names in the data corresponding to the start date, the event date and the date of last follow-up.</p>
 <p>Example survival calculation to use in the Data Dictionary:</p>
 <div class="figure">
-<img src="vignettes/survivalVar.png" alt="" />
+<img src="images/survivalVar.png" alt="" />
 <p class="caption">Example of a survival calculation</p>
 </div>
 <p>This will cause two variables to be created: <code>OS</code> (this is the name given in the VariableName column) and <code>OS_status</code> (the variable name with _status appended to it). The status marker will be 1 if the event occurred, in this case if there is a value in the <code>Date_Death</code> column and 0 otherwise. The OS variable will give the time from <code>DxDate</code> until <code>Date_Death</code>, or if no <code>Date_Death</code> was recorded then the time from <code>DxDate</code> to <code>Date_LFU.</code></p>
@@ -167,7 +167,7 @@
 <p>where <code>OriginalVar</code> is the variable in the data to be recoded and newCodes=oldCodes gives the new category followed by comma-separated original categories.</p>
 <p>Example of recoding a variable in the Data Dictionary:</p>
 <div class="figure">
-<img src="vignettes/recodedVar.png" alt="" />
+<img src="images/recodedVar.png" alt="" />
 <p class="caption">Example of a recoded variable</p>
 </div>
 <p>This will create the T0_Stg variable from T_Stage. T0_Stg will be T0 if T_Stage is T0 and T1up for all other values of T_Stage.</p>
@@ -178,16 +178,16 @@
 <p><strong>Syntax:</strong> <code>OrginalVar</code>,category1=&lt;cutoff1,category2=&lt;cutoff2,category3</p>
 <p>where <code>OriginalVar</code> is the variable in the data to be categorised and category1,category2 etc are the names of the new categories (these will become factor levels) amd cutoff1,cutoff2 are the cut-offs for each category and the final category (in this case category3) does not have a cutoff, only a name, because all people not meeting earlier criteria will be in this level. Note that at this point it is only possible to create categories by specifying the upper bounds.</p>
 <p>Example of categorising a continuous variable in the Data Dictionary:</p>
-<p><img src="vignettes/categoriseVar.png" alt="Example of a recoded variable" />
+<p><img src="images/categoriseVar.png" alt="Example of a recoded variable" />
 This will create the AgeGroup variable from Age with four levels: "under50’,‘50-60’,‘60-69’,‘70plus’</p>
 </div>
 <div id="combined-variables" class="section level3" number="2.3.4">
 <h3><span class="header-section-number">2.3.4</span> Combined Variables</h3>
 <p>Combined variables are used to detect patterns in sets of dichotomous variables. For example, if a survey has a number of yes/no or checklist questions about a single topic a combined variable can be created and used to determine the most common response patterns when the variables are plotted. Combined variables will be plotted a Pareto graph with up to the ten most common response patterns plotted.</p>
-<p><img src="vignettes/combinedVar.png" alt="Example of a combined variable" />
+<p><img src="images/combinedVar.png" alt="Example of a combined variable" />
 running <code>PlotVariables(data,vars='InfoSources')</code> will produce the following plot:</p>
 <div class="figure">
-<img src="vignettes/pareto.png" alt="" />
+<img src="images/pareto.png" alt="" />
 <p class="caption">Pareto graph of a combined variable</p>
 </div>
 </div>
