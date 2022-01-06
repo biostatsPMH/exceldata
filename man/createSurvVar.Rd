@@ -13,7 +13,7 @@ createSurvVar(data, newVarName, survVars, timeUnit = "month")
 
 \item{survVars}{are, in order the start date, event date and date of last followup}
 
-\item{timeUnit}{string, the unit of time to calculate survival variables for (day week month year)}
+\item{timeUnit}{Character, the unit of time to calculate survival variables for (ex: 'day' 'week' 'month' 'year')}
 }
 \description{
 This function will create survival variables from an existing start variable

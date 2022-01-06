@@ -2,7 +2,7 @@
 % Please edit documentation in R/main.R
 \name{importExcelData}
 \alias{importExcelData}
-\title{Import Excel Data from a dictTable file}
+\title{Import Excel Data based on the specifications in a data dictionary}
 \usage{
 importExcelData(
   excelFile,
@@ -11,14 +11,15 @@ importExcelData(
   saveWarnings = FALSE,
   setErrorsMissing = TRUE,
   range,
+  colnames,
   origin,
   timeUnit = "month"
 )
 }
 \arguments{
-\item{excelFile}{path and filename of the data file}
+\item{excelFile}{path and filename of the data file containing the data and dictionary}
 
-\item{dictionarySheet}{the name of the sheet containing the data dictionary, defaults to 'dictTable'}
+\item{dictionarySheet}{the name of the sheet containing the data dictionary, defaults to 'DataDictionary'}
 
 \item{dataSheet}{name of the data entry sheet within the file, defaults to 'DataEntry'}
 
@@ -28,24 +29,44 @@ importExcelData(
 
 \item{range}{Optional, Range of Excel sheet to restrict import to (ie. range="A1:F6")}
 
+\item{colnames}{Optional, Column names of the dictionary,
+defaults to those used in the Excel template:
+ c('VariableName', 'Description (optional)', 'Type', 'Minimum', 'Maximum', 'Levels')}
+
 \item{origin}{Optional, the date origin of Excel dates, defaults to 30 December 1899}
 
-\item{timeUnit}{character specifying the unit of time that should be used when created survival type variables}
+\item{timeUnit}{Character specifying the unit of time that should be used
+when creating survival type variables. Allowed values are from lubridate (ex: 'day' 'week' 'month' 'year')}
 }
 \value{
-a list containing two data frames: the data dictionary and the data table
+A list containing two data frames: the data dictionary and the data table
 }
 \description{
 This function reads in a data dictionary and data entry table and converts
-code and category variables to factors as outlined in the dictionary. This
-code is to be used in conjection with the dictTable.xlsm template
-template file according to the specifications in the dictTable
+code and category variables to factors as outlined in the dictionary. See the
+examples.
 }
 \details{
-Prior to reading in the data, the dictTable file must be imported using
-readDataDict.
-
+The exceldata package was designed around the DataDictionary.xlsm template.
+More documentation and the current downloadable template can be found on the
+[GitHub Site](https://github.com/biostatsPMH/exceldata#readme)
 Warning: If SetErrorsMissing = TRUE then a subsequent call to checkData will not return any errors, because the errors have been set to missing.
 
-NOTE: This function will only read in those columns present in the dictTable
+NOTE: This function will only read in those columns present in the DataDictionary
+}
+\examples{
+exampleDataFile <- system.file("extdata", "exampleData.xlsx", package = "exceldata")
+import <- importExcelData(exampleDataFile,
+dictionarySheet = 'DataDictionary',dataSheet = 'DataEntry')
+# The imported data dictionary
+dictionary <- import$dictionary
+head(dictionary)
+
+# The imported data, with calculated variables
+data <- import$data
+head(data)
+
+# Simple univariate plots with outliers
+plots <- plotVariables(data=data,dictTable=dictionary,IDvar = 'ID')
+
 }

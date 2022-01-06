@@ -15,7 +15,8 @@ plotVariables(data, dictTable, IDvar, vars, showOutliers = TRUE)
 
 \item{vars}{is an optional character vector of the names of variables to plot}
 
-\item{showOutliers}{boolean, should outliers be labelled? Outliers are defined by the 1.5xIQR rule (as with boxplots)}
+\item{showOutliers}{boolean, Defaults to TRUE. Should outliers be labelled?
+Outliers are defined by the 1.5xIQR rule (as with boxplots)}
 }
 \description{
 This function should be run as the final step after the data have been

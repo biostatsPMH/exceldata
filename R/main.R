@@ -1,19 +1,23 @@
 #' Read in the data dictionary
 #'
-#' This function reads in a data dictionary that was set up with the
-#' PMH dictTable.xlsm spreadsheet to a data frame.
+#' This function reads in a data dictionary from an Excel file, based on the
+#'[DataDictionary.xlsm template](https://github.com/biostatsPMH/exceldata#readme)
 #'
 #' It assumes that the columns names  have not been altered and are:
 #' c('VariableName', 'Description (optional)', 'Type', 'Minimum', 'Maximum', 'Levels')
-#' To override specify colnames as an argument, ensuring to place variables in the above order.
+#'
+#' To override these column names specify colnames as an argument, ensuring
+#' that the content of the columns is in the above order.
 #
 #' As of the time of writing, the origin date in Excel is 30 December 1899. To override this specify origin="yyy-mm-dd"
 #'
-#' To read in only part of the excel sheet specify the desrired range (ie range="A1:F6")
+#' To read in only part of the excel sheet specify the desired range (ie range="A1:F6")
 #'
-#' @param excelFile Character, Path and filename of the data file
-#' @param dictionarySheet Character, Name of the dictionary sheet within the file, defaults to 'dictTable'
-#' @param colnames Optional, Column names of the dictTable, defaults to those used in the Excel template c('VariableName', 'Description (optional)', 'Type', 'Minimum', 'Maximum', 'Levels')
+#' @param excelFile Character, Path and Name of the data file
+#' @param dictionarySheet Character, Name of the dictionary sheet within the file, defaults to 'DataDictionary'
+#' @param colnames Optional, Column names of the dictionary,
+#' defaults to those used in the Excel template:
+#'  c('VariableName', 'Description (optional)', 'Type', 'Minimum', 'Maximum', 'Levels')
 #' @param range Optional, Range of Excel sheet to restrict import to (ie. range="A1:F6")
 #' @param origin Optional, the date origin of Excel dates, defaults to 30 December 1899
 #' @export
@@ -86,30 +90,49 @@ readDataDict <- function(excelFile,dictionarySheet ='DataDictionary',range,colna
   return(dict)
 }
 
-#' Import Excel Data from a dictTable file
+#' Import Excel Data based on the specifications in a data dictionary
 #'
 #' This function reads in a data dictionary and data entry table and converts
-#' code and category variables to factors as outlined in the dictionary. This
-#' code is to be used in conjection with the dictTable.xlsm template
-#' template file according to the specifications in the dictTable
+#' code and category variables to factors as outlined in the dictionary. See the
+#' examples.
 #'
-#' Prior to reading in the data, the dictTable file must be imported using
-#' readDataDict.
-#'
+#' The exceldata package was designed around the DataDictionary.xlsm template.
+#' More documentation and the current downloadable template can be found on the
+#' [GitHub Site](https://github.com/biostatsPMH/exceldata#readme)
+
 #' Warning: If SetErrorsMissing = TRUE then a subsequent call to checkData will not return any errors, because the errors have been set to missing.
 #'
-#' NOTE: This function will only read in those columns present in the dictTable
-#' @param excelFile path and filename of the data file
-#' @param dictionarySheet the name of the sheet containing the data dictionary, defaults to 'dictTable'
+#' NOTE: This function will only read in those columns present in the DataDictionary
+#' @param excelFile path and filename of the data file containing the data and dictionary
+#' @param dictionarySheet the name of the sheet containing the data dictionary, defaults to 'DataDictionary'
 #' @param dataSheet name of the data entry sheet within the file, defaults to 'DataEntry'
 #' @param saveWarnings Boolean, if TRUE and there are any warnings then the function will return a list with the data frame and the import warnings
 #' @param setErrorsMissing Boolean, if TRUE all values out of range will be set to NA
 #' @param range Optional, Range of Excel sheet to restrict import to (ie. range="A1:F6")
+#' @param colnames Optional, Column names of the dictionary,
+#' defaults to those used in the Excel template:
+#'  c('VariableName', 'Description (optional)', 'Type', 'Minimum', 'Maximum', 'Levels')
 #' @param origin Optional, the date origin of Excel dates, defaults to 30 December 1899
-#' @param timeUnit character specifying the unit of time that should be used when created survival type variables
-#' @return a list containing two data frames: the data dictionary and the data table
+#' @param timeUnit Character specifying the unit of time that should be used
+#' when creating survival type variables. Allowed values are from lubridate (ex: 'day' 'week' 'month' 'year')
+#' @return A list containing two data frames: the data dictionary and the data table
+#' @examples
+#' exampleDataFile <- system.file("extdata", "exampleData.xlsx", package = "exceldata")
+#' import <- importExcelData(exampleDataFile,
+#' dictionarySheet = 'DataDictionary',dataSheet = 'DataEntry')
+#' # The imported data dictionary
+#' dictionary <- import$dictionary
+#' head(dictionary)
+#'
+#' # The imported data, with calculated variables
+#' data <- import$data
+#' head(data)
+#'
+#' # Simple univariate plots with outliers
+#' plots <- plotVariables(data=data,dictTable=dictionary,IDvar = 'ID')
+#'
 #' @export
-importExcelData <- function(excelFile,dictionarySheet='DataDictionary',dataSheet='DataEntry',saveWarnings=FALSE,setErrorsMissing=TRUE,range,origin,timeUnit='month'){
+importExcelData <- function(excelFile,dictionarySheet='DataDictionary',dataSheet='DataEntry',saveWarnings=FALSE,setErrorsMissing=TRUE,range,colnames,origin,timeUnit='month'){
   if (missing(excelFile) ) stop('The excel file containing the data dictionary and data entry table are required')
   if (missing(range)) range = NULL
   if (missing(origin)) origin = "1899-12-30"
@@ -123,7 +146,7 @@ importExcelData <- function(excelFile,dictionarySheet='DataDictionary',dataSheet
 
     WriteToLog(msg =  'Log File Created',timestamp = T,append=F)
 
-    dictTable <- readDataDict(excelFile,dictionarySheet =dictionarySheet)
+    dictTable <- readDataDict(excelFile,dictionarySheet =dictionarySheet,range,colnames,origin)
 
     data <- readExcelData(excelFile,dictTable =  dictTable,dataSheet=dataSheet,saveWarnings=saveWarnings,setErrorsMissing=setErrorsMissing,range,origin)
 
@@ -552,7 +575,7 @@ createCalculated<-function(data,dictTable,timeUnit='month'){
 #' @param data is data returned by the importExcelData or readExcelData functions
 #' @param newVarName the name of the new survival variable. The status variable will be suffixed with '_status'
 #' @param survVars are, in order the start date, event date and date of last followup
-#' @param timeUnit string, the unit of time to calculate survival variables for (day week month year)
+#' @param timeUnit Character, the unit of time to calculate survival variables for (ex: 'day' 'week' 'month' 'year')
 #' @importFrom lubridate time_length interval
 createSurvVar <- function(data,newVarName,survVars,timeUnit='month'){
 
@@ -788,7 +811,8 @@ WriteToLog <- function(msg,append=T,timestamp=F){
 #' @param dictTable optional, the data dictionary returned by importExcelData or readDataDict functions to provide plot titles
 #' @param IDvar an optional string indicating the name of an identifying variable to highlight outliers
 #' @param vars is an optional character vector of the names of variables to plot
-#' @param showOutliers boolean, should outliers be labelled? Outliers are defined by the 1.5xIQR rule (as with boxplots)
+#' @param showOutliers boolean, Defaults to TRUE. Should outliers be labelled?
+#' Outliers are defined by the 1.5xIQR rule (as with boxplots)
 #' @importFrom ggrepel geom_text_repel
 #' @import ggplot2
 #' @importFrom scales date_format

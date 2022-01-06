@@ -1,12 +1,14 @@
 Package: exceldata
 Type: Package
-Title: A suite of functions to read and check files created with the DataDictionary.xlsm template
+Title: Functions to streamline data import, cleaning and recoding from Excel
 Version: 0.1.0
 Author: Lisa Avery
-Maintainer: Lisa Avery <lisa.avery@uhnresearch.ca>
-Description: A suite of functions to read in the data dictionary and the
-    corresponding data table from a macro-enabled Excel file created using
-    the DataDictionary.xlsm template.
+Maintainer: Lisa Avery <lisa.avery@uhn.ca>
+Description: A small group of functions to read in a data dictionary and the
+    corresponding data table from Excel and to automate the cleaning, recoding
+    and creation of simple calculated variables. This package was designed to
+    be a companion to the macro-enabled DataDictionary.xlsm template available
+    on the github site, but works with any similarly-formatted Excel data.
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true

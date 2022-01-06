@@ -13,25 +13,29 @@ readDataDict(
 )
 }
 \arguments{
-\item{excelFile}{Character, Path and filename of the data file}
+\item{excelFile}{Character, Path and Name of the data file}
 
-\item{dictionarySheet}{Character, Name of the dictionary sheet within the file, defaults to 'dictTable'}
+\item{dictionarySheet}{Character, Name of the dictionary sheet within the file, defaults to 'DataDictionary'}
 
 \item{range}{Optional, Range of Excel sheet to restrict import to (ie. range="A1:F6")}
 
-\item{colnames}{Optional, Column names of the dictTable, defaults to those used in the Excel template c('VariableName', 'Description (optional)', 'Type', 'Minimum', 'Maximum', 'Levels')}
+\item{colnames}{Optional, Column names of the dictionary,
+defaults to those used in the Excel template:
+ c('VariableName', 'Description (optional)', 'Type', 'Minimum', 'Maximum', 'Levels')}
 
 \item{origin}{Optional, the date origin of Excel dates, defaults to 30 December 1899}
 }
 \description{
-This function reads in a data dictionary that was set up with the
-PMH dictTable.xlsm spreadsheet to a data frame.
+This function reads in a data dictionary from an Excel file, based on the
+[DataDictionary.xlsm template](https://github.com/biostatsPMH/exceldata#readme)
 }
 \details{
 It assumes that the columns names  have not been altered and are:
 c('VariableName', 'Description (optional)', 'Type', 'Minimum', 'Maximum', 'Levels')
-To override specify colnames as an argument, ensuring to place variables in the above order.
+
+To override these column names specify colnames as an argument, ensuring
+that the content of the columns is in the above order.
 As of the time of writing, the origin date in Excel is 30 December 1899. To override this specify origin="yyy-mm-dd"
 
-To read in only part of the excel sheet specify the desrired range (ie range="A1:F6")
+To read in only part of the excel sheet specify the desired range (ie range="A1:F6")
 }
