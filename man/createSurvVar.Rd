@@ -7,11 +7,11 @@
 createSurvVar(data, newVarName, survVars, timeUnit = "month")
 }
 \arguments{
-\item{data}{is data returned by the importExcelData or readExcelData functions}
+\item{data}{A data frame returned by the importExcelData or readExcelData functions}
 
 \item{newVarName}{the name of the new survival variable. The status variable will be suffixed with '_status'}
 
-\item{survVars}{are, in order the start date, event date and date of last followup}
+\item{survVars}{In order the start date, event date and date of last followup}
 
 \item{timeUnit}{Character, the unit of time to calculate survival variables for (ex: 'day' 'week' 'month' 'year')}
 }

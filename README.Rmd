@@ -18,7 +18,7 @@ knitr::opts_chunk$set(
 
 <!-- badges: start -->
 [![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
-[![CRAN status](https://www.r-pkg.org/badges/version/exceldata)](https://CRAN.R-project.org/package=exceldata)
+<!--[![CRAN status](https://www.r-pkg.org/badges/version/exceldata)](https://CRAN.R-project.org/package=exceldata)-->
 <!-- badges: end -->
 
 The goal of exceldata is to facilitate the use of Excel as a data entry tool for reproducible research. This package provides tools to automate data cleaning and recoding of data by requiring a data dictionary to accompany the Excel data. A macro-enabled template file has been created to facilitate clean data entry including validation rules for live data checking.
@@ -76,7 +76,7 @@ data <- import$data
 head(data)
 
 # Simple univariate plots with outliers 
-plots <- plotVariables(data=data,dictTable=dictionary,IDvar = 'ID',showOutliers = T)
+plots <- plotVariables(data,dictionary,IDvar = 'ID',showOutliers = T)
 # Not Run: Show plots in viewer
 # plots
 

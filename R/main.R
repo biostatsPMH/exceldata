@@ -20,7 +20,13 @@
 #'  c('VariableName', 'Description (optional)', 'Type', 'Minimum', 'Maximum', 'Levels')
 #' @param range Optional, Range of Excel sheet to restrict import to (ie. range="A1:F6")
 #' @param origin Optional, the date origin of Excel dates, defaults to 30 December 1899
+#' @return A data frame with an entry for each variable to be imported
 #' @export
+#' @examples
+#' \dontrun{
+#' exampleDataFile <- system.file("extdata", "exampleData.xlsx", package = "exceldata")
+#' dictionary <- readDataDict(exampleDataFile, dictionarySheet = 'DataDictionary')
+#' }
 readDataDict <- function(excelFile,dictionarySheet ='DataDictionary',range,colnames,origin){
   if (missing(range)) range = NULL
   if (!file.exists(excelFile)){
@@ -97,14 +103,15 @@ readDataDict <- function(excelFile,dictionarySheet ='DataDictionary',range,colna
 #' examples.
 #'
 #' The exceldata package was designed around the DataDictionary.xlsm template.
-#' More documentation and the current downloadable template can be found on the
-#' [GitHub Site](https://github.com/biostatsPMH/exceldata#readme)
+#' More documentation and the current downloadable template can be found at:
+#'
+#' https://github.com/biostatsPMH/exceldata#readme
 
 #' Warning: If SetErrorsMissing = TRUE then a subsequent call to checkData will not return any errors, because the errors have been set to missing.
 #'
 #' NOTE: This function will only read in those columns present in the DataDictionary
 #' @param excelFile path and filename of the data file containing the data and dictionary
-#' @param dictionarySheet the name of the sheet containing the data dictionary, defaults to 'DataDictionary'
+#' @param dictionarySheet name of the sheet containing the data dictionary, defaults to 'DataDictionary'
 #' @param dataSheet name of the data entry sheet within the file, defaults to 'DataEntry'
 #' @param saveWarnings Boolean, if TRUE and there are any warnings then the function will return a list with the data frame and the import warnings
 #' @param setErrorsMissing Boolean, if TRUE all values out of range will be set to NA
@@ -116,10 +123,15 @@ readDataDict <- function(excelFile,dictionarySheet ='DataDictionary',range,colna
 #' @param timeUnit Character specifying the unit of time that should be used
 #' when creating survival type variables. Allowed values are from lubridate (ex: 'day' 'week' 'month' 'year')
 #' @return A list containing two data frames: the data dictionary and the data table
+#' \itemize{
+#'   \item dictionary - A data frame with entries for each variable
+#'   \item data - A data frame containing the imported data
+#' }
 #' @examples
 #' exampleDataFile <- system.file("extdata", "exampleData.xlsx", package = "exceldata")
 #' import <- importExcelData(exampleDataFile,
 #' dictionarySheet = 'DataDictionary',dataSheet = 'DataEntry')
+#'
 #' # The imported data dictionary
 #' dictionary <- import$dictionary
 #' head(dictionary)
@@ -129,7 +141,7 @@ readDataDict <- function(excelFile,dictionarySheet ='DataDictionary',range,colna
 #' head(data)
 #'
 #' # Simple univariate plots with outliers
-#' plots <- plotVariables(data=data,dictTable=dictionary,IDvar = 'ID')
+#' plots <- plotVariables(data=data,dictionary=dictionary,IDvar = 'ID')
 #'
 #' @export
 importExcelData <- function(excelFile,dictionarySheet='DataDictionary',dataSheet='DataEntry',saveWarnings=FALSE,setErrorsMissing=TRUE,range,colnames,origin,timeUnit='month'){
@@ -146,58 +158,64 @@ importExcelData <- function(excelFile,dictionarySheet='DataDictionary',dataSheet
 
     WriteToLog(msg =  'Log File Created',timestamp = T,append=F)
 
-    dictTable <- readDataDict(excelFile,dictionarySheet =dictionarySheet,range,colnames,origin)
+    dictionary <- readDataDict(excelFile,dictionarySheet =dictionarySheet,range,colnames,origin)
 
-    data <- readExcelData(excelFile,dictTable =  dictTable,dataSheet=dataSheet,saveWarnings=saveWarnings,setErrorsMissing=setErrorsMissing,range,origin)
+    data <- readExcelData(excelFile,dictionary =  dictionary,dataSheet=dataSheet,saveWarnings=saveWarnings,setErrorsMissing=setErrorsMissing,range,origin)
 
-    factorData <- addFactorVariables(data,dictTable,keepOriginal = FALSE)
+    factorData <- addFactorVariables(data,dictionary,keepOriginal = FALSE)
 
-    fullData <- createCalculated(factorData,dictTable,timeUnit='month')
+    fullData <- createCalculated(factorData,dictionary,timeUnit='month')
 
 
     cat('File import complete. Details of variables created are in the logfile: ',Sys.getenv("EXCEL_LOG"),'\n')
 
 
     # RUN CHECKS TO ENSURE THE Calculated Variables are Correct
-    return(list(dictionary=dictTable,data=fullData))
+    return(list(dictionary=dictionary,data=fullData))
   }
 }
 
 #' Read Excel Data
 #'
-#' This function reads in an excel data table created by the dictTable.xlsm
-#' template file according to the specifications in the dictTable
+#' This function reads in an excel data table created by the dictionary.xlsm
+#' template file according to the specifications in the dictionary
 #'
-#' Prior to reading in the data, the dictTable file must be imported using
+#' Prior to reading in the data, the dictionary file must be imported using
 #' readDataDict.
 #'
 #' Warning: If SetErrorsMissing = TRUE then a subsequent call to checkData will not return any errors, because the errors have been set to missing.
 #'
-#' NOTE: This function will only read in those columns present in the dictTable
-#' @param dictTable a data frame returned by readDataDict
+#' NOTE: This function will only read in those columns present in the dictionary
+#' @param dictionary A data frame returned by readDataDict
 #' @param excelFile path and filename of the data file
 #' @param dataSheet name of the data entry sheet within the file, defaults to 'DataEntry'
 #' @param saveWarnings Boolean, if TRUE and there are any warnings then the function will return a list with the data frame and the import warnings
 #' @param setErrorsMissing Boolean, if TRUE all values out of range will be set to NA
 #' @param range Optional, Range of Excel sheet to restrict import to (ie. range="A1:F6")
 #' @param origin Optional, the date origin of Excel dates, defaults to 30 December 1899
-#' @return a data frame containing the imported data
+#' @return A data frame containing the imported data
 #' @importFrom lubridate as_date
 #' @export
-readExcelData <- function(excelFile,dictTable,dataSheet='DataEntry',saveWarnings=FALSE,setErrorsMissing=FALSE,range,origin){
-  if (missing(excelFile) | missing(dictTable)) stop(paste('Both the excel data file and the data dictionary are required arguments.\n',
+#' @examples
+#' \dontrun{
+#' exampleDataFile <- system.file("extdata", "exampleData.xlsx", package = "exceldata")
+#' dictionary <- readDataDict(exampleDataFile, dictionarySheet = 'DataDictionary')
+#' data <- readExcelData(exampleDataFile,dictionary,dataSheet='DataEntry')
+#' }
+readExcelData <- function(excelFile,dictionary,dataSheet='DataEntry',saveWarnings=FALSE,setErrorsMissing=FALSE,range,origin){
+  if (missing(excelFile) | missing(dictionary)) stop(paste('Both the excel data file and the data dictionary are required arguments.\n',
                                                           'Use exceldata::readDataDict to read in the data dictionary before importing data.\n',
                                                           'Or run exceldata::importExcelData to import the dictionary and data files and create factor variables.'))
-  if (all(names(dictTable) != c('VariableName', 'Description', 'Type', 'Minimum', 'Maximum', 'Levels'))) {
+  if (all(names(dictionary) != c('VariableName', 'Description', 'Type', 'Minimum', 'Maximum', 'Levels'))) {
     stop('The specified dictionary does not have the expected columns. \nTry running readDataDict again.')
   }
   if (missing(range)) range = NULL
   if (missing(origin)) origin = "1899-12-30"
-  col_types = sapply(dictTable[["Type"]],function(x){
+  col_types = sapply(dictionary[["Type"]],function(x){
     if (x %in% c('integer','numeric','codes')) x <-'numeric'
     if (x %in% c('category','character','calculated')) x <-'text'
     return(x)},simplify = T)
-  varLookup = data.frame(VariableName = dictTable[['VariableName']],
+  varLookup = data.frame(VariableName = dictionary[['VariableName']],
                          col_type = col_types)
   # Read in the Excel data
   dat <- try(readxl::read_excel(excelFile,sheet=dataSheet,col_names = T,range=range),silent = T)
@@ -205,12 +223,12 @@ readExcelData <- function(excelFile,dictTable,dataSheet='DataEntry',saveWarnings
                                              '\n\nNOTE: It may be necessary to close Excel for this \nfunction to work.'))
 
   # check that the variables match the data dictionary
-  if (!all(dictTable[['VariableName']] %in% names(dat))){
+  if (!all(dictionary[['VariableName']] %in% names(dat))){
     warning(paste('The following variable are missing from the datafile:\n',
-                  setdiff(dictTable[['VariableName']], names(dat))))
+                  setdiff(dictionary[['VariableName']], names(dat))))
   }
 
-  # Assign the col_type of any variables missing in the dictTable to 'guess'
+  # Assign the col_type of any variables missing in the dictionary to 'guess'
   dataFileColumns = data.frame(VariableName = names(dat),position=1:length(names(dat)))
   dataFileColumns = merge(dataFileColumns,varLookup,all.x = T)
   dataFileColumns = dataFileColumns[order(dataFileColumns[["position"]]),]
@@ -226,43 +244,43 @@ readExcelData <- function(excelFile,dictTable,dataSheet='DataEntry',saveWarnings
   dat <- dat[,which(import_types!='guess')]
 
   # assign integer types to integer fields
-  for (v in dictTable$VariableName[dictTable$Type=='integer']) dat[[v]] <- as.integer(dat[[v]])
+  for (v in dictionary$VariableName[dictionary$Type=='integer']) dat[[v]] <- as.integer(dat[[v]])
 
   # assign date types to date fields
-  for (v in dictTable$VariableName[dictTable$Type=='date']) dat[[v]] <- as.Date(dat[[v]])
+  for (v in dictionary$VariableName[dictionary$Type=='date']) dat[[v]] <- as.Date(dat[[v]])
 
   # Set all out of range entries to missing if specified
   if (setErrorsMissing){
 
     # Range checks
-    varsToCheck <- intersect(dictTable[['VariableName']][dictTable[['Type']] %in% c('numeric','codes','category','integer','date')],names(dat))
+    varsToCheck <- intersect(dictionary[['VariableName']][dictionary[['Type']] %in% c('numeric','codes','category','integer','date')],names(dat))
 
     for (v in varsToCheck){
       # Numeric Data
-      if (dictTable[['Type']][dictTable[['VariableName']]==v] %in% c('integer','numeric')){
-        minVal = dictTable[['Minimum']][dictTable[['VariableName']]==v]
-        if (minVal %in% dictTable[["VariableName"]]) minVal = dat[[minVal]] else minVal = as.numeric(minVal)
-        maxVal = dictTable[['Maximum']][dictTable[['VariableName']]==v]
-        if (maxVal %in% dictTable[["VariableName"]]) maxVal = dat[[maxVal]] else maxVal = as.numeric(maxVal)
+      if (dictionary[['Type']][dictionary[['VariableName']]==v] %in% c('integer','numeric')){
+        minVal = dictionary[['Minimum']][dictionary[['VariableName']]==v]
+        if (minVal %in% dictionary[["VariableName"]]) minVal = dat[[minVal]] else minVal = as.numeric(minVal)
+        maxVal = dictionary[['Maximum']][dictionary[['VariableName']]==v]
+        if (maxVal %in% dictionary[["VariableName"]]) maxVal = dat[[maxVal]] else maxVal = as.numeric(maxVal)
 
         check = minVal <= dat[[v]] & dat[[v]] <= maxVal
       }
 
       # Dates
-      if (dictTable[['Type']][dictTable[['VariableName']]==v] =='date'){
-        minVal = dictTable[['Minimum']][dictTable[['VariableName']]==v]
+      if (dictionary[['Type']][dictionary[['VariableName']]==v] =='date'){
+        minVal = dictionary[['Minimum']][dictionary[['VariableName']]==v]
 
-        if (minVal %in% dictTable[["VariableName"]]) minVal = lubridate::as_date(dat[[minVal]]) else if (minVal=='today') minVal=Sys.Date() else  minVal = lubridate::as_date(minVal)
-        maxVal = dictTable[['Maximum']][dictTable[['VariableName']]==v]
-        if (maxVal %in% dictTable[["VariableName"]]) maxVal = lubridate::as_date(dat[[maxVal]]) else if (maxVal=='today') maxVal=Sys.Date() else maxVal = lubridate::as_date(maxVal)
+        if (minVal %in% dictionary[["VariableName"]]) minVal = lubridate::as_date(dat[[minVal]]) else if (minVal=='today') minVal=Sys.Date() else  minVal = lubridate::as_date(minVal)
+        maxVal = dictionary[['Maximum']][dictionary[['VariableName']]==v]
+        if (maxVal %in% dictionary[["VariableName"]]) maxVal = lubridate::as_date(dat[[maxVal]]) else if (maxVal=='today') maxVal=Sys.Date() else maxVal = lubridate::as_date(maxVal)
 
         check = as.numeric(minVal) <= as.numeric(lubridate::as_date(dat[[v]])) & as.numeric(lubridate::as_date(dat[[v]])) <= as.numeric(maxVal)
       }
 
       # Factors
-      if (dictTable[['Type']][dictTable[['VariableName']]==v] %in% c('category','codes')){
-        allowedCodes = importCodes(dictTable[['Levels']][dictTable[['VariableName']]==v])[['code']]
-        if (dictTable[['Type']][dictTable[['VariableName']]==v] =='codes') allowedCodes = as.numeric(allowedCodes)
+      if (dictionary[['Type']][dictionary[['VariableName']]==v] %in% c('category','codes')){
+        allowedCodes = importCodes(dictionary[['Levels']][dictionary[['VariableName']]==v])[['code']]
+        if (dictionary[['Type']][dictionary[['VariableName']]==v] =='codes') allowedCodes = as.numeric(allowedCodes)
         check = dat[[v]]  %in% allowedCodes
       }
       dat[[v]][!check] <- NA
@@ -292,43 +310,64 @@ readExcelData <- function(excelFile,dictTable,dataSheet='DataEntry',saveWarnings
 #' Check the entered data against the data dictionary
 #'
 #' This function compares the data in the data entry table against the
-#' specifications in the dictTable.
+#' specifications in the dictionary
 #'
-#' Prior to reading in the data, the dictTable must be imported using
+#' Prior to reading in the data, the dictionary must be imported using
 #' readDataDict and the data must be imported using readExcelData.
 #'
-#' The function will check all variables in the dictTable.
-#' If variables are missing from the dictTable an error will occur.
+#' The function will check all variables in the dictionary.
+#' If variables are missing from the dictionary an error will occur.
 #' If variables are missing from the data table a warning will be shown.
 #'
 #'
-#' @param dictTable a data frame returned by readDataDict
-#' @param data a data frame returned by readExcelData
-#' @param id a string indicating the ID variable, to display errors by ID instead of row number
-#' @return A list with three data frames: one with all errors, one with errors by row
-#' (or ID if supplied) and one with errors by variable. Also returns a check for duplicate rows.
+#' @param dictionary A data frame returned by readDataDict
+#' @param data A data frame returned by readExcelData
+#' @param id String indicating the ID variable, to display errors by ID instead of row number
+#' @return A list with various reports of errors and duplicates
+#' \itemize{
+#'   \item errors_by_row - A data frame with errors by rownumber, or ID if supplied
+#'   \item errors_by_variable - A data frame containing all errors by variable
+#'   \item duplicated_entries - A string containing a list of duplicated entries
+#'   \item error_dataframe - A data frame containing all the rows and columns
+#'   with errors and Boolean values indicating if the entry is an error
+#' }
 #' @export
+#' @examples
+#' \dontrun{
+#' exampleDataFile <- system.file("extdata", "exampleData.xlsx", package = "exceldata")
 #'
-checkData <-function(dictTable,data,id){
+#' dictionary <- readDataDict(exampleDataFile, dictionarySheet = 'DataDictionary')
+#' data <- readExcelData(exampleDataFile,dictionary,dataSheet='DataEntry')
+#' checks <- checkData(dictionary,data,'ID')
+#'
+#' exampleDataFile <- system.file("extdata", "exampleData_withErrors.xlsx", package = "exceldata")
+#'
+#' dictionary <- readDataDict(exampleDataFile, dictionarySheet = 'DataDictionary')
+#' data <- readExcelData(exampleDataFile,dictionary,dataSheet='DataEntry')
+#' checks <- checkData(dictionary,data,'ID')
+#'
+#' checks
+#' }
+checkData <-function(dictionary,data,id){
   # excelFile = '/Users/lisaavery/OneDrive/HB_survey/dataFile.xlsx'
-  # dictTable = exceldata::readDataDict(excelFile)
-  # data = exceldata::readExcelData(excelFile,dictTable)
+  # dictionary = exceldata::readDataDict(excelFile)
+  # data = exceldata::readExcelData(excelFile,dictionary)
 
-  if (!('data.frame' %in% class(dictTable))) stop('dictTable must be a data dictionary imported using readDataDict')
+  if (!('data.frame' %in% class(dictionary))) stop('dictionary must be a data dictionary imported using readDataDict')
   if (!('data.frame' %in% class(data))) stop('data must be a data entry table imported using readExcelData')
   if (!missing(id)) if (!id %in% names(data)) stop(paste(id,'not found in the data. Specify a valid ID variable.'))
-  if (all(names(dictTable) != c('VariableName', 'Description', 'Type', 'Minimum', 'Maximum', 'Levels'))) {
+  if (all(names(dictionary) != c('VariableName', 'Description', 'Type', 'Minimum', 'Maximum', 'Levels'))) {
     stop('The specified dictionary does not have the expected columns. \nTry running readDataDict again.')
   }
 
-  if (!all(names(data) %in% dictTable[['VariableName']])){
-    stop(paste('Variables missing from the dictTable:\n',
-               setdiff(names(data),dictTable[['VariableName']])))
+  if (!all(names(data) %in% dictionary[['VariableName']])){
+    stop(paste('Variables missing from the dictionary:\n',
+               setdiff(names(data),dictionary[['VariableName']])))
   }
 
-  if (!all(dictTable[['VariableName']] %in% names(data) )){
+  if (!all(dictionary[['VariableName']] %in% names(data) )){
     warning(paste('Variables missing from the data table:\n',
-                  paste(setdiff(dictTable[['VariableName']],names(data)),collapse = ',')))
+                  paste(setdiff(dictionary[['VariableName']],names(data)),collapse = ',')))
   }
 
   # check for duplicate rows
@@ -340,30 +379,30 @@ checkData <-function(dictTable,data,id){
   }
 
   # Range checks
-  varsToCheck <- intersect(dictTable[['VariableName']][dictTable[['Type']] %in% c('numeric','codes','category','integer','date')],names(data))
+  varsToCheck <- intersect(dictionary[['VariableName']][dictionary[['Type']] %in% c('numeric','codes','category','integer','date')],names(data))
   df_checks <- NULL
   for (v in varsToCheck){
-    if (dictTable[['Type']][dictTable[['VariableName']]==v] %in% c('integer','numeric')){
-      minVal = dictTable[['Minimum']][dictTable[['VariableName']]==v]
-      if (minVal %in% dictTable[["VariableName"]]) minVal = data[[minVal]] else minVal = as.numeric(minVal)
-      maxVal = dictTable[['Maximum']][dictTable[['VariableName']]==v]
-      if (maxVal %in% dictTable[["VariableName"]]) maxVal = data[[maxVal]] else maxVal = as.numeric(maxVal)
+    if (dictionary[['Type']][dictionary[['VariableName']]==v] %in% c('integer','numeric')){
+      minVal = dictionary[['Minimum']][dictionary[['VariableName']]==v]
+      if (minVal %in% dictionary[["VariableName"]]) minVal = data[[minVal]] else minVal = as.numeric(minVal)
+      maxVal = dictionary[['Maximum']][dictionary[['VariableName']]==v]
+      if (maxVal %in% dictionary[["VariableName"]]) maxVal = data[[maxVal]] else maxVal = as.numeric(maxVal)
 
       check = minVal <= data[[v]] & data[[v]] <= maxVal
     }
 
-    if (dictTable[['Type']][dictTable[['VariableName']]==v] =='date'){
-      minVal = dictTable[['Minimum']][dictTable[['VariableName']]==v]
-      if (minVal %in% dictTable[["VariableName"]]) minVal = as.Date(data[[minVal]]) else if (minVal=='today') minVal=Sys.Date() else  minVal = as.Date(minVal)
-      maxVal = dictTable[['Maximum']][dictTable[['VariableName']]==v]
-      if (maxVal %in% dictTable[["VariableName"]]) maxVal = as.Date(data[[maxVal]]) else if (maxVal=='today') maxVal=Sys.Date() else maxVal = as.Date(maxVal)
+    if (dictionary[['Type']][dictionary[['VariableName']]==v] =='date'){
+      minVal = dictionary[['Minimum']][dictionary[['VariableName']]==v]
+      if (minVal %in% dictionary[["VariableName"]]) minVal = as.Date(data[[minVal]]) else if (minVal=='today') minVal=Sys.Date() else  minVal = as.Date(minVal)
+      maxVal = dictionary[['Maximum']][dictionary[['VariableName']]==v]
+      if (maxVal %in% dictionary[["VariableName"]]) maxVal = as.Date(data[[maxVal]]) else if (maxVal=='today') maxVal=Sys.Date() else maxVal = as.Date(maxVal)
 
       check = as.numeric(minVal) <= as.numeric(as.Date(data[[v]])) & as.numeric(as.Date(data[[v]])) <= as.numeric(maxVal)
     }
 
-    if (dictTable[['Type']][dictTable[['VariableName']]==v] %in% c('category','codes')){
-      allowedCodes = importCodes(dictTable[['Levels']][dictTable[['VariableName']]==v])[['code']]
-      if (dictTable[['Type']][dictTable[['VariableName']]==v] =='codes') allowedCodes = as.numeric(allowedCodes)
+    if (dictionary[['Type']][dictionary[['VariableName']]==v] %in% c('category','codes')){
+      allowedCodes = importCodes(dictionary[['Levels']][dictionary[['VariableName']]==v])[['code']]
+      if (dictionary[['Type']][dictionary[['VariableName']]==v] =='codes') allowedCodes = as.numeric(allowedCodes)
       check = data[[v]]  %in% allowedCodes
     }
 
@@ -408,34 +447,41 @@ checkData <-function(dictTable,data,id){
 #' dictionary. The original variables are retained with the suffix
 #' '_orig'
 #'
-#' @param data a data frame returned by readExcelData
-#' @param dictTable a data frame returned by readDataDict
+#' @param data A data frame returned by readExcelData
+#' @param dictionary A data frame returned by readDataDict
 #' @param keepOriginal Boolean indicating if the original character variables should be kept, default is TRUE with _original appended to variable names
-#' @return a data frame with the updated factor variables
+#' @return A data frame with the updated factor variables
 #' @importFrom utils capture.output
 #' @export
-addFactorVariables <-function(data,dictTable,keepOriginal=TRUE){
-  if (!('data.frame' %in% class(dictTable))) stop('dictTable must be a data dictionary imported using readDataDict')
+#' @examples
+#' \dontrun{
+#' exampleDataFile <- system.file("extdata", "exampleData.xlsx", package = "exceldata")
+#' dictionary <- readDataDict(exampleDataFile, dictionarySheet = 'DataDictionary')
+#' data <- readExcelData(exampleDataFile,dictionary,dataSheet='DataEntry')
+#' factorData <- addFactorVariables(data,dictionary,keepOriginal = TRUE)
+#' }
+addFactorVariables <-function(data,dictionary,keepOriginal=TRUE){
+  if (!('data.frame' %in% class(dictionary))) stop('dictionary must be a data dictionary imported using readDataDict')
   if (!('data.frame' %in% class(data))) stop('data must be a data entry table imported using readExcelData')
-  if (all(names(dictTable) != c('VariableName', 'Description', 'Type', 'Minimum', 'Maximum', 'Levels'))) {
+  if (all(names(dictionary) != c('VariableName', 'Description', 'Type', 'Minimum', 'Maximum', 'Levels'))) {
     stop('The specified dictionary does not have the expected columns. \nTry running readDataDict again.')
   }
 
-  if (!all(names(data) %in% dictTable[['VariableName']])){
-    stop(paste('Variables missing from the dictTable:\n',
-               setdiff(names(data),dictTable[['VariableName']])))
+  if (!all(names(data) %in% dictionary[['VariableName']])){
+    stop(paste('Variables missing from the dictionary:\n',
+               setdiff(names(data),dictionary[['VariableName']])))
   }
 
-  if (!all(dictTable[['VariableName']] %in% names(data) )){
+  if (!all(dictionary[['VariableName']] %in% names(data) )){
     warning(paste('Variables missing from the data table:\n',
-                  paste(setdiff(dictTable[['VariableName']],names(data)),collapse = ',')))
+                  paste(setdiff(dictionary[['VariableName']],names(data)),collapse = ',')))
   }
-  varsWithCodes <- intersect(dictTable[['VariableName']][dictTable[['Type']] %in% c('codes','category')],names(data))
+  varsWithCodes <- intersect(dictionary[['VariableName']][dictionary[['Type']] %in% c('codes','category')],names(data))
   for (v in varsWithCodes){
-    factorLevels = try(importCodes(dictTable[["Levels"]][dictTable[['VariableName']]==v]),silent = T)
+    factorLevels = try(importCodes(dictionary[["Levels"]][dictionary[['VariableName']]==v]),silent = T)
     if (!class(factorLevels)[1]=='try-error'){
       if (keepOriginal) data[[paste0(v,'_original')]] <- data[[v]]
-      if (dictTable[['Type']][dictTable[['VariableName']]==v]=='codes'){
+      if (dictionary[['Type']][dictionary[['VariableName']]==v]=='codes'){
         factorVar <- factor(data[[v]],levels=factorLevels$code,labels=factorLevels$label)
       } else {
         factorVar <- factor(data[[v]],levels=factorLevels$code)
@@ -461,14 +507,13 @@ testForNumeric <- function(str){
   unname(testResults)
 }
 
-#' Return a data frame of codes
+#' Return A data frame of codes
 #'
 #' Accepts a string input in the form "code1=label1,code2=label2,.." and
-#' returns a data frame with a column of codes and a column of labels
+#' returns A data frame with a column of codes and a column of labels
 #'
 #' @param labelStr in the format code1=label1,code2=label2
 #' @param delim delimeter separating codes in labelStr, defaults to ','
-#' @export
 importCodes<-function(labelStr,delim=','){
   x=strsplit(labelStr,split=delim)[[1]]
   # check for multiple '=', probably indicates an error
@@ -488,14 +533,23 @@ importCodes<-function(labelStr,delim=','){
 #' Create calculated variables
 #'
 #' This function will create survival and recoded variables according to the
-#' rules in the dictTable.xlsm file. See the Example sheet for an example.
+#' rules in the dictionary.xlsm file. See the Example sheet for an example.
 #'
-#' @param data is data returned by the importExcelData or readExcelData functions
-#' @param dictTable is the data dictionary returned by importExcelData or readDataDict functions
-#' @param timeUnit a string containing the desired unit of time for survival variables
+#' @param data A data frame data returned by the importExcelData or readExcelData functions
+#' @param dictionary A data frame returned by the importExcelData or readDataDict functions
+#' @param timeUnit String containing the desired unit of time for survival variables
+#' @return A data frame with the calculated variables as specified by the dictionary
 #' @export
-createCalculated<-function(data,dictTable,timeUnit='month'){
-  calcVars <- dictTable$VariableName[dictTable$Type=='calculated']
+#' @examples
+#' \dontrun{
+#' exampleDataFile <- system.file("extdata", "exampleData.xlsx", package = "exceldata")
+#' dictionary <- readDataDict(exampleDataFile, dictionarySheet = 'DataDictionary')
+#' data <- readExcelData(exampleDataFile,dictionary,dataSheet='DataEntry')
+#' factorData <- addFactorVariables(data,dictionary,keepOriginal = TRUE)
+#' fullData <- createCalculated(factorData,dictionary,timeUnit='month')
+#' }
+createCalculated<-function(data,dictionary,timeUnit='month'){
+  calcVars <- dictionary$VariableName[dictionary$Type=='calculated']
 
   # Calculation instructions should start with 'start' for survival type variable or a variable name for recoding
   logMessages <- NULL
@@ -513,20 +567,20 @@ createCalculated<-function(data,dictTable,timeUnit='month'){
       newVarName <- v
     }
 
-    instructions <- trimws(unlist(strsplit(dictTable$Levels[dictTable$VariableName==v],',')))
+    instructions <- trimws(unlist(strsplit(dictionary$Levels[dictionary$VariableName==v],',')))
 
     # Determine what type of calculation to do
     wrnMessage <- NULL
-    if (substr(dictTable$Levels[dictTable$VariableName==v],1,5)=='start') {
+    if (substr(dictionary$Levels[dictionary$VariableName==v],1,5)=='start') {
       if (length(instructions)!=3) {
-        wrnMessage <- paste(newVarName,' not created. For a survival variable, a start date, event date and last date followd must be specified. Check dictTableionary.')
+        wrnMessage <- paste(newVarName,' not created. For a survival variable, a start date, event date and last date followd must be specified. Check dictionaryionary.')
         survVars <- sapply(instructions,function(x) trimws(unlist(strsplit(x,'='))[2]))
         if (!all(survVars %in% names(data))) {
           wrnMessage <-paste(paste(survVars[!survVars %in% names(data)],collapse=','),' not in the data. Variable names are case sensitive.\n',newVarName,' not created.')
         }} else{
           data <- createSurvVar(data,newVarName,survVars,timeUnit)
         }
-    } else if (substr(dictTable$Levels[dictTable$VariableName==v],1,7)=='combine') {
+    } else if (substr(dictionary$Levels[dictionary$VariableName==v],1,7)=='combine') {
       varsToCombine <- unlist(strsplit(trimws(gsub('combine|to','',instructions[1])),' '))
       varsToCombine <- varsToCombine[varsToCombine!=""]
       if (!all(varsToCombine %in% names(data))) {
@@ -537,18 +591,18 @@ createCalculated<-function(data,dictTable,timeUnit='month'){
         wrnMessage <- paste0(newVarName,' not created, check instructions. Must be in the format: combine var1 to var2, response=value')
       } else{
         responseVal <- trimws(gsub('response|=','',instructions[2]))
-        data <- createCombinedVar(data,dictTable,newVarName,varsToCombine,responseVal)
+        data <- createCombinedVar(data,dictionary,newVarName,varsToCombine,responseVal)
       }
     } else {
 
       if (!instructions[1] %in% names(data)) {
         wrnMessage <- paste(instructions[1],' is not a recognised instruction. Variable names are case sensitive.\n',newVarName,' not created.')
       } else {
-        if (dictTable$Type[dictTable$VariableName==instructions[1]] %in% c('integer','numeric')) {
+        if (dictionary$Type[dictionary$VariableName==instructions[1]] %in% c('integer','numeric')) {
           data <- createCategorisedVar(data,newVarName,instructions)
 
         } else{
-          data <- createRecodedVar(data,dictTable,newVarName,instructions)
+          data <- createRecodedVar(data,dictionary,newVarName,instructions)
         }
       }
     }
@@ -572,9 +626,9 @@ createCalculated<-function(data,dictTable,timeUnit='month'){
 #' This function will create survival variables from an existing start variable
 #' date of event variable and last date followed variable
 #'
-#' @param data is data returned by the importExcelData or readExcelData functions
+#' @param data A data frame returned by the importExcelData or readExcelData functions
 #' @param newVarName the name of the new survival variable. The status variable will be suffixed with '_status'
-#' @param survVars are, in order the start date, event date and date of last followup
+#' @param survVars In order the start date, event date and date of last followup
 #' @param timeUnit Character, the unit of time to calculate survival variables for (ex: 'day' 'week' 'month' 'year')
 #' @importFrom lubridate time_length interval
 createSurvVar <- function(data,newVarName,survVars,timeUnit='month'){
@@ -615,16 +669,20 @@ createSurvVar <- function(data,newVarName,survVars,timeUnit='month'){
 #' date of event variable and last date followed variable
 #'
 #' The instructions are contained in the Levels column of the data dictionary and should be in the format:
+#'
 #' original_varname,newCode1=oldcode1,oldCode2,...,newCode2=oldCode3,..
+#'
 #' For Example:
-#' instructions="T_Stage,T0=T0,T1up=T1,T2,T3,T4" will recode T1-T4 as T1up and retain T0
+#' instructions="T_Stage,T0=T0,T1up=T1,T2,T3,T4"
+#'
+#' will recode T1-T4 as T1up and retain T0 as is
 #'
 #' @param data is data returned by the importExcelData or readExcelData functions
-#' @param dictTable is the data dictionary returned by importExcelData or readDataDict functions
+#' @param dictionary is the data dictionary returned by importExcelData or readDataDict functions
 #' @param newVarName the name of the new variable.
 #' @param instructions are from the data dictionary
 #' @importFrom utils capture.output
-createRecodedVar <- function(data,dictTable,newVarName,instructions){
+createRecodedVar <- function(data,dictionary,newVarName,instructions){
 
   originalVar <- instructions[1]
 
@@ -635,8 +693,8 @@ createRecodedVar <- function(data,dictTable,newVarName,instructions){
 
 
   # If the variable is a codes variable, then we need the original entered levels
-  if (dictTable[["Type"]][dictTable[['VariableName']]==originalVar]=='codes') {
-    factorLevels = try(importCodes(dictTable[["Levels"]][dictTable[['VariableName']]==originalVar]),silent = T)
+  if (dictionary[["Type"]][dictionary[['VariableName']]==originalVar]=='codes') {
+    factorLevels = try(importCodes(dictionary[["Levels"]][dictionary[['VariableName']]==originalVar]),silent = T)
 
     if (class(factorLevels)[1]=='try-error'){
       warning(paste('Data codes for',originalVar,'could not be extracted,', newVarName,'not created.'))
@@ -667,17 +725,21 @@ createRecodedVar <- function(data,dictTable,newVarName,instructions){
 #' if there are a small number of popular response patterns. Currently this
 #' function only works with dichotomous variables.
 #'
-#' The instructions are contained in the Levels column of the data dictionary and should be in the format:
+#' The instructions are contained in the Levels column of the data dictionary
+#' and should be in the format:
 #' original_varname,newCode1=oldcode1,oldCode2,...,newCode2=oldCode3,..
+#'
 #' For Example:
-#' instructions="T_Stage,T0=T0,T1up=T1,T2,T3,T4" will recode T1-T4 as T1up and retain T0
+#' instructions="T_Stage,T0=T0,T1up=T1,T2,T3,T4"
+#'
+#' will recode T1-T4 as T1up and retain T0 as is
 #'
 #' @param data is data returned by the importExcelData or readExcelData functions
-#' @param dictTable is the data dictionary returned by importExcelData or readDataDict functions
+#' @param dictionary is the data dictionary returned by importExcelData or readDataDict functions
 #' @param newVarName the name of the new variable.
 #' @param varsToCombine a vector of the first and last variables to combine into the new variable. Note that the variables to be conbined mut be contiguous in the data.
 #' @param responseVal the value of the variables to be combined, usually this will be 1 for 0,1 variables or Yes for Yes No or Checked for Checked Unchecked
-createCombinedVar <- function(data,dictTable,newVarName,varsToCombine,responseVal){
+createCombinedVar <- function(data,dictionary,newVarName,varsToCombine,responseVal){
 
   startVar = which(names(data)==varsToCombine[1])
   endVar = which(names(data)==varsToCombine[2])
@@ -690,7 +752,7 @@ createCombinedVar <- function(data,dictTable,newVarName,varsToCombine,responseVa
   if (length(unique(types))!=1) {
     warning(paste0('All variables to be combined must be the same type ',newVarName,' not created.') )
   } else if (types[1]=='factor') {
-    factorLevels = try(importCodes(dictTable[["Levels"]][dictTable[['VariableName']]==varsToCombine[1]]),silent = T)
+    factorLevels = try(importCodes(dictionary[["Levels"]][dictionary[['VariableName']]==varsToCombine[1]]),silent = T)
     responseIn <- unlist(lapply(factorLevels,function(x) responseVal %in%  x))
     if (sum(responseIn)==0) {
       warning(paste0('The response value ',responseVal,' is not a response to the variable to be combined. ',newVarName,' not created.') )
@@ -807,18 +869,30 @@ WriteToLog <- function(msg,append=T,timestamp=F){
 #'
 #' This function should be run as the final step after the data have been
 #' imported, checked and the factor variables created.
-#' @param data is a data frame containing the variables to be plotted
-#' @param dictTable optional, the data dictionary returned by importExcelData or readDataDict functions to provide plot titles
-#' @param IDvar an optional string indicating the name of an identifying variable to highlight outliers
-#' @param vars is an optional character vector of the names of variables to plot
-#' @param showOutliers boolean, Defaults to TRUE. Should outliers be labelled?
+#' @param data A data frame containing the variables to be plotted
+#' @param dictionary Optional, the data dictionary returned by importExcelData or readDataDict functions to provide plot titles
+#' @param IDvar Optional string indicating the name of an identifying variable to highlight outliers
+#' @param vars Optional,  vector of the names of variables to plot
+#' @param showOutliers Boolean, Defaults to TRUE. Should outliers be labelled?
 #' Outliers are defined by the 1.5xIQR rule (as with boxplots)
-#' @importFrom ggrepel geom_text_repel
 #' @import ggplot2
 #' @importFrom scales date_format
 #' @importFrom graphics boxplot
+#' @return A list of plots with one plot for each variable
 #' @export
-plotVariables<-function(data,dictTable,IDvar,vars,showOutliers=TRUE){
+#' @examples
+#' \dontrun{
+#' exampleDataFile <- system.file("extdata", "exampleData.xlsx", package = "exceldata")
+#' import <- importExcelData(exampleDataFile,
+#' dictionarySheet = 'DataDictionary',dataSheet = 'DataEntry')
+#' dictionary <- import$dictionary
+#' data <- import$data
+#'
+#' # Simple univariate plots with outliers
+#' plots <- plotVariables(data=data,dictionary=dictionary,IDvar = 'ID')
+#' plots
+#' }
+plotVariables<-function(data,dictionary,IDvar,vars,showOutliers=TRUE){
   varTypes = sapply(data,function(x) class(x)[1])
   if (missing(vars)){
     char_vars = names(data)[varTypes=='character']
@@ -872,7 +946,7 @@ plotVariables<-function(data,dictTable,IDvar,vars,showOutliers=TRUE){
           p <- p + geom_dotplot(data=subset(data,data$highlight),
                                 dotsize = dotsize,
                                 fill='red')
-          p <- p + ggrepel::geom_text_repel(data=subset(data,data$highlight),aes(x=.data[[v]],y=0,label=.data[['outLabel']]),position = position_nudge(y=.2))
+          p <- p + geom_text(data=subset(data,data$highlight),aes(x=.data[[v]],y=0,label=.data[['outLabel']]),position = position_nudge(y=.2))
         }
       }
 
@@ -884,8 +958,8 @@ plotVariables<-function(data,dictTable,IDvar,vars,showOutliers=TRUE){
     # Add a time unit to the x-lab if there is one
     if (!is.null(attributes(data[[v]])$timeUnit)) p <- p + xlab(paste0(v," (",attributes(data[[v]])$timeUnit,'s)'))
 
-    # If the dictTable is provided at the description as a title
-    if (!missing(dictTable)) p <- p + ggtitle(dictTable$Description[dictTable$VariableName==v])
+    # If the dictionary is provided at the description as a title
+    if (!missing(dictionary)) p <- p + ggtitle(dictionary$Description[dictionary$VariableName==v])
 
     plots[[v]] <- p
   }

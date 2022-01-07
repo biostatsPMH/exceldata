@@ -8,3 +8,5 @@
 ^.log$
 ^.nojekyll$
 ^_bookdown\.yml$
+^CRAN-SUBMISSION$
+^cran-comments\.md$

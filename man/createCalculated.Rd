@@ -4,16 +4,28 @@
 \alias{createCalculated}
 \title{Create calculated variables}
 \usage{
-createCalculated(data, dictTable, timeUnit = "month")
+createCalculated(data, dictionary, timeUnit = "month")
 }
 \arguments{
-\item{data}{is data returned by the importExcelData or readExcelData functions}
+\item{data}{A data frame data returned by the importExcelData or readExcelData functions}
 
-\item{dictTable}{is the data dictionary returned by importExcelData or readDataDict functions}
+\item{dictionary}{A data frame returned by the importExcelData or readDataDict functions}
 
-\item{timeUnit}{a string containing the desired unit of time for survival variables}
+\item{timeUnit}{String containing the desired unit of time for survival variables}
+}
+\value{
+A data frame with the calculated variables as specified by the dictionary
 }
 \description{
 This function will create survival and recoded variables according to the
-rules in the dictTable.xlsm file. See the Example sheet for an example.
+rules in the dictionary.xlsm file. See the Example sheet for an example.
+}
+\examples{
+\dontrun{
+exampleDataFile <- system.file("extdata", "exampleData.xlsx", package = "exceldata")
+dictionary <- readDataDict(exampleDataFile, dictionarySheet = 'DataDictionary')
+data <- readExcelData(exampleDataFile,dictionary,dataSheet='DataEntry')
+factorData <- addFactorVariables(data,dictionary,keepOriginal = TRUE)
+fullData <- createCalculated(factorData,dictionary,timeUnit='month')
+}
 }

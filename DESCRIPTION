@@ -1,22 +1,22 @@
 Package: exceldata
 Type: Package
-Title: Functions to streamline data import, cleaning and recoding from Excel
+Title: Functions to Streamline Data Import, Cleaning and Recoding from Excel
 Version: 0.1.0
-Author: Lisa Avery
-Maintainer: Lisa Avery <lisa.avery@uhn.ca>
+Authors@R: 
+    person("Lisa", "Avery", , "lisa.avery@uhn.ca", role = c("aut", "cre","cph"),
+           comment = c(ORCID = "0000-0002-8431-5143"))
 Description: A small group of functions to read in a data dictionary and the
-    corresponding data table from Excel and to automate the cleaning, recoding
+    corresponding data table from Excel and to automate the cleaning, re-coding
     and creation of simple calculated variables. This package was designed to
-    be a companion to the macro-enabled DataDictionary.xlsm template available
-    on the github site, but works with any similarly-formatted Excel data.
+    be a companion to the macro-enabled Excel template available
+    on the GitHub site, but works with any similarly-formatted Excel data.
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 7.1.1
+RoxygenNote: 7.1.2
 Imports: 
     dplyr,
     ggplot2,
-    ggrepel,
     graphics,
     lubridate,
     readxl,
@@ -24,4 +24,4 @@ Imports:
 Suggests: 
     knitr,
     rmarkdown
-VignetteBuilder: knitr
+

@@ -4,12 +4,12 @@
 \alias{createCombinedVar}
 \title{Create a combined variable from several dichotomous variables}
 \usage{
-createCombinedVar(data, dictTable, newVarName, varsToCombine, responseVal)
+createCombinedVar(data, dictionary, newVarName, varsToCombine, responseVal)
 }
 \arguments{
 \item{data}{is data returned by the importExcelData or readExcelData functions}
 
-\item{dictTable}{is the data dictionary returned by importExcelData or readDataDict functions}
+\item{dictionary}{is the data dictionary returned by importExcelData or readDataDict functions}
 
 \item{newVarName}{the name of the new variable.}
 
@@ -24,8 +24,12 @@ if there are a small number of popular response patterns. Currently this
 function only works with dichotomous variables.
 }
 \details{
-The instructions are contained in the Levels column of the data dictionary and should be in the format:
+The instructions are contained in the Levels column of the data dictionary
+and should be in the format:
 original_varname,newCode1=oldcode1,oldCode2,...,newCode2=oldCode3,..
+
 For Example:
-instructions="T_Stage,T0=T0,T1up=T1,T2,T3,T4" will recode T1-T4 as T1up and retain T0
+instructions="T_Stage,T0=T0,T1up=T1,T2,T3,T4"
+
+will recode T1-T4 as T1up and retain T0 as is
 }

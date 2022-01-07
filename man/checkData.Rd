@@ -4,28 +4,51 @@
 \alias{checkData}
 \title{Check the entered data against the data dictionary}
 \usage{
-checkData(dictTable, data, id)
+checkData(dictionary, data, id)
 }
 \arguments{
-\item{dictTable}{a data frame returned by readDataDict}
+\item{dictionary}{A data frame returned by readDataDict}
 
-\item{data}{a data frame returned by readExcelData}
+\item{data}{A data frame returned by readExcelData}
 
-\item{id}{a string indicating the ID variable, to display errors by ID instead of row number}
+\item{id}{String indicating the ID variable, to display errors by ID instead of row number}
 }
 \value{
-A list with three data frames: one with all errors, one with errors by row
-(or ID if supplied) and one with errors by variable. Also returns a check for duplicate rows.
+A list with various reports of errors and duplicates
+\itemize{
+  \item errors_by_row - A data frame with errors by rownumber, or ID if supplied
+  \item errors_by_variable - A data frame containing all errors by variable
+  \item duplicated_entries - A string containing a list of duplicated entries
+  \item error_dataframe - A data frame containing all the rows and columns
+  with errors and Boolean values indicating if the entry is an error
+}
 }
 \description{
 This function compares the data in the data entry table against the
-specifications in the dictTable.
+specifications in the dictionary
 }
 \details{
-Prior to reading in the data, the dictTable must be imported using
+Prior to reading in the data, the dictionary must be imported using
 readDataDict and the data must be imported using readExcelData.
 
-The function will check all variables in the dictTable.
-If variables are missing from the dictTable an error will occur.
+The function will check all variables in the dictionary.
+If variables are missing from the dictionary an error will occur.
 If variables are missing from the data table a warning will be shown.
+}
+\examples{
+\dontrun{
+exampleDataFile <- system.file("extdata", "exampleData.xlsx", package = "exceldata")
+
+dictionary <- readDataDict(exampleDataFile, dictionarySheet = 'DataDictionary')
+data <- readExcelData(exampleDataFile,dictionary,dataSheet='DataEntry')
+checks <- checkData(dictionary,data,'ID')
+
+exampleDataFile <- system.file("extdata", "exampleData_withErrors.xlsx", package = "exceldata")
+
+dictionary <- readDataDict(exampleDataFile, dictionarySheet = 'DataDictionary')
+data <- readExcelData(exampleDataFile,dictionary,dataSheet='DataEntry')
+checks <- checkData(dictionary,data,'ID')
+
+checks
+}
 }

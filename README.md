@@ -7,8 +7,7 @@
 
 [![Lifecycle:
 experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
-[![CRAN
-status](https://www.r-pkg.org/badges/version/exceldata)](https://CRAN.R-project.org/package=exceldata)
+<!--[![CRAN status](https://www.r-pkg.org/badges/version/exceldata)](https://CRAN.R-project.org/package=exceldata)-->
 <!-- badges: end -->
 
 The goal of exceldata is to facilitate the use of Excel as a data entry
@@ -88,15 +87,15 @@ head(data)
 #> # A tibble: 6 x 9
 #>   ID      Age Gender T_Stage DxDate      ECOG Date_Death Date_LFU   T0_Stg
 #>   <chr> <dbl> <fct>  <fct>   <date>     <int> <date>     <date>     <fct> 
-#> 1 1        77 f      T0      2019-06-05     0 2021-08-06 NA         T0    
-#> 2 2        58 f      T3      2019-09-26     3 2020-06-06 NA         T1up  
-#> 3 3        66 f      T3      2019-07-19     5 NA         2020-07-20 T1up  
-#> 4 4        72 f      T1      2019-04-07     5 NA         2021-07-04 T1up  
-#> 5 5        52 f      T1      2019-06-07     0 2020-12-04 NA         T1up  
-#> 6 6        72 f      T2      2021-02-10     0 2021-10-10 NA         T1up
+#> 1 1        77 f      T2      2019-06-05     4 2021-08-06 NA         T1up  
+#> 2 2        58 f      T2      2019-09-26     2 2020-06-06 NA         T1up  
+#> 3 3        66 f      T4      2019-07-19     0 NA         2020-07-20 T1up  
+#> 4 4        72 f      T4      2019-12-17     4 NA         2021-07-04 T1up  
+#> 5 5        52 f      T2      2019-06-07     1 2020-12-04 NA         T1up  
+#> 6 6        72 f      T1      2021-02-10     2 2021-10-10 NA         T1up
 
 # Simple univariate plots with outliers 
-plots <- plotVariables(data=data,dictTable=dictionary,IDvar = 'ID',showOutliers = T)
+plots <- plotVariables(data,dictionary,IDvar = 'ID',showOutliers = T)
 # Not Run: Show plots in viewer
 # plots
 ```

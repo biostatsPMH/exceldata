@@ -6,7 +6,7 @@
 \usage{
 readExcelData(
   excelFile,
-  dictTable,
+  dictionary,
   dataSheet = "DataEntry",
   saveWarnings = FALSE,
   setErrorsMissing = FALSE,
@@ -17,7 +17,7 @@ readExcelData(
 \arguments{
 \item{excelFile}{path and filename of the data file}
 
-\item{dictTable}{a data frame returned by readDataDict}
+\item{dictionary}{A data frame returned by readDataDict}
 
 \item{dataSheet}{name of the data entry sheet within the file, defaults to 'DataEntry'}
 
@@ -30,17 +30,24 @@ readExcelData(
 \item{origin}{Optional, the date origin of Excel dates, defaults to 30 December 1899}
 }
 \value{
-a data frame containing the imported data
+A data frame containing the imported data
 }
 \description{
-This function reads in an excel data table created by the dictTable.xlsm
-template file according to the specifications in the dictTable
+This function reads in an excel data table created by the dictionary.xlsm
+template file according to the specifications in the dictionary
 }
 \details{
-Prior to reading in the data, the dictTable file must be imported using
+Prior to reading in the data, the dictionary file must be imported using
 readDataDict.
 
 Warning: If SetErrorsMissing = TRUE then a subsequent call to checkData will not return any errors, because the errors have been set to missing.
 
-NOTE: This function will only read in those columns present in the dictTable
+NOTE: This function will only read in those columns present in the dictionary
+}
+\examples{
+\dontrun{
+exampleDataFile <- system.file("extdata", "exampleData.xlsx", package = "exceldata")
+dictionary <- readDataDict(exampleDataFile, dictionarySheet = 'DataDictionary')
+data <- readExcelData(exampleDataFile,dictionary,dataSheet='DataEntry')
+}
 }

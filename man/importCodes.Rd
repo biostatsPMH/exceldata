@@ -2,7 +2,7 @@
 % Please edit documentation in R/main.R
 \name{importCodes}
 \alias{importCodes}
-\title{Return a data frame of codes}
+\title{Return A data frame of codes}
 \usage{
 importCodes(labelStr, delim = ",")
 }
@@ -13,5 +13,5 @@ importCodes(labelStr, delim = ",")
 }
 \description{
 Accepts a string input in the form "code1=label1,code2=label2,.." and
-returns a data frame with a column of codes and a column of labels
+returns A data frame with a column of codes and a column of labels
 }

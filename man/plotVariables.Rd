@@ -4,21 +4,37 @@
 \alias{plotVariables}
 \title{Return a list of univariate ggplots for each non-character variable}
 \usage{
-plotVariables(data, dictTable, IDvar, vars, showOutliers = TRUE)
+plotVariables(data, dictionary, IDvar, vars, showOutliers = TRUE)
 }
 \arguments{
-\item{data}{is a data frame containing the variables to be plotted}
+\item{data}{A data frame containing the variables to be plotted}
 
-\item{dictTable}{optional, the data dictionary returned by importExcelData or readDataDict functions to provide plot titles}
+\item{dictionary}{Optional, the data dictionary returned by importExcelData or readDataDict functions to provide plot titles}
 
-\item{IDvar}{an optional string indicating the name of an identifying variable to highlight outliers}
+\item{IDvar}{Optional string indicating the name of an identifying variable to highlight outliers}
 
-\item{vars}{is an optional character vector of the names of variables to plot}
+\item{vars}{Optional,  vector of the names of variables to plot}
 
-\item{showOutliers}{boolean, Defaults to TRUE. Should outliers be labelled?
+\item{showOutliers}{Boolean, Defaults to TRUE. Should outliers be labelled?
 Outliers are defined by the 1.5xIQR rule (as with boxplots)}
+}
+\value{
+A list of plots with one plot for each variable
 }
 \description{
 This function should be run as the final step after the data have been
 imported, checked and the factor variables created.
+}
+\examples{
+\dontrun{
+exampleDataFile <- system.file("extdata", "exampleData.xlsx", package = "exceldata")
+import <- importExcelData(exampleDataFile,
+dictionarySheet = 'DataDictionary',dataSheet = 'DataEntry')
+dictionary <- import$dictionary
+data <- import$data
+
+# Simple univariate plots with outliers
+plots <- plotVariables(data=data,dictionary=dictionary,IDvar = 'ID')
+plots
+}
 }

@@ -4,21 +4,29 @@
 \alias{addFactorVariables}
 \title{Create factor variables from data dictionary}
 \usage{
-addFactorVariables(data, dictTable, keepOriginal = TRUE)
+addFactorVariables(data, dictionary, keepOriginal = TRUE)
 }
 \arguments{
-\item{data}{a data frame returned by readExcelData}
+\item{data}{A data frame returned by readExcelData}
 
-\item{dictTable}{a data frame returned by readDataDict}
+\item{dictionary}{A data frame returned by readDataDict}
 
 \item{keepOriginal}{Boolean indicating if the original character variables should be kept, default is TRUE with _original appended to variable names}
 }
 \value{
-a data frame with the updated factor variables
+A data frame with the updated factor variables
 }
 \description{
 This function will replace the code and category variables
 with factors based on the factor levels provided in the data
 dictionary. The original variables are retained with the suffix
 '_orig'
+}
+\examples{
+\dontrun{
+exampleDataFile <- system.file("extdata", "exampleData.xlsx", package = "exceldata")
+dictionary <- readDataDict(exampleDataFile, dictionarySheet = 'DataDictionary')
+data <- readExcelData(exampleDataFile,dictionary,dataSheet='DataEntry')
+factorData <- addFactorVariables(data,dictionary,keepOriginal = TRUE)
+}
 }

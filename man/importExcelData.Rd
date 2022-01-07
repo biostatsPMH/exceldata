@@ -19,7 +19,7 @@ importExcelData(
 \arguments{
 \item{excelFile}{path and filename of the data file containing the data and dictionary}
 
-\item{dictionarySheet}{the name of the sheet containing the data dictionary, defaults to 'DataDictionary'}
+\item{dictionarySheet}{name of the sheet containing the data dictionary, defaults to 'DataDictionary'}
 
 \item{dataSheet}{name of the data entry sheet within the file, defaults to 'DataEntry'}
 
@@ -40,6 +40,10 @@ when creating survival type variables. Allowed values are from lubridate (ex: 'd
 }
 \value{
 A list containing two data frames: the data dictionary and the data table
+\itemize{
+  \item dictionary - A data frame with entries for each variable
+  \item data - A data frame containing the imported data
+}
 }
 \description{
 This function reads in a data dictionary and data entry table and converts
@@ -48,8 +52,9 @@ examples.
 }
 \details{
 The exceldata package was designed around the DataDictionary.xlsm template.
-More documentation and the current downloadable template can be found on the
-[GitHub Site](https://github.com/biostatsPMH/exceldata#readme)
+More documentation and the current downloadable template can be found at:
+
+https://github.com/biostatsPMH/exceldata#readme
 Warning: If SetErrorsMissing = TRUE then a subsequent call to checkData will not return any errors, because the errors have been set to missing.
 
 NOTE: This function will only read in those columns present in the DataDictionary
@@ -58,6 +63,7 @@ NOTE: This function will only read in those columns present in the DataDictionar
 exampleDataFile <- system.file("extdata", "exampleData.xlsx", package = "exceldata")
 import <- importExcelData(exampleDataFile,
 dictionarySheet = 'DataDictionary',dataSheet = 'DataEntry')
+
 # The imported data dictionary
 dictionary <- import$dictionary
 head(dictionary)
@@ -67,6 +73,6 @@ data <- import$data
 head(data)
 
 # Simple univariate plots with outliers
-plots <- plotVariables(data=data,dictTable=dictionary,IDvar = 'ID')
+plots <- plotVariables(data=data,dictionary=dictionary,IDvar = 'ID')
 
 }
