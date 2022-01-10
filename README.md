@@ -6,8 +6,9 @@
 <!-- badges: start -->
 
 [![Lifecycle:
-experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
-<!--[![CRAN status](https://www.r-pkg.org/badges/version/exceldata)](https://CRAN.R-project.org/package=exceldata)-->
+Stable](https://img.shields.io/badge/lifecycle-stable-green.svg)](https://lifecycle.r-lib.org/articles/stages.html#stable)
+[![CRAN
+status](https://www.r-pkg.org/badges/version/exceldata)](https://CRAN.R-project.org/package=exceldata)
 <!-- badges: end -->
 
 The goal of exceldata is to facilitate the use of Excel as a data entry
@@ -27,34 +28,32 @@ and then click on `Download`
 
 ## Installation
 
-<!--You can install the released version of PDstats from [CRAN](https://CRAN.R-project.org) with:
+You can install the released version of exceldata from
+[CRAN](https://CRAN.R-project.org) with:
 
 ``` r
-install.packages("PDstats")
+install.packages("exceldata")
 ```
 
 And the development version from [GitHub](https://github.com/) with:
--->
-
-You can install the development version of the package from GitHub with:
 
 ``` r
-`devtools::install_github("biostatsPMH/exceldata")`
+devtools::install_github("biostatsPMH/exceldata")
 ```
 
 ------------------------------------------------------------------------
 
 ## Documentation
 
-[Online Documentation For Excel
-Users](https://biostatspmh.github.io/exceldata/information-for-users-of-the-data-dictionary.html)
+[Online Documentation](https://biostatspmh.github.io/exceldata/)
 
 PDF Documentation: [Click
 Here](https://github.com/biostatsPMH/exceldata/blob/main/docs/ExcelDictionaryUserManual.pdf)
 and then click on `Download`
 <!-- Note - this is created in a separate directory - Teaching/excelData Instructions -->
 
-[For Biostatisticians](https://biostatspmh.github.io/exceldata/)
+[Using the Excel
+Template](https://biostatspmh.github.io/exceldata/data-dictionary-1.html)
 
 ## Example
 
@@ -66,7 +65,7 @@ library(exceldata)
 
 exampleDataFile <- system.file("extdata", "exampleData.xlsx", package = "exceldata")
 import <- importExcelData(exampleDataFile,dictionarySheet = 'DataDictionary',dataSheet = 'DataEntry')
-#> File import complete. Details of variables created are in the logfile:  exampleData06Jan22.log
+#> File import complete. Details of variables created are in the logfile:  exampleData10Jan22.log
 
 # The imported data dictionary 
 dictionary <- import$dictionary
