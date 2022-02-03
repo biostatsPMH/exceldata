@@ -9,6 +9,8 @@
 Stable](https://img.shields.io/badge/lifecycle-stable-green.svg)](https://lifecycle.r-lib.org/articles/stages.html#stable)
 [![CRAN
 status](https://www.r-pkg.org/badges/version/exceldata)](https://CRAN.R-project.org/package=exceldata)
+[![metacran
+downloads](https://cranlogs.r-pkg.org/badges/grand-total/exceldata)](https://cran.r-project.org/package=exceldata)
 <!-- badges: end -->
 
 The goal of exceldata is to facilitate the use of Excel as a data entry
@@ -62,10 +64,13 @@ for outliers.
 
 ``` r
 library(exceldata)
+#> Warning: package 'exceldata' was built under R version 4.1.2
+#> Warning in register(): Can't find generic `scale_type` in package ggplot2 to
+#> register S3 method.
 
 exampleDataFile <- system.file("extdata", "exampleData.xlsx", package = "exceldata")
 import <- importExcelData(exampleDataFile,dictionarySheet = 'DataDictionary',dataSheet = 'DataEntry')
-#> File import complete. Details of variables created are in the logfile:  exampleData10Jan22.log
+#> File import complete. Details of variables created are in the logfile:  exampleData03Feb22.log
 
 # The imported data dictionary 
 dictionary <- import$dictionary
