@@ -145,6 +145,9 @@ readDataDict <- function(excelFile,dictionarySheet ='DataDictionary',range,colna
 #' plots <- plotVariables(data=data,dictionary=dictionary,IDvar = 'ID')
 #'
 #' @export
+#' excelFile= 'C:/Users/lisa/OneDrive - UHN/Giuliani/CAPCR_20-5589/FollowUp Survey/data/DataDictionary_CovidSurvey.xlsm'
+#' dictionarySheet='DataDictionary'
+#' dataSheet='03 - CODED + CLEANED'
 importExcelData <- function(excelFile,dictionarySheet='DataDictionary',dataSheet='DataEntry',id,saveWarnings=TRUE,setErrorsMissing=TRUE,range,colnames,origin,timeUnit='month'){
   if (missing(excelFile) ) stop('The excel file containing the data dictionary and data entry table are required')
   if (missing(range)) range = NULL
@@ -222,8 +225,8 @@ importExcelData <- function(excelFile,dictionarySheet='DataDictionary',dataSheet
 #' }
 readExcelData <- function(excelFile,dictionary,dataSheet='DataEntry',saveWarnings=FALSE,setErrorsMissing=FALSE,range,origin){
   if (missing(excelFile) | missing(dictionary)) stop(paste('Both the excel data file and the data dictionary are required arguments.\n',
-                                                          'Use exceldata::readDataDict to read in the data dictionary before importing data.\n',
-                                                          'Or run exceldata::importExcelData to import the dictionary and data files and create factor variables.'))
+                                                           'Use exceldata::readDataDict to read in the data dictionary before importing data.\n',
+                                                           'Or run exceldata::importExcelData to import the dictionary and data files and create factor variables.'))
   if (all(names(dictionary) != c('VariableName', 'Description', 'Type', 'Minimum', 'Maximum', 'Levels'))) {
     stop('The specified dictionary does not have the expected columns. \nTry running readDataDict again.')
   }
@@ -383,7 +386,7 @@ checkData <-function(dictionary,data,id){
                setdiff(names(data),dictionary[['VariableName']])))
   }
 
-  if (!all(dictionary[['VariableName']] %in% names(data) )){
+  if (!all(dictionary[['VariableName']][dictionary[['Type']]!='calculated'] %in% names(data) )){
     warning(paste('Variables missing from the data table:\n',
                   paste(setdiff(dictionary[['VariableName']],names(data)),collapse = ',')))
   }
@@ -490,7 +493,7 @@ addFactorVariables <-function(data,dictionary,keepOriginal=TRUE){
                setdiff(names(data),dictionary[['VariableName']])))
   }
 
-  if (!all(dictionary[['VariableName']] %in% names(data) )){
+  if (!all(dictionary[['VariableName']][dictionary[['Type']]!='calculated'] %in% names(data) )){
     warning(paste('Variables missing from the data table:\n',
                   paste(setdiff(dictionary[['VariableName']],names(data)),collapse = ',')))
   }
@@ -706,21 +709,26 @@ createRecodedVar <- function(data,dictionary,newVarName,instructions){
 
   codeReps <-diff(  c(grep("=",instructions),length(instructions)+1))
   newCodes <- sapply(instructions[grep("=",instructions)],function(x) trimws(unlist(strsplit(x,"="))[1]))
-  oldCodes=gsub('.*=','',instructions[-1])
-  labels = unlist(mapply(rep,x=newCodes,times=codeReps))
+  oldCodes <- sapply(gsub('.*=','',instructions[-1]),trimws)
+  labels <- unname(unlist(mapply(rep,x=newCodes,times=codeReps)))
 
 
-  # If the variable is a codes variable, then we need the original entered levels
+  # If the variable is a codes variable, then we may need the original entered levels
   if (dictionary[["Type"]][dictionary[['VariableName']]==originalVar]=='codes') {
     factorLevels = try(importCodes(dictionary[["Levels"]][dictionary[['VariableName']]==originalVar]),silent = T)
 
     if (class(factorLevels)[1]=='try-error'){
       warning(paste('Data codes for',originalVar,'could not be extracted,', newVarName,'not created.'))
     } else {
-
-      oldCodes <- data.frame(oldCodes=oldCodes)
-      codeLookup <- merge(oldCodes,factorLevels,by.x = "oldCodes", by.y = "code" )
-      recoded = droplevels(factor(data[[originalVar]],levels = codeLookup[,2],labels=labels))
+      # code labels supplied
+      if (length(setdiff(oldCodes,factorLevels$label))==0){
+        recoded = droplevels(factor(data[[originalVar]],levels = oldCodes,labels=labels))
+      # numeric codes supplied
+      } else{
+        oldCodes <- data.frame(oldCodes=oldCodes)
+        codeLookup <- merge(oldCodes,factorLevels,by.x = "oldCodes", by.y = "code" )
+        recoded = droplevels(factor(data[[originalVar]],levels = codeLookup[,2],labels=labels))
+      }
     }
   } else{
     recoded = droplevels(factor(data[[originalVar]],levels = oldCodes,labels=labels))
