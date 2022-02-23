@@ -8,7 +8,8 @@ importExcelData(
   excelFile,
   dictionarySheet = "DataDictionary",
   dataSheet = "DataEntry",
-  saveWarnings = FALSE,
+  id,
+  saveWarnings = TRUE,
   setErrorsMissing = TRUE,
   range,
   colnames,
@@ -22,6 +23,8 @@ importExcelData(
 \item{dictionarySheet}{name of the sheet containing the data dictionary, defaults to 'DataDictionary'}
 
 \item{dataSheet}{name of the data entry sheet within the file, defaults to 'DataEntry'}
+
+\item{id}{String indicating the ID variable, to display errors by ID instead of row number}
 
 \item{saveWarnings}{Boolean, if TRUE and there are any warnings then the function will return a list with the data frame and the import warnings}
 

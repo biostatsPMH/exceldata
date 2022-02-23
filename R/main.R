@@ -113,6 +113,7 @@ readDataDict <- function(excelFile,dictionarySheet ='DataDictionary',range,colna
 #' @param excelFile path and filename of the data file containing the data and dictionary
 #' @param dictionarySheet name of the sheet containing the data dictionary, defaults to 'DataDictionary'
 #' @param dataSheet name of the data entry sheet within the file, defaults to 'DataEntry'
+#' @param id String indicating the ID variable, to display errors by ID instead of row number
 #' @param saveWarnings Boolean, if TRUE and there are any warnings then the function will return a list with the data frame and the import warnings
 #' @param setErrorsMissing Boolean, if TRUE all values out of range will be set to NA
 #' @param range Optional, Range of Excel sheet to restrict import to (ie. range="A1:F6")
@@ -144,7 +145,7 @@ readDataDict <- function(excelFile,dictionarySheet ='DataDictionary',range,colna
 #' plots <- plotVariables(data=data,dictionary=dictionary,IDvar = 'ID')
 #'
 #' @export
-importExcelData <- function(excelFile,dictionarySheet='DataDictionary',dataSheet='DataEntry',saveWarnings=FALSE,setErrorsMissing=TRUE,range,colnames,origin,timeUnit='month'){
+importExcelData <- function(excelFile,dictionarySheet='DataDictionary',dataSheet='DataEntry',id,saveWarnings=TRUE,setErrorsMissing=TRUE,range,colnames,origin,timeUnit='month'){
   if (missing(excelFile) ) stop('The excel file containing the data dictionary and data entry table are required')
   if (missing(range)) range = NULL
   if (missing(origin)) origin = "1899-12-30"
@@ -160,18 +161,35 @@ importExcelData <- function(excelFile,dictionarySheet='DataDictionary',dataSheet
 
     dictionary <- readDataDict(excelFile,dictionarySheet =dictionarySheet,range,colnames,origin)
 
-    data <- readExcelData(excelFile,dictionary =  dictionary,dataSheet=dataSheet,saveWarnings=saveWarnings,setErrorsMissing=setErrorsMissing,range,origin)
+    data <- suppressWarnings(readExcelData(excelFile,dictionary =  dictionary,dataSheet=dataSheet,saveWarnings=TRUE,setErrorsMissing=FALSE,range,origin))
+    if ('list' %in% class(data)){
+      warnings <- data$warnings
+      data <- data$data
+    }
+    if (missing(id)) checks <- checkData(dictionary,data) else checks <- checkData(dictionary,data,id)
+    if (!is.null(checks)){
+      WriteToLog(msg =  'Data Entry Errors:\n',timestamp = T,append=T)
+      for (v in 1:nrow(checks$errors_by_variable)){
+        WriteToLog(msg =  paste0('Rows (or IDs) with errors in: ',checks$errors_by_variable[v,1],' \n',
+                                 paste0(checks$errors_by_variable[v,2],collapse=', ')),timestamp = FALSE,append=T)
+      }
+
+    }
+    data <- suppressWarnings(readExcelData(excelFile,dictionary=dictionary,dataSheet=dataSheet,saveWarnings=saveWarnings,setErrorsMissing=setErrorsMissing,range,origin))
+    if ('list' %in% class(data)){
+      warnings <- data$warnings
+      data <- data$data
+    }
 
     factorData <- addFactorVariables(data,dictionary,keepOriginal = FALSE)
 
     fullData <- createCalculated(factorData,dictionary,timeUnit='month')
 
-
     cat('File import complete. Details of variables created are in the logfile: ',Sys.getenv("EXCEL_LOG"),'\n')
 
-
-    # RUN CHECKS TO ENSURE THE Calculated Variables are Correct
-    return(list(dictionary=dictionary,data=fullData))
+    if (saveWarnings)   {
+      return(list(dictionary=dictionary,data=fullData,warnings=list(importWarnings=warnings,dataCheckErrors=checks)))
+    } else  return(list(dictionary=dictionary,data=fullData))
   }
 }
 
@@ -403,7 +421,7 @@ checkData <-function(dictionary,data,id){
     if (dictionary[['Type']][dictionary[['VariableName']]==v] %in% c('category','codes')){
       allowedCodes = importCodes(dictionary[['Levels']][dictionary[['VariableName']]==v])[['code']]
       if (dictionary[['Type']][dictionary[['VariableName']]==v] =='codes') allowedCodes = as.numeric(allowedCodes)
-      check = data[[v]]  %in% allowedCodes
+      check = data[[v]]  %in% c(NA,allowedCodes)
     }
 
     if (any(check==FALSE,na.rm=T)) df_checks[[v]] = check
