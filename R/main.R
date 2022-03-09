@@ -107,7 +107,12 @@ readDataDict <- function(excelFile,dictionarySheet ='DataDictionary',range,colna
 #'
 #' https://github.com/biostatsPMH/exceldata#readme
 
-#' Warning: If SetErrorsMissing = TRUE then a subsequent call to checkData will not return any errors, because the errors have been set to missing.
+#' Note that as of release 0.1.1.1 the log file will give row numbers
+#' corresponding to the row number in Excel, as opposed to the row number in the
+#' data frame
+#'
+#' Warning: If SetErrorsMissing = TRUE then a subsequent call to checkData will
+#' not return any errors, because the errors have already been set to missing.
 #'
 #' NOTE: This function will only read in those columns present in the DataDictionary
 #' @param excelFile path and filename of the data file containing the data and dictionary
@@ -175,6 +180,10 @@ importExcelData <- function(excelFile,dictionarySheet='DataDictionary',dataSheet
     }
     if (missing(id)) checks <- checkData(dictionary,data) else checks <- checkData(dictionary,data,id)
     if (!is.null(checks)){
+      if (setErrorsMissing){
+        message('Date entry errors found, please refer to log file.\n These have been set to missing.')
+      } else message('Date entry errors found, please refer to log file.\n Use setErrorsMissing=T to recode these values as missing.')
+
       WriteToLog(msg =  'Data Entry Errors:\n',timestamp = T,append=T)
       for (v in 1:nrow(checks$errors_by_variable)){
         WriteToLog(msg =  paste0('Rows (or IDs) with errors in: ',checks$errors_by_variable[v,1],' \n',
@@ -442,7 +451,7 @@ checkData <-function(dictionary,data,id){
     # keep only rows with errors
     if (missing(id)){
       id = 'originalRowID'
-      rowIDs = 1:nrow(entry_errors)
+      rowIDs = 1:nrow(entry_errors)+1
     } else{
       rowIDs = data[[id]]
     }
