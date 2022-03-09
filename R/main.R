@@ -164,7 +164,11 @@ importExcelData <- function(excelFile,dictionarySheet='DataDictionary',dataSheet
 
     dictionary <- readDataDict(excelFile,dictionarySheet =dictionarySheet,range,colnames,origin)
 
-    data <- suppressWarnings(readExcelData(excelFile,dictionary =  dictionary,dataSheet=dataSheet,saveWarnings=TRUE,setErrorsMissing=FALSE,range,origin))
+    data <- suppressWarnings(readExcelData(excelFile,dictionary =  dictionary,
+                                           dataSheet=dataSheet,
+                                           saveWarnings=TRUE,
+                                           setErrorsMissing=FALSE,
+                                           range,origin))
     if ('list' %in% class(data)){
       warnings <- data$warnings
       data <- data$data
@@ -447,12 +451,12 @@ checkData <-function(dictionary,data,id){
     entry_errors <- entry_errors[rowsToKeep,]
     row_errors = data.frame(originalRowID = entry_errors[[id]],
                             Errors = sapply(1:nrow(entry_errors),function(i){
-                              paste(names(entry_errors)[-1][as.logical(as.vector(entry_errors[i,-1]))],collapse = ",")
+                              paste(names(entry_errors)[-1][na.omit(as.logical(as.vector(entry_errors[i,-1])))],collapse = ",")
                             }))
     names(row_errors)[1] <- id
     var_errors = data.frame(Variable = names(entry_errors)[-1],
                             Row_Errors = sapply(names(entry_errors)[-1],function(v){
-                              paste(entry_errors[[id]][as.logical(as.vector(entry_errors[[v]]))],collapse = ",")
+                              paste(na.omit(entry_errors[[id]][as.logical(as.vector(entry_errors[[v]]))]),collapse = ",")
                             }))
     rownames(var_errors) <- NULL
     colnames(var_errors)[2] <- ifelse(missing(id),'Row_Errors','IDs_With_Errors')
