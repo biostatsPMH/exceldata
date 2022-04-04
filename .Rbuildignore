@@ -5,9 +5,11 @@
 ^images$
 ^index\.Rmd$
 ^README\.Rmd$
+^DataDictionary0.9.1.xlsm$
 ^.log$
 ^.nojekyll$
 ^_bookdown\.yml$
 ^CRAN-SUBMISSION$
 ^cran-comments\.md$
 ^CRAN-RELEASE$
+^\.github$

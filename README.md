@@ -11,6 +11,7 @@ Stable](https://img.shields.io/badge/lifecycle-stable-green.svg)](https://lifecy
 status](https://www.r-pkg.org/badges/version/exceldata)](https://CRAN.R-project.org/package=exceldata)
 [![metacran
 downloads](https://cranlogs.r-pkg.org/badges/grand-total/exceldata)](https://cran.r-project.org/package=exceldata)
+[![R-CMD-check](https://github.com/biostatsPMH/exceldata/workflows/R-CMD-check/badge.svg)](https://github.com/biostatsPMH/exceldata/actions)
 <!-- badges: end -->
 
 The goal of exceldata is to facilitate the use of Excel as a data entry
@@ -64,13 +65,11 @@ for outliers.
 
 ``` r
 library(exceldata)
-#> Warning: package 'exceldata' was built under R version 4.1.2
-#> Warning in register(): Can't find generic `scale_type` in package ggplot2 to
-#> register S3 method.
 
 exampleDataFile <- system.file("extdata", "exampleData.xlsx", package = "exceldata")
 import <- importExcelData(exampleDataFile,dictionarySheet = 'DataDictionary',dataSheet = 'DataEntry')
-#> File import complete. Details of variables created are in the logfile:  exampleData03Feb22.log
+#> No errors in data.
+#> File import complete. Details of variables created are in the logfile:  exampleData04Apr22.log
 
 # The imported data dictionary 
 dictionary <- import$dictionary
@@ -91,12 +90,12 @@ head(data)
 #> # A tibble: 6 x 9
 #>   ID      Age Gender T_Stage DxDate      ECOG Date_Death Date_LFU   T0_Stg
 #>   <chr> <dbl> <fct>  <fct>   <date>     <int> <date>     <date>     <fct> 
-#> 1 1        77 f      T2      2019-06-05     4 2021-08-06 NA         T1up  
-#> 2 2        58 f      T2      2019-09-26     2 2020-06-06 NA         T1up  
-#> 3 3        66 f      T4      2019-07-19     0 NA         2020-07-20 T1up  
-#> 4 4        72 f      T4      2019-12-17     4 NA         2021-07-04 T1up  
-#> 5 5        52 f      T2      2019-06-07     1 2020-12-04 NA         T1up  
-#> 6 6        72 f      T1      2021-02-10     2 2021-10-10 NA         T1up
+#> 1 1        77 Female T2      2019-06-05     4 2021-08-06 NA         T1up  
+#> 2 2        58 Female T2      2019-09-26     2 2020-06-06 NA         T1up  
+#> 3 3        66 Female T4      2019-07-19     0 NA         2020-07-20 T1up  
+#> 4 4        72 Female T4      2019-12-17     4 NA         2021-07-04 T1up  
+#> 5 5        52 Female T2      2019-06-07     1 2020-12-04 NA         T1up  
+#> 6 6        72 Female T1      2021-02-10     2 2021-10-10 NA         T1up
 
 # Simple univariate plots with outliers 
 plots <- plotVariables(data,dictionary,IDvar = 'ID',showOutliers = T)

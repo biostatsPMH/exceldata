@@ -1,1 +1,3 @@
 output_dir: "docs"
+rmd_files: ["index.Rmd"] # required to omit README.Rmd
+

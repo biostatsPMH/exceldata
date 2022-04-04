@@ -150,9 +150,6 @@ readDataDict <- function(excelFile,dictionarySheet ='DataDictionary',range,colna
 #' plots <- plotVariables(data=data,dictionary=dictionary,IDvar = 'ID')
 #'
 #' @export
-#' excelFile= 'C:/Users/lisa/OneDrive - UHN/Giuliani/CAPCR_20-5589/FollowUp Survey/data/DataDictionary_CovidSurvey.xlsm'
-#' dictionarySheet='DataDictionary'
-#' dataSheet='03 - CODED + CLEANED'
 importExcelData <- function(excelFile,dictionarySheet='DataDictionary',dataSheet='DataEntry',id,saveWarnings=TRUE,setErrorsMissing=TRUE,range,colnames,origin,timeUnit='month'){
   if (missing(excelFile) ) stop('The excel file containing the data dictionary and data entry table are required')
   if (missing(range)) range = NULL
@@ -518,7 +515,13 @@ addFactorVariables <-function(data,dictionary,keepOriginal=TRUE){
       if (dictionary[['Type']][dictionary[['VariableName']]==v]=='codes'){
         factorVar <- factor(data[[v]],levels=factorLevels$code,labels=factorLevels$label)
       } else {
-        factorVar <- factor(data[[v]],levels=factorLevels$code)
+        if (all(is.na(factorLevels$label))){ # simple comma-separated categories
+          factorVar <- factor(data[[v]],levels=factorLevels$code)
+        } else if (any(is.na(factorLevels$label))){ # some labels missing, warn
+          warning(paste('Category labels missing in the following variable:\n',v,
+                        '\n Check the log file for factor assignment.'))
+          factorVar <- factor(data[[v]],levels=factorLevels$code,labels=factorLevels$label)
+        } else factorVar <- factor(data[[v]],levels=factorLevels$code,labels=factorLevels$label)
       }
       WriteToLog(paste('Factor structure added for: ',v))
       tbl_check <- utils::capture.output(table(factorVar,data[[v]]))
@@ -736,7 +739,7 @@ createRecodedVar <- function(data,dictionary,newVarName,instructions){
       # code labels supplied
       if (length(setdiff(oldCodes,factorLevels$label))==0){
         recoded = droplevels(factor(data[[originalVar]],levels = oldCodes,labels=labels))
-      # numeric codes supplied
+        # numeric codes supplied
       } else{
         oldCodes <- data.frame(oldCodes=oldCodes)
         codeLookup <- merge(oldCodes,factorLevels,by.x = "oldCodes", by.y = "code" )

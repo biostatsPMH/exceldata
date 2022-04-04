@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>3 The exceldata package | Using the DataDictionary template and the exceldata package</title>
-  <meta name="description" content="3 The exceldata package | Using the DataDictionary template and the exceldata package" />
+  <title>3.2 importExcelData Sub- Functions | Using the DataDictionary template and the exceldata package</title>
+  <meta name="description" content="3.2 importExcelData Sub- Functions | Using the DataDictionary template and the exceldata package" />
   <meta name="generator" content="bookdown 0.24 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="3 The exceldata package | Using the DataDictionary template and the exceldata package" />
+  <meta property="og:title" content="3.2 importExcelData Sub- Functions | Using the DataDictionary template and the exceldata package" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="3 The exceldata package | Using the DataDictionary template and the exceldata package" />
+  <meta name="twitter:title" content="3.2 importExcelData Sub- Functions | Using the DataDictionary template and the exceldata package" />
   
   
   
@@ -29,8 +29,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="multiple-data-sheets.html"/>
-<link rel="next" href="importexceldata.html"/>
+<link rel="prev" href="importexceldata.html"/>
+<link rel="next" href="plotvariables.html"/>
 <script src="libs/header-attrs-2.13/header-attrs.js"></script>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
@@ -145,12 +145,61 @@
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="the-exceldata-package" class="section level1 tabset hasAnchor" number="3">
-<h1><span class="header-section-number">3</span> The exceldata package<a href="the-exceldata-package.html#the-exceldata-package" class="anchor-section" aria-label="Anchor link to header"></a></h1>
-<p>The exceldata package is a small companion to the DataDictionary workbook. The purpose is to read in the data dictionary and the data entry sheets and then to perform range checks on all the variables. The DataDictionary file does not <em>prevent</em> data entry errors, users can still copy and paste bad values into the sheet.</p>
-<div class="figure">
-<img src="images/exceldatapkg.png" alt="" />
-<p class="caption">Workflow of the exceldata package</p>
+<div id="importexceldata-sub--functions" class="section level2 hasAnchor" number="3.2">
+<h2><span class="header-section-number">3.2</span> importExcelData Sub- Functions<a href="importexceldata-sub--functions.html#importexceldata-sub--functions" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="import-the-data-dictionary" class="section level3 hasAnchor" number="3.2.1">
+<h3><span class="header-section-number">3.2.1</span> Import the Data Dictionary<a href="importexceldata-sub--functions.html#import-the-data-dictionary" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>The <code>readDataDict</code> function will import the dictionary file. This is slightly more useful than just using <code>readxl::read_excel</code> because checks will be performed to ensure the dictionary is complete and dates will be converted to easy to read text strings.</p>
+<p>The file and sheet name must be specified.</p>
+<p>Optional Arguments:</p>
+<ul>
+<li><code>colnames</code> Column names of the DataDictionary, defaults to those used in the Excel template</li>
+<li><code>range</code> allows a specified range of the sheet to be imported (ie range = “A1:F10”)</li>
+<li><code>origin</code> enables the origin of Excel dates to be set (defaults to 30 December 1899)</li>
+</ul>
+<p><strong>!<code>readDataDict</code> must be run before <code>readExcelData</code></strong></p>
+</div>
+<div id="import-the-data" class="section level3 hasAnchor" number="3.2.2">
+<h3><span class="header-section-number">3.2.2</span> Import the Data<a href="importexceldata-sub--functions.html#import-the-data" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>The <code>readExcelData</code> function will import the data, using the specifications provided in the data dictionary. Again, this should be slightly more useful than a readxl::read_excel because:</p>
+<ul>
+<li>dates will be imported nicely</li>
+<li>variables not in the data dictionary will be removed</li>
+<li>there is an option to store any import warnings, which may be useful to send to the user</li>
+<li>the data can be read in ‘strictly’, setting all values that fall outside the allowed range to <code>NA</code> (This can be useful if users insist on using missing value codes)</li>
+</ul>
+<p>The file and sheetname, as well as the object returned by the <code>readDataDict</code> function must be specified.</p>
+<p>Optional Arguments:</p>
+<ul>
+<li><code>range</code> allows a specified range of the sheet to be imported (ie range = “A1:AB102”)</li>
+<li><code>origin</code> enables the origin of Excel dates to be set (defaults to 30 December 1899)</li>
+<li><code>saveWarnings</code> will return a list with the data frame and the import warnings (if there are any)</li>
+<li><code>setErrorsMissing</code> will set all values out of range to <code>NA</code> <strong>this should only be done if no warnings are given</strong></li>
+</ul>
+</div>
+<div id="perform-checks" class="section level3 hasAnchor" number="3.2.3">
+<h3><span class="header-section-number">3.2.3</span> Perform Checks<a href="importexceldata-sub--functions.html#perform-checks" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>The <code>checkData</code> function will simply check the data against the data dictionary. This requires the outputs of <code>readDataDict</code> and <code>readExcelData</code>.</p>
+<p>The <code>checkData</code> function will check for duplicate rows and check that all numeric, integer, date, code and category variables meet the requirements of the data dictionary. It does not check the data types, because these are enforced by the <code>readExcelData</code> function.</p>
+<p>The outputs from <code>readDataDict</code> and <code>readExcelData</code> are required.</p>
+<p>Optional Argument:</p>
+<ul>
+<li>id can be used to indicate the patient identifier (ie id =‘SubjectID’) which will provide errors for each id, instead of by row number</li>
+</ul>
+<p><code>checkData</code> returns a list with three elements:</p>
+<ul>
+<li><p>a data frame containing all the errors (rows and columns without errors are removed)</p></li>
+<li><p>a two-column data frame with Variable Names in one column and the location of errors in the second (either row numbers or IDs if provided)</p></li>
+<li><p>a two-column data frame with Row Numbers (or IDs) in one columns and the variable containing errors in the second column.</p></li>
+</ul>
+</div>
+<div id="create-factor-variables" class="section level3 hasAnchor" number="3.2.4">
+<h3><span class="header-section-number">3.2.4</span> Create Factor Variables<a href="importexceldata-sub--functions.html#create-factor-variables" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>If keepOriginal = TRUE then <code>addFactorVariables</code> function will rename all the code and category variables suffixed with <code>_orig</code> (so <em>ecog</em> becomes <em>ecog_orig</em>) and create factor variables using the codes provided in the data dictionary as the factor levels and labels. Otherwise, if keepOriginal = FALSE then the existing variables are over-written with factor variables.</p>
+</div>
+<div id="create-calculated-variables" class="section level3 hasAnchor" number="3.2.5">
+<h3><span class="header-section-number">3.2.5</span> Create Calculated Variables<a href="importexceldata-sub--functions.html#create-calculated-variables" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>The ‘createCalculated’ function calculated variables according the specifications given in the data dictionary. For recoded variables a contingency table is exported to the log file to ensure the categories have been created as expected. For categorised variables a table with the minimum and maximum values on the continuous variable is given for each category and also exported to the log file. For combined variables an attribute is tagged onto the variable so that it is printed as a Pareto graph by the <code>PlotVariables</code> function.</p>
 </div>
 </div>
             </section>
@@ -158,8 +207,8 @@
           </div>
         </div>
       </div>
-<a href="multiple-data-sheets.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="importexceldata.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="importexceldata.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="plotvariables.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

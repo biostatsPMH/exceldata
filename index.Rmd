@@ -16,11 +16,9 @@ output:
           <li> &nbsp;&nbsp; exceldata    </li>
           <li> &nbsp;&nbsp; PMH Biostatistics</li>
         after: |
-          <li> <a href="mailto:lisa.avery@uhnresearch.ca">Lisa Avery</a>   </li>
-        toolbar:
-        position: fixed
+          <li> <a href="mailto:lisa.avery@uhn.ca">Lisa Avery</a>   </li>
       edit : null
-      download: no
+      download: 'pdf'
       search: yes
       sharing:
         facebook: false
@@ -31,6 +29,10 @@ output:
         family: sans
         size: 2
       info: no
+  bookdown::word_document2:
+    reference_docx: "../../wordTemplate.docx"
+    fig_height: 4 
+    toc: yes
   bookdown::html_document2:
     toc: true
     toc_float: true
@@ -225,9 +227,9 @@ A user begins by specifying the name, type and allowed range (or values) for eac
 There are seven allowed types of variables: 
 
 - *calculated* for variables where users specify calculations to be performed (age groups, overall survival)
-- *category* for variables which can take only pre-specified values 
+- *category* for variables which can take only pre-specified values (male, female), or where **character** short forms are used (M=male, F=female)
 - *character* for variables such as the id, or any variable not to be analysed
-- *codes* for variables where short forms are entered (ie 1=male, 2=female)
+- *codes* for variables where **numeric** short forms are entered (ie 1=male, 2=female)
 - *date* for all dates 
 - *integer* for values which can take only whole numbers (ECOG score)
 - *numeric* for all other numeric values
@@ -235,11 +237,13 @@ There are seven allowed types of variables:
 
 For the *date*, *integer* and *numeric* types the user must specify both a minimum and a maximum value. The minimum and maximum values can be numeric, the names of other variables in the data (if you want to make sure death is after diagnosis) or, for date types, 'today' can be used to allow all dates up to the time of entry.
 
-For the *codes* and *category* variables the user needs to specify the allowed categories, or the codes, in the order they would like them presented. If they struggle with this for data that has already been entered, then the UNIQUE function in Excel may be of use to them, it will list all the unique variables in a range.
+For the *codes* and *category* variables the user needs to specify the allowed categories, or the codes, in the order they would like them presented. If they struggle with this for data that has already been entered, then the UNIQUE function in Excel may be of use to them, it will list all the unique variables in a range. 
+
+Note that **codes** variables contain numeric data in the data entry sheet while **category** variables contain character data in the data entry sheet. 
 
 Once the dictionary is complete clicking the the `Create Data Entry Sheet` button will create the data entry table. 
 
-If the user wishes to change any of the ranges or codes after entering data then they can change the dictionary and click `Re-format Exising Sheet` to update the validaion rules.
+If the user wishes to change any of the ranges or codes after entering data then they can change the dictionary and click `Re-format Exising Sheet` to update the validation rules.
 
 If code or category variables are present then a `_codes_` sheet will be created to contain the allowed values for data validation. This sheet contains the same name as the data entry sheet, suffixed by *_codes_*. This sheet is hidden from the user.
 
@@ -283,7 +287,7 @@ Categorised variables are created from continuous variables
 
 **Syntax:** `OrginalVar`,category1=<cutoff1,category2=<cutoff2,category3
 
-where `OriginalVar` is the variable in the data to be categorised and category1,category2 etc are the names of the new categories (these will become factor levels) amd cutoff1,cutoff2 are the cut-offs for each category and the final category (in this case category3) does not have a cutoff, only a name, because all people not meeting earlier criteria will be in this level. Note that at this point it is only possible to create categories by specifying the upper bounds.
+where `OriginalVar` is the variable in the data to be categorised and category1,category2 etc are the names of the new categories (these will become factor levels) and cutoff1,cutoff2 are the cut-offs for each category and the final category (in this case category3) does not have a cutoff, only a name, because all people not meeting earlier criteria will be in this level. Note that at this point it is only possible to create categories by specifying the upper bounds.
 
 Example of categorising a continuous variable in the Data Dictionary: 
 
@@ -389,7 +393,7 @@ rsvg::rsvg_png(tmp, "images/excel.png") # saved graph as png in current working 
 
 If the user wishes to have multiple data sheets (for static data vs assessment data) then multiple data dictionaries can be used. The user simply creates a copy of the DataDictionary sheet and creates a different data entry sheet. It will be obvious which dictionaries belong with which data entry sheets by looking at the variables.
 
-![A workbook with multiple sheets](images/multiplesheets.png)
+![A workbook with multiple sheet tabs](images/multiplesheets.png)
 
 # The exceldata package {.tabset}
 
@@ -514,7 +518,7 @@ Optional Argument:
 
 `checkData` returns a list with three elements:
 
-- a data frame containiny all the errors (rows and columns without errors are removed)
+- a data frame containing all the errors (rows and columns without errors are removed)
 
 - a two-column data frame with Variable Names in one column and the location of errors in the second (either row numbers or IDs if provided)
 
@@ -523,11 +527,11 @@ Optional Argument:
 
 ### Create Factor Variables
 
-The `addFactorVariables` function will rename all the code and category variables suffixed with `_orig` (so *ecog* becomes *ecog_orig*) and create factor variables using the codes provided in the data dictionary as the factor levels and labels.
+If keepOriginal = TRUE then `addFactorVariables` function will rename all the code and category variables suffixed with `_orig` (so *ecog* becomes *ecog_orig*) and create factor variables using the codes provided in the data dictionary as the factor levels and labels. Otherwise, if keepOriginal = FALSE then the existing variables are over-written with factor variables.
 
 ### Create Calculated Variables
 
-The 'createCalculated' function calculated variables according the specifications given in the data dictionary. For recoded variables a contingency table is exported to the log file to ensure the categories have been created as expected. For categorised variables a table with the minimum and maximum values on the continuous variable is given for each category and also exported to the log file. For combined variables an atribute is tagged onto the variable so that it is printed as a Pareto graph by the `PlotVariables` function.
+The 'createCalculated' function calculated variables according the specifications given in the data dictionary. For recoded variables a contingency table is exported to the log file to ensure the categories have been created as expected. For categorised variables a table with the minimum and maximum values on the continuous variable is given for each category and also exported to the log file. For combined variables an attribute is tagged onto the variable so that it is printed as a Pareto graph by the `PlotVariables` function.
 
 
 ## PlotVariables
@@ -552,7 +556,7 @@ To view them in the plots view:
 
 Each variable will be shown separately, the arrows at the top left of the Plots screen can be used to scroll through the plots
 
-To show them all together on one page you can use the gggpubr package:
+To show them all together on one page you can use the ggpubr package:
 
 `ggpubr::ggarrange(plotlist=varPlots)`
 
@@ -670,7 +674,7 @@ Categorised variables are created from continuous variables
 
 **Syntax:** `OrginalVar`,category1=<cutoff1,category2=<cutoff2,category3
 
-where `OriginalVar` is the variable in the data to be categorised and category1,category2 etc are the names of the new categories (these will become factor levels) amd cutoff1,cutoff2 are the cut-offs for each category and the final category (in this case category3) does not have a cutoff, only a name, because all people not meeting earlier criteria will be in this level. Note that at this point it is only possible to create categories by specifying the upper bounds.
+where `OriginalVar` is the variable in the data to be categorised and category1,category2 etc are the names of the new categories (these will become factor levels) and cutoff1,cutoff2 are the cut-offs for each category and the final category (in this case category3) does not have a cutoff, only a name, because all people not meeting earlier criteria will be in this level. Note that at this point it is only possible to create categories by specifying the upper bounds.
 
 Example of categorising a continuous variable in the Data Dictionary: 
 

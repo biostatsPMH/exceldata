@@ -58,7 +58,12 @@ The exceldata package was designed around the DataDictionary.xlsm template.
 More documentation and the current downloadable template can be found at:
 
 https://github.com/biostatsPMH/exceldata#readme
-Warning: If SetErrorsMissing = TRUE then a subsequent call to checkData will not return any errors, because the errors have been set to missing.
+Note that as of release 0.1.1.1 the log file will give row numbers
+corresponding to the row number in Excel, as opposed to the row number in the
+data frame
+
+Warning: If SetErrorsMissing = TRUE then a subsequent call to checkData will
+not return any errors, because the errors have already been set to missing.
 
 NOTE: This function will only read in those columns present in the DataDictionary
 }

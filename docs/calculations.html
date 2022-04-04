@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>3.5 Calculations | Using the DataDictionary template and the exceldata package</title>
   <meta name="description" content="3.5 Calculations | Using the DataDictionary template and the exceldata package" />
-  <meta name="generator" content="bookdown 0.22 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.24 and GitBook 2.6.7" />
 
   <meta property="og:title" content="3.5 Calculations | Using the DataDictionary template and the exceldata package" />
   <meta property="og:type" content="book" />
@@ -31,8 +31,9 @@
   
 <link rel="prev" href="data-dictionary-1.html"/>
 <link rel="next" href="entering-data.html"/>
-<script src="libs/header-attrs-2.9/header-attrs.js"></script>
-<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<script src="libs/header-attrs-2.13/header-attrs.js"></script>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
@@ -48,9 +49,9 @@
 
 
 
-
-<link href="libs/anchor-sections-1.0.1/anchor-sections.css" rel="stylesheet" />
-<script src="libs/anchor-sections-1.0.1/anchor-sections.js"></script>
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
 
 
 
@@ -71,61 +72,61 @@
 <li> &nbsp;&nbsp; PMH Biostatistics</li>
 
 <li class="divider"></li>
-<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Workflow and Biostatistics</a></li>
-<li class="chapter" data-level="2" data-path="the-datadictionary-xlsm-file.html"><a href="the-datadictionary-xlsm-file.html"><i class="fa fa-check"></i><b>2</b> The DataDictionary.xlsm file</a>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Workflow and Biostatistics<span></span></a></li>
+<li class="chapter" data-level="2" data-path="the-datadictionary.xlsm-file.html"><a href="the-datadictionary.xlsm-file.html"><i class="fa fa-check"></i><b>2</b> The DataDictionary.xlsm file<span></span></a>
 <ul>
-<li class="chapter" data-level="2.1" data-path="data-dictionary.html"><a href="data-dictionary.html"><i class="fa fa-check"></i><b>2.1</b> Data Dictionary</a></li>
-<li class="chapter" data-level="2.2" data-path="variable-types.html"><a href="variable-types.html"><i class="fa fa-check"></i><b>2.2</b> Variable Types</a></li>
-<li class="chapter" data-level="2.3" data-path="calculated-variables.html"><a href="calculated-variables.html"><i class="fa fa-check"></i><b>2.3</b> Calculated Variables</a>
+<li class="chapter" data-level="2.1" data-path="data-dictionary.html"><a href="data-dictionary.html"><i class="fa fa-check"></i><b>2.1</b> Data Dictionary<span></span></a></li>
+<li class="chapter" data-level="2.2" data-path="variable-types.html"><a href="variable-types.html"><i class="fa fa-check"></i><b>2.2</b> Variable Types<span></span></a></li>
+<li class="chapter" data-level="2.3" data-path="calculated-variables.html"><a href="calculated-variables.html"><i class="fa fa-check"></i><b>2.3</b> Calculated Variables<span></span></a>
 <ul>
-<li class="chapter" data-level="2.3.1" data-path="calculated-variables.html"><a href="calculated-variables.html#survival-variables"><i class="fa fa-check"></i><b>2.3.1</b> Survival Variables</a></li>
-<li class="chapter" data-level="2.3.2" data-path="calculated-variables.html"><a href="calculated-variables.html#recoded-variables"><i class="fa fa-check"></i><b>2.3.2</b> Recoded Variables</a></li>
-<li class="chapter" data-level="2.3.3" data-path="calculated-variables.html"><a href="calculated-variables.html#categorised-variables"><i class="fa fa-check"></i><b>2.3.3</b> Categorised Variables</a></li>
-<li class="chapter" data-level="2.3.4" data-path="calculated-variables.html"><a href="calculated-variables.html#combined-variables"><i class="fa fa-check"></i><b>2.3.4</b> Combined Variables</a></li>
+<li class="chapter" data-level="2.3.1" data-path="calculated-variables.html"><a href="calculated-variables.html#survival-variables"><i class="fa fa-check"></i><b>2.3.1</b> Survival Variables<span></span></a></li>
+<li class="chapter" data-level="2.3.2" data-path="calculated-variables.html"><a href="calculated-variables.html#recoded-variables"><i class="fa fa-check"></i><b>2.3.2</b> Recoded Variables<span></span></a></li>
+<li class="chapter" data-level="2.3.3" data-path="calculated-variables.html"><a href="calculated-variables.html#categorised-variables"><i class="fa fa-check"></i><b>2.3.3</b> Categorised Variables<span></span></a></li>
+<li class="chapter" data-level="2.3.4" data-path="calculated-variables.html"><a href="calculated-variables.html#combined-variables"><i class="fa fa-check"></i><b>2.3.4</b> Combined Variables<span></span></a></li>
 </ul></li>
-<li class="chapter" data-level="2.4" data-path="data-entry.html"><a href="data-entry.html"><i class="fa fa-check"></i><b>2.4</b> Data Entry</a></li>
-<li class="chapter" data-level="2.5" data-path="multiple-data-sheets.html"><a href="multiple-data-sheets.html"><i class="fa fa-check"></i><b>2.5</b> Multiple Data Sheets</a></li>
+<li class="chapter" data-level="2.4" data-path="data-entry.html"><a href="data-entry.html"><i class="fa fa-check"></i><b>2.4</b> Data Entry<span></span></a></li>
+<li class="chapter" data-level="2.5" data-path="multiple-data-sheets.html"><a href="multiple-data-sheets.html"><i class="fa fa-check"></i><b>2.5</b> Multiple Data Sheets<span></span></a></li>
 </ul></li>
-<li class="chapter" data-level="3" data-path="the-exceldata-package.html"><a href="the-exceldata-package.html"><i class="fa fa-check"></i><b>3</b> The exceldata package</a>
+<li class="chapter" data-level="3" data-path="the-exceldata-package.html"><a href="the-exceldata-package.html"><i class="fa fa-check"></i><b>3</b> The exceldata package<span></span></a>
 <ul>
-<li class="chapter" data-level="3.1" data-path="importexceldata.html"><a href="importexceldata.html"><i class="fa fa-check"></i><b>3.1</b> importExcelData</a></li>
-<li class="chapter" data-level="3.2" data-path="importexceldata-sub-functions.html"><a href="importexceldata-sub-functions.html"><i class="fa fa-check"></i><b>3.2</b> importExcelData Sub- Functions</a>
+<li class="chapter" data-level="3.1" data-path="importexceldata.html"><a href="importexceldata.html"><i class="fa fa-check"></i><b>3.1</b> importExcelData<span></span></a></li>
+<li class="chapter" data-level="3.2" data-path="importexceldata-sub--functions.html"><a href="importexceldata-sub--functions.html"><i class="fa fa-check"></i><b>3.2</b> importExcelData Sub- Functions<span></span></a>
 <ul>
-<li class="chapter" data-level="3.2.1" data-path="importexceldata-sub-functions.html"><a href="importexceldata-sub-functions.html#import-the-data-dictionary"><i class="fa fa-check"></i><b>3.2.1</b> Import the Data Dictionary</a></li>
-<li class="chapter" data-level="3.2.2" data-path="importexceldata-sub-functions.html"><a href="importexceldata-sub-functions.html#import-the-data"><i class="fa fa-check"></i><b>3.2.2</b> Import the Data</a></li>
-<li class="chapter" data-level="3.2.3" data-path="importexceldata-sub-functions.html"><a href="importexceldata-sub-functions.html#perform-checks"><i class="fa fa-check"></i><b>3.2.3</b> Perform Checks</a></li>
-<li class="chapter" data-level="3.2.4" data-path="importexceldata-sub-functions.html"><a href="importexceldata-sub-functions.html#create-factor-variables"><i class="fa fa-check"></i><b>3.2.4</b> Create Factor Variables</a></li>
-<li class="chapter" data-level="3.2.5" data-path="importexceldata-sub-functions.html"><a href="importexceldata-sub-functions.html#create-calculated-variables"><i class="fa fa-check"></i><b>3.2.5</b> Create Calculated Variables</a></li>
+<li class="chapter" data-level="3.2.1" data-path="importexceldata-sub--functions.html"><a href="importexceldata-sub--functions.html#import-the-data-dictionary"><i class="fa fa-check"></i><b>3.2.1</b> Import the Data Dictionary<span></span></a></li>
+<li class="chapter" data-level="3.2.2" data-path="importexceldata-sub--functions.html"><a href="importexceldata-sub--functions.html#import-the-data"><i class="fa fa-check"></i><b>3.2.2</b> Import the Data<span></span></a></li>
+<li class="chapter" data-level="3.2.3" data-path="importexceldata-sub--functions.html"><a href="importexceldata-sub--functions.html#perform-checks"><i class="fa fa-check"></i><b>3.2.3</b> Perform Checks<span></span></a></li>
+<li class="chapter" data-level="3.2.4" data-path="importexceldata-sub--functions.html"><a href="importexceldata-sub--functions.html#create-factor-variables"><i class="fa fa-check"></i><b>3.2.4</b> Create Factor Variables<span></span></a></li>
+<li class="chapter" data-level="3.2.5" data-path="importexceldata-sub--functions.html"><a href="importexceldata-sub--functions.html#create-calculated-variables"><i class="fa fa-check"></i><b>3.2.5</b> Create Calculated Variables<span></span></a></li>
 </ul></li>
-<li class="chapter" data-level="3.3" data-path="plotvariables.html"><a href="plotvariables.html"><i class="fa fa-check"></i><b>3.3</b> PlotVariables</a></li>
-<li class="chapter" data-level="3.4" data-path="data-dictionary-1.html"><a href="data-dictionary-1.html"><i class="fa fa-check"></i><b>3.4</b> Data Dictionary</a>
+<li class="chapter" data-level="3.3" data-path="plotvariables.html"><a href="plotvariables.html"><i class="fa fa-check"></i><b>3.3</b> PlotVariables<span></span></a></li>
+<li class="chapter" data-level="3.4" data-path="data-dictionary-1.html"><a href="data-dictionary-1.html"><i class="fa fa-check"></i><b>3.4</b> Data Dictionary<span></span></a>
 <ul>
-<li class="chapter" data-level="3.4.1" data-path="data-dictionary-1.html"><a href="data-dictionary-1.html#variable-names"><i class="fa fa-check"></i><b>3.4.1</b> Variable names:</a></li>
-<li class="chapter" data-level="3.4.2" data-path="data-dictionary-1.html"><a href="data-dictionary-1.html#types-of-data"><i class="fa fa-check"></i><b>3.4.2</b> Types of Data</a></li>
-<li class="chapter" data-level="3.4.3" data-path="data-dictionary-1.html"><a href="data-dictionary-1.html#variable-ranges"><i class="fa fa-check"></i><b>3.4.3</b> Variable Ranges</a></li>
+<li class="chapter" data-level="3.4.1" data-path="data-dictionary-1.html"><a href="data-dictionary-1.html#variable-names"><i class="fa fa-check"></i><b>3.4.1</b> Variable names:<span></span></a></li>
+<li class="chapter" data-level="3.4.2" data-path="data-dictionary-1.html"><a href="data-dictionary-1.html#types-of-data"><i class="fa fa-check"></i><b>3.4.2</b> Types of Data<span></span></a></li>
+<li class="chapter" data-level="3.4.3" data-path="data-dictionary-1.html"><a href="data-dictionary-1.html#variable-ranges"><i class="fa fa-check"></i><b>3.4.3</b> Variable Ranges<span></span></a></li>
 </ul></li>
-<li class="chapter" data-level="3.5" data-path="calculations.html"><a href="calculations.html"><i class="fa fa-check"></i><b>3.5</b> Calculations</a>
+<li class="chapter" data-level="3.5" data-path="calculations.html"><a href="calculations.html"><i class="fa fa-check"></i><b>3.5</b> Calculations<span></span></a>
 <ul>
-<li class="chapter" data-level="3.5.1" data-path="calculations.html"><a href="calculations.html#recoded-variables-1"><i class="fa fa-check"></i><b>3.5.1</b> Recoded Variables</a></li>
-<li class="chapter" data-level="3.5.2" data-path="calculations.html"><a href="calculations.html#categorised-variables-1"><i class="fa fa-check"></i><b>3.5.2</b> Categorised Variables</a></li>
+<li class="chapter" data-level="3.5.1" data-path="calculations.html"><a href="calculations.html#recoded-variables-1"><i class="fa fa-check"></i><b>3.5.1</b> Recoded Variables<span></span></a></li>
+<li class="chapter" data-level="3.5.2" data-path="calculations.html"><a href="calculations.html#categorised-variables-1"><i class="fa fa-check"></i><b>3.5.2</b> Categorised Variables<span></span></a></li>
 </ul></li>
-<li class="chapter" data-level="3.6" data-path="entering-data.html"><a href="entering-data.html"><i class="fa fa-check"></i><b>3.6</b> Entering Data</a></li>
-<li class="chapter" data-level="3.7" data-path="longitudinal-data.html"><a href="longitudinal-data.html"><i class="fa fa-check"></i><b>3.7</b> Longitudinal Data</a>
+<li class="chapter" data-level="3.6" data-path="entering-data.html"><a href="entering-data.html"><i class="fa fa-check"></i><b>3.6</b> Entering Data<span></span></a></li>
+<li class="chapter" data-level="3.7" data-path="longitudinal-data.html"><a href="longitudinal-data.html"><i class="fa fa-check"></i><b>3.7</b> Longitudinal Data<span></span></a>
 <ul>
-<li class="chapter" data-level="3.7.1" data-path="longitudinal-data.html"><a href="longitudinal-data.html#long-format"><i class="fa fa-check"></i><b>3.7.1</b> Long Format</a></li>
-<li class="chapter" data-level="3.7.2" data-path="longitudinal-data.html"><a href="longitudinal-data.html#wide-format"><i class="fa fa-check"></i><b>3.7.2</b> Wide Format</a></li>
+<li class="chapter" data-level="3.7.1" data-path="longitudinal-data.html"><a href="longitudinal-data.html#long-format"><i class="fa fa-check"></i><b>3.7.1</b> Long Format<span></span></a></li>
+<li class="chapter" data-level="3.7.2" data-path="longitudinal-data.html"><a href="longitudinal-data.html#wide-format"><i class="fa fa-check"></i><b>3.7.2</b> Wide Format<span></span></a></li>
 </ul></li>
-<li class="chapter" data-level="3.8" data-path="multiple-data-sheets-1.html"><a href="multiple-data-sheets-1.html"><i class="fa fa-check"></i><b>3.8</b> Multiple Data Sheets</a></li>
-<li class="chapter" data-level="3.9" data-path="revising-data.html"><a href="revising-data.html"><i class="fa fa-check"></i><b>3.9</b> Revising Data</a>
+<li class="chapter" data-level="3.8" data-path="multiple-data-sheets-1.html"><a href="multiple-data-sheets-1.html"><i class="fa fa-check"></i><b>3.8</b> Multiple Data Sheets<span></span></a></li>
+<li class="chapter" data-level="3.9" data-path="revising-data.html"><a href="revising-data.html"><i class="fa fa-check"></i><b>3.9</b> Revising Data<span></span></a>
 <ul>
-<li class="chapter" data-level="3.9.1" data-path="revising-data.html"><a href="revising-data.html#revising-ranges"><i class="fa fa-check"></i><b>3.9.1</b> Revising Ranges</a></li>
-<li class="chapter" data-level="3.9.2" data-path="revising-data.html"><a href="revising-data.html#revising-data-1"><i class="fa fa-check"></i><b>3.9.2</b> Revising Data</a></li>
-<li class="chapter" data-level="3.9.3" data-path="revising-data.html"><a href="revising-data.html#adding-a-new-column"><i class="fa fa-check"></i><b>3.9.3</b> Adding a New Column</a></li>
+<li class="chapter" data-level="3.9.1" data-path="revising-data.html"><a href="revising-data.html#revising-ranges"><i class="fa fa-check"></i><b>3.9.1</b> Revising Ranges<span></span></a></li>
+<li class="chapter" data-level="3.9.2" data-path="revising-data.html"><a href="revising-data.html#revising-data-1"><i class="fa fa-check"></i><b>3.9.2</b> Revising Data<span></span></a></li>
+<li class="chapter" data-level="3.9.3" data-path="revising-data.html"><a href="revising-data.html#adding-a-new-column"><i class="fa fa-check"></i><b>3.9.3</b> Adding a New Column<span></span></a></li>
 </ul></li>
-<li class="chapter" data-level="3.10" data-path="frequently-asked-questions.html"><a href="frequently-asked-questions.html"><i class="fa fa-check"></i><b>3.10</b> Frequently Asked Questions</a></li>
+<li class="chapter" data-level="3.10" data-path="frequently-asked-questions.html"><a href="frequently-asked-questions.html"><i class="fa fa-check"></i><b>3.10</b> Frequently Asked Questions<span></span></a></li>
 </ul></li>
 <li class="divider"></li>
-<li> <a href="mailto:lisa.avery@uhnresearch.ca">Lisa Avery</a>   </li>
+<li> <a href="mailto:lisa.avery@uhn.ca">Lisa Avery</a>   </li>
 
 </ul>
 
@@ -144,8 +145,8 @@
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="calculations" class="section level2" number="3.5">
-<h2><span class="header-section-number">3.5</span> Calculations</h2>
+<div id="calculations" class="section level2 hasAnchor" number="3.5">
+<h2><span class="header-section-number">3.5</span> Calculations<a href="calculations.html#calculations" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>All calculations can be performed by the Biostatistics department. These will be done in code and are easily reproduced and re-calculated if there are changes to the data. This saves time and increases data quality.</p>
 <p>Examples of some variables that can be easily calculated:</p>
 <ul>
@@ -156,8 +157,8 @@
 </ul>
 <p>Do not do calculations in Excel. Instead, specify re-codings and calculations in the data dictionary.</p>
 <p>Your can specify syntax to automatically create re-coded variables (these will not appear in your data entry sheet)</p>
-<div id="recoded-variables-1" class="section level3" number="3.5.1">
-<h3><span class="header-section-number">3.5.1</span> Recoded Variables</h3>
+<div id="recoded-variables-1" class="section level3 hasAnchor" number="3.5.1">
+<h3><span class="header-section-number">3.5.1</span> Recoded Variables<a href="calculations.html#recoded-variables-1" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>Recoded variables are calculated from categorical or coded variables (as opposed to categorising a numerical variable)</p>
 <p><strong>Syntax:</strong> <code>OrginalVar</code>,newCode1=oldCode1,oldCode2,newCode2=oldCode3,oldCode4</p>
 <p>where <code>OriginalVar</code> is the variable in the data to be recoded and newCodes=oldCodes gives the new category followed by comma-separated original categories.</p>
@@ -168,11 +169,11 @@
 </div>
 <p>This will create the T0_Stg variable from T_Stage. T0_Stg will be T0 if T_Stage is T0 and T1up for all other values of T_Stage.</p>
 </div>
-<div id="categorised-variables-1" class="section level3" number="3.5.2">
-<h3><span class="header-section-number">3.5.2</span> Categorised Variables</h3>
+<div id="categorised-variables-1" class="section level3 hasAnchor" number="3.5.2">
+<h3><span class="header-section-number">3.5.2</span> Categorised Variables<a href="calculations.html#categorised-variables-1" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>Categorised variables are created from continuous variables</p>
 <p><strong>Syntax:</strong> <code>OrginalVar</code>,category1=&lt;cutoff1,category2=&lt;cutoff2,category3</p>
-<p>where <code>OriginalVar</code> is the variable in the data to be categorised and category1,category2 etc are the names of the new categories (these will become factor levels) amd cutoff1,cutoff2 are the cut-offs for each category and the final category (in this case category3) does not have a cutoff, only a name, because all people not meeting earlier criteria will be in this level. Note that at this point it is only possible to create categories by specifying the upper bounds.</p>
+<p>where <code>OriginalVar</code> is the variable in the data to be categorised and category1,category2 etc are the names of the new categories (these will become factor levels) and cutoff1,cutoff2 are the cut-offs for each category and the final category (in this case category3) does not have a cutoff, only a name, because all people not meeting earlier criteria will be in this level. Note that at this point it is only possible to create categories by specifying the upper bounds.</p>
 <p>Example of categorising a continuous variable in the Data Dictionary:</p>
 <p><img src="images/categoriseVar.png" alt="Example of a recoded variable" />
 This will create the AgeGroup variable from Age with four levels: "under50’,‘50-60’,‘60-69’,‘70plus’</p>
@@ -188,7 +189,6 @@ This will create the AgeGroup variable from Age with four levels: "under50’,�
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
-<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
 <script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
@@ -224,15 +224,16 @@ gitbook.start({
 "link": null,
 "text": null
 },
-"download": null,
+"download": ["_main.pdf"],
+"search": {
+"engine": "fuse",
+"options": null
+},
 "toc": {
 "collapse": "none",
 "toc_depth": 3,
-"scroll_highlight": true,
-"toolbar": null,
-"position": "fixed"
+"scroll_highlight": true
 },
-"search": true,
 "info": false
 });
 });
