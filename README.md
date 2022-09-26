@@ -48,15 +48,15 @@ devtools::install_github("biostatsPMH/exceldata")
 
 ## Documentation
 
-[Online Documentation](https://biostatspmh.github.io/exceldata/)
+[Online Documentation](https://lisa-avery.github.io/exceldata/)
 
 PDF Documentation: [Click
-Here](https://github.com/biostatsPMH/exceldata/blob/main/docs/ExcelDictionaryUserManual.pdf)
+Here](https://github.com/lisa-avery/exceldata/blob/main/docs/ExcelDictionaryUserManual.pdf)
 and then click on `Download`
 <!-- Note - this is created in a separate directory - Teaching/excelData Instructions -->
 
 [Using the Excel
-Template](https://biostatspmh.github.io/exceldata/data-dictionary-1.html)
+Template](https://lisa-avery.github.io/exceldata/data-dictionary-1.html)
 
 ## Example
 
