@@ -1,3 +1,6 @@
+# TODO: New function to create a data dictionary from an existing excel or csv file
+# and save the data
+
 #' Read in the data dictionary
 #'
 #' This function reads in a data dictionary from an Excel file, based on the
@@ -679,7 +682,7 @@ createSurvVar <- function(data,newVarName,survVars,timeUnit='month'){
       if (newStatusVar %in% names(data)) suffix=suffix+1 else break
     }}
 
-  # Determine if the event occured
+  # Determine if the event occurred
   status <- ifelse(is.na(data[[survVars[2]]]),0L,1L)
 
   # Determine the end date for calculating the interval NOTE: requires dplyr::if_else

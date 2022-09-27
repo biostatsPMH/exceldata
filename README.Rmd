@@ -20,16 +20,16 @@ knitr::opts_chunk$set(
 [![Lifecycle: Stable](https://img.shields.io/badge/lifecycle-stable-green.svg)](https://lifecycle.r-lib.org/articles/stages.html#stable)
 [![CRAN status](https://www.r-pkg.org/badges/version/exceldata)](https://CRAN.R-project.org/package=exceldata)
 [![metacran downloads](https://cranlogs.r-pkg.org/badges/grand-total/exceldata)](https://cran.r-project.org/package=exceldata)
-[![R-CMD-check](https://github.com/biostatsPMH/exceldata/workflows/R-CMD-check/badge.svg)](https://github.com/biostatsPMH/exceldata/actions)
+[![R-CMD-check](https://github.com/lisa-avery/exceldata/workflows/R-CMD-check/badge.svg)](https://github.com/lisa-avery/exceldata/actions)
 <!-- badges: end -->
 
 The goal of exceldata is to facilitate the use of Excel as a data entry tool for reproducible research. This package provides tools to automate data cleaning and recoding of data by requiring a data dictionary to accompany the Excel data. A macro-enabled template file has been created to facilitate clean data entry including validation rules for live data checking.
 
 To download the Excel Template
-[Click Here](https://github.com/biostatsPMH/exceldata/blob/main/images/DataDictionary0.9.1.xlsm) and then click on `Download`
+[Click Here](https://github.com/lisa-avery/exceldata/blob/main/images/DataDictionary0.9.1.xlsm) and then click on `Download`
 
 To view data in the required format without macros
-[Click Here](https://github.com/biostatsPMH/exceldata/blob/main/inst/extdata/exampleData.xlsx) and then click on `Download`
+[Click Here](https://github.com/lisa-avery/exceldata/blob/main/inst/extdata/exampleData.xlsx) and then click on `Download`
 
 ## Installation
 
@@ -42,19 +42,19 @@ install.packages("exceldata")
 And the development version from [GitHub](https://github.com/) with:
 
 ``` r
-devtools::install_github("biostatsPMH/exceldata")
+devtools::install_github("lisa-avery/exceldata")
 ```
 
 ---
 ## Documentation
 
 
-[Online Documentation](https://biostatspmh.github.io/exceldata/)
+[Online Documentation](https://lisa-avery.github.io/exceldata/)
 
-PDF Documentation: [Click Here](https://github.com/biostatsPMH/exceldata/blob/main/docs/ExcelDictionaryUserManual.pdf) and then click on `Download`
+PDF Documentation: [Click Here](https://github.com/lisa-avery/exceldata/blob/main/docs/ExcelDictionaryUserManual.pdf) and then click on `Download`
 <!-- Note - this is created in a separate directory - Teaching/excelData Instructions -->
 
-[Using the Excel Template](https://biostatspmh.github.io/exceldata/data-dictionary-1.html)
+[Using the Excel Template](https://lisa-avery.github.io/exceldata/data-dictionary-1.html)
 
 
 ## Example
