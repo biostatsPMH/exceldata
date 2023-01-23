@@ -638,7 +638,7 @@ createCalculated<-function(data,dictionary,timeUnit='month'){
       if (!instructions[1] %in% names(data)) {
         wrnMessage <- paste(instructions[1],' is not a recognised instruction. Variable names are case sensitive.\n',newVarName,' not created.')
       } else {
-        if (dictionary$Type[dictionary$VariableName==instructions[1]] %in% c('integer','numeric')) {
+        if (dictionary$Type[dictionary$VariableName==instructions[1]] %in% c('integer','numeric') & any(grepl("<|>",instructions))) {
           data <- createCategorisedVar(data,newVarName,instructions)
 
         } else{
@@ -723,34 +723,38 @@ createSurvVar <- function(data,newVarName,survVars,timeUnit='month'){
 #' @param instructions are from the data dictionary
 #' @importFrom utils capture.output
 createRecodedVar <- function(data,dictionary,newVarName,instructions){
-
   originalVar <- instructions[1]
 
-  codeReps <-diff(  c(grep("=",instructions),length(instructions)+1))
-  newCodes <- sapply(instructions[grep("=",instructions)],function(x) trimws(unlist(strsplit(x,"="))[1]))
-  oldCodes <- sapply(gsub('.*=','',instructions[-1]),trimws)
-  labels <- unname(unlist(mapply(rep,x=newCodes,times=codeReps)))
-
+  z<-lapply(instructions[-1], function(x){
+    y=unlist(strsplit(x,'='))
+    if (grepl('=',x)) z <- data.frame(newlabel=trimws(y[1]),code=trimws(y[2])) else z <- data.frame(newlabel=NA,code=trimws(y[1]))
+    return(z)
+  })
+  y<-do.call(rbind,z)
+  for (i in 2:nrow(y)) if (is.na(y[i,1])) y[i,1] <- y[i-1,1]
+  y$fct_order <- 1:nrow(y)
 
   # If the variable is a codes variable, then we may need the original entered levels
   if (dictionary[["Type"]][dictionary[['VariableName']]==originalVar]=='codes') {
-    factorLevels = try(importCodes(dictionary[["Levels"]][dictionary[['VariableName']]==originalVar]),silent = T)
+    factorLevels = try(exceldata:::importCodes(dictionary[["Levels"]][dictionary[['VariableName']]==originalVar]),silent = T)
 
     if (class(factorLevels)[1]=='try-error'){
       warning(paste('Data codes for',originalVar,'could not be extracted,', newVarName,'not created.'))
     } else {
-      # code labels supplied
-      if (length(setdiff(oldCodes,factorLevels$label))==0){
-        recoded = droplevels(factor(data[[originalVar]],levels = oldCodes,labels=labels))
-        # numeric codes supplied
-      } else{
-        oldCodes <- data.frame(oldCodes=oldCodes)
-        codeLookup <- merge(oldCodes,factorLevels,by.x = "oldCodes", by.y = "code" )
-        recoded = droplevels(factor(data[[originalVar]],levels = codeLookup[,2],labels=labels))
+      if (length(setdiff(y$code,factorLevels$code)) < length(setdiff(y$code,factorLevels$label))){
+        lu <- merge(y,factorLevels,by='code',all=T)
+        lu <- na.omit(lu[order(lu$fct_order),])
+        recoded = droplevels(factor(data[[originalVar]],levels = lu$label,labels=lu$newlabel))
+      } else  {
+        lu <- merge(y,factorLevels,by.x='code',by.y='label',all=T)
+        lu <- na.omit(lu[order(lu$fct_order),])
+        recoded = droplevels(factor(data[[originalVar]],levels = lu$code,labels=lu$newlabel))
       }
     }
   } else{
-    recoded = droplevels(factor(data[[originalVar]],levels = oldCodes,labels=labels))
+    factorLevels <- na.omit(data.frame(code=unique(data[[originalVar]]),label=unique(data[[originalVar]])))
+    lu <- merge(y,factorLevels,by='code',all=T)
+    recoded = droplevels(factor(data[[originalVar]],levels = lu$label,labels=lu$newlabel))
 
   }
   # Add the variable to the data
