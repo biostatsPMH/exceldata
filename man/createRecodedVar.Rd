@@ -7,9 +7,11 @@
 createRecodedVar(data, dictionary, newVarName, instructions)
 }
 \arguments{
-\item{data}{is data returned by the importExcelData or readExcelData functions}
+\item{data}{is data returned by the importExcelData or readExcelData
+functions}
 
-\item{dictionary}{is the data dictionary returned by importExcelData or readDataDict functions}
+\item{dictionary}{is the data dictionary returned by importExcelData or
+readDataDict functions}
 
 \item{newVarName}{the name of the new variable.}
 
@@ -20,12 +22,12 @@ This function will create survival variables from an existing start variable
 date of event variable and last date followed variable
 }
 \details{
-The instructions are contained in the Levels column of the data dictionary and should be in the format:
+The instructions are contained in the Levels column of the data dictionary
+and should be in the format:
 
 original_varname,newCode1=oldcode1,oldCode2,...,newCode2=oldCode3,..
 
-For Example:
-instructions="T_Stage,T0=T0,T1up=T1,T2,T3,T4"
+For Example: instructions="T_Stage,T0=T0,T1up=T1,T2,T3,T4"
 
 will recode T1-T4 as T1up and retain T0 as is
 }

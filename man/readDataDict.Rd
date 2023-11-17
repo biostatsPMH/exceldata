@@ -30,7 +30,7 @@ A data frame with an entry for each variable to be imported
 }
 \description{
 This function reads in a data dictionary from an Excel file, based on the
-[DataDictionary.xlsm template](https://github.com/biostatsPMH/exceldata#readme)
+\href{https://github.com/biostatsPMH/exceldata#exceldata}{Excel DataDictionary template}
 }
 \details{
 It assumes that the columns names  have not been altered and are:
@@ -38,13 +38,12 @@ c('VariableName', 'Description (optional)', 'Type', 'Minimum', 'Maximum', 'Level
 
 To override these column names specify colnames as an argument, ensuring
 that the content of the columns is in the above order.
-As of the time of writing, the origin date in Excel is 30 December 1899. To override this specify origin="yyy-mm-dd"
+As of the time of writing, the origin date in Excel is 30 December 1899.
+To override this specify origin="yyy-mm-dd"
 
 To read in only part of the excel sheet specify the desired range (ie range="A1:F6")
 }
 \examples{
-\dontrun{
 exampleDataFile <- system.file("extdata", "exampleData.xlsx", package = "exceldata")
 dictionary <- readDataDict(exampleDataFile, dictionarySheet = 'DataDictionary')
-}
 }

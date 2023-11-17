@@ -5,7 +5,7 @@
 ^images$
 ^index\.Rmd$
 ^README\.Rmd$
-^DataDictionary0.9.1.xlsm$
+^DataDictionary0.1.0.xlsm$
 ^.log$
 ^.nojekyll$
 ^_bookdown\.yml$

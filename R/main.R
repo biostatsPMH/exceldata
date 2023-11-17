@@ -4,7 +4,7 @@
 #' Read in the data dictionary
 #'
 #' This function reads in a data dictionary from an Excel file, based on the
-#'[DataDictionary.xlsm template](https://github.com/biostatsPMH/exceldata#readme)
+#' \href{https://github.com/biostatsPMH/exceldata#exceldata}{Excel DataDictionary template}
 #'
 #' It assumes that the columns names  have not been altered and are:
 #' c('VariableName', 'Description (optional)', 'Type', 'Minimum', 'Maximum', 'Levels')
@@ -12,7 +12,8 @@
 #' To override these column names specify colnames as an argument, ensuring
 #' that the content of the columns is in the above order.
 #
-#' As of the time of writing, the origin date in Excel is 30 December 1899. To override this specify origin="yyy-mm-dd"
+#' As of the time of writing, the origin date in Excel is 30 December 1899.
+#' To override this specify origin="yyy-mm-dd"
 #'
 #' To read in only part of the excel sheet specify the desired range (ie range="A1:F6")
 #'
@@ -26,10 +27,8 @@
 #' @return A data frame with an entry for each variable to be imported
 #' @export
 #' @examples
-#' \dontrun{
 #' exampleDataFile <- system.file("extdata", "exampleData.xlsx", package = "exceldata")
 #' dictionary <- readDataDict(exampleDataFile, dictionarySheet = 'DataDictionary')
-#' }
 readDataDict <- function(excelFile,dictionarySheet ='DataDictionary',range,colnames,origin){
   if (missing(range)) range = NULL
   if (!file.exists(excelFile)){
@@ -117,21 +116,34 @@ readDataDict <- function(excelFile,dictionarySheet ='DataDictionary',range,colna
 #' Warning: If SetErrorsMissing = TRUE then a subsequent call to checkData will
 #' not return any errors, because the errors have already been set to missing.
 #'
-#' NOTE: This function will only read in those columns present in the DataDictionary
-#' @param excelFile path and filename of the data file containing the data and dictionary
-#' @param dictionarySheet name of the sheet containing the data dictionary, defaults to 'DataDictionary'
-#' @param dataSheet name of the data entry sheet within the file, defaults to 'DataEntry'
-#' @param id String indicating the ID variable, to display errors by ID instead of row number
-#' @param saveWarnings Boolean, if TRUE and there are any warnings then the function will return a list with the data frame and the import warnings
-#' @param setErrorsMissing Boolean, if TRUE all values out of range will be set to NA
-#' @param range Optional, Range of Excel sheet to restrict import to (ie. range="A1:F6")
-#' @param colnames Optional, Column names of the dictionary,
-#' defaults to those used in the Excel template:
-#'  c('VariableName', 'Description (optional)', 'Type', 'Minimum', 'Maximum', 'Levels')
-#' @param origin Optional, the date origin of Excel dates, defaults to 30 December 1899
+#' NOTE: This function will only read in those columns present in the
+#' DataDictionary
+#' @param excelFile path and filename of the data file containing the data and
+#'   dictionary
+#' @param dictionarySheet name of the sheet containing the data dictionary,
+#'   defaults to 'DataDictionary'
+#' @param dataSheet name of the data entry sheet within the file, defaults to
+#'   'DataEntry'
+#' @param id String indicating the ID variable, to display errors by ID instead
+#'   of row number
+#' @param saveWarnings Boolean, if TRUE and there are any warnings then the
+#'   function will return a list with the data frame and the import warnings
+#' @param setErrorsMissing Boolean, if TRUE all values out of range will be set
+#'   to NA
+#' @param use_labels should variable descriptions be added as variable label
+#'   attributes, default is TRUE
+#' @param range Optional, Range of Excel sheet to restrict import to (ie.
+#'   range="A1:F6")
+#' @param colnames Optional, Column names of the dictionary, defaults to those
+#'   used in the Excel template: c('VariableName', 'Description (optional)',
+#'   'Type', 'Minimum', 'Maximum', 'Levels')
+#' @param origin Optional, the date origin of Excel dates, defaults to 30
+#'   December 1899
 #' @param timeUnit Character specifying the unit of time that should be used
-#' when creating survival type variables. Allowed values are from lubridate (ex: 'day' 'week' 'month' 'year')
-#' @return A list containing two data frames: the data dictionary and the data table
+#'   when creating survival type variables. Allowed values are from lubridate
+#'   (ex: 'day' 'week' 'month' 'year')
+#' @return A list containing two data frames: the data dictionary and the data
+#'   table
 #' \itemize{
 #'   \item dictionary - A data frame with entries for each variable
 #'   \item data - A data frame containing the imported data
@@ -153,7 +165,7 @@ readDataDict <- function(excelFile,dictionarySheet ='DataDictionary',range,colna
 #' plots <- plotVariables(data=data,dictionary=dictionary,IDvar = 'ID')
 #'
 #' @export
-importExcelData <- function(excelFile,dictionarySheet='DataDictionary',dataSheet='DataEntry',id,saveWarnings=TRUE,setErrorsMissing=TRUE,range,colnames,origin,timeUnit='month'){
+importExcelData <- function(excelFile,dictionarySheet='DataDictionary',dataSheet='DataEntry',id,saveWarnings=TRUE,setErrorsMissing=TRUE,use_labels=TRUE,range,colnames,origin,timeUnit='month'){
   if (missing(excelFile) ) stop('The excel file containing the data dictionary and data entry table are required')
   if (missing(range)) range = NULL
   if (missing(origin)) origin = "1899-12-30"
@@ -173,7 +185,7 @@ importExcelData <- function(excelFile,dictionarySheet='DataDictionary',dataSheet
                                            dataSheet=dataSheet,
                                            saveWarnings=TRUE,
                                            setErrorsMissing=FALSE,
-                                           range,origin))
+                                           use_labels,range,origin))
     if ('list' %in% class(data)){
       warnings <- data$warnings
       data <- data$data
@@ -191,7 +203,7 @@ importExcelData <- function(excelFile,dictionarySheet='DataDictionary',dataSheet
       }
 
     }
-    data <- suppressWarnings(readExcelData(excelFile,dictionary=dictionary,dataSheet=dataSheet,saveWarnings=saveWarnings,setErrorsMissing=setErrorsMissing,range,origin))
+    data <- suppressWarnings(readExcelData(excelFile,dictionary=dictionary,dataSheet=dataSheet,saveWarnings=saveWarnings,setErrorsMissing=setErrorsMissing,use_labels,range,origin))
     if ('list' %in% class(data)){
       warnings <- data$warnings
       data <- data$data
@@ -217,26 +229,32 @@ importExcelData <- function(excelFile,dictionarySheet='DataDictionary',dataSheet
 #' Prior to reading in the data, the dictionary file must be imported using
 #' readDataDict.
 #'
-#' Warning: If SetErrorsMissing = TRUE then a subsequent call to checkData will not return any errors, because the errors have been set to missing.
+#' Warning: If SetErrorsMissing = TRUE then a subsequent call to checkData will
+#' not return any errors, because the errors have been set to missing.
 #'
 #' NOTE: This function will only read in those columns present in the dictionary
 #' @param dictionary A data frame returned by readDataDict
 #' @param excelFile path and filename of the data file
-#' @param dataSheet name of the data entry sheet within the file, defaults to 'DataEntry'
-#' @param saveWarnings Boolean, if TRUE and there are any warnings then the function will return a list with the data frame and the import warnings
-#' @param setErrorsMissing Boolean, if TRUE all values out of range will be set to NA
-#' @param range Optional, Range of Excel sheet to restrict import to (ie. range="A1:F6")
-#' @param origin Optional, the date origin of Excel dates, defaults to 30 December 1899
+#' @param dataSheet name of the data entry sheet within the file, defaults to
+#'   'DataEntry'
+#' @param saveWarnings Boolean, if TRUE and there are any warnings then the
+#'   function will return a list with the data frame and the import warnings
+#' @param setErrorsMissing Boolean, if TRUE all values out of range will be set
+#'   to NA
+#' @param use_labels should variable descriptions be added as variable label
+#'   attributes, default is TRUE
+#' @param range Optional, Range of Excel sheet to restrict import to (ie.
+#'   range="A1:F6")
+#' @param origin Optional, the date origin of Excel dates, defaults to 30
+#'   December 1899
 #' @return A data frame containing the imported data
 #' @importFrom lubridate as_date
 #' @export
 #' @examples
-#' \dontrun{
 #' exampleDataFile <- system.file("extdata", "exampleData.xlsx", package = "exceldata")
 #' dictionary <- readDataDict(exampleDataFile, dictionarySheet = 'DataDictionary')
 #' data <- readExcelData(exampleDataFile,dictionary,dataSheet='DataEntry')
-#' }
-readExcelData <- function(excelFile,dictionary,dataSheet='DataEntry',saveWarnings=FALSE,setErrorsMissing=FALSE,range,origin){
+readExcelData <- function(excelFile,dictionary,dataSheet='DataEntry',saveWarnings=FALSE,setErrorsMissing=FALSE,use_labels=TRUE,range,origin){
   if (missing(excelFile) | missing(dictionary)) stop(paste('Both the excel data file and the data dictionary are required arguments.\n',
                                                            'Use exceldata::readDataDict to read in the data dictionary before importing data.\n',
                                                            'Or run exceldata::importExcelData to import the dictionary and data files and create factor variables.'))
@@ -321,7 +339,7 @@ readExcelData <- function(excelFile,dictionary,dataSheet='DataEntry',saveWarning
     }
 
   }
-
+  if (use_labels) dat <- set_labels(dat,dictionary[,1:2])
 
   if (!is.null(entry_warning) & saveWarnings){
     entry_warning <- entry_warning[names(entry_warning)=='message']
@@ -341,6 +359,36 @@ readExcelData <- function(excelFile,dictionary,dataSheet='DataEntry',saveWarning
     return(dat)
   }}
 
+set_labels <- function(data,names_labels){
+  if (!inherits(data,"data.frame")) {
+    stop("data must be a data frame")
+  }
+  if (!inherits(names_labels,"data.frame")) {
+    stop("names_labels must be a data frame")
+  }
+  if (ncol(names_labels)<2) stop("names_labels must be a data frame with at least two columns")
+
+  if (ncol(names_labels)>2) message("The names_labels data frame contains more than two columns.\nVariable names will be taken from the first column and variable labels from the second column.")
+  for (v in 1:ncol(names_labels)) names_labels[[v]] <- as.character(names_labels[[v]])
+  tryCatch({
+    names_labels[which(is.na(names_labels[,2])), 2] <- names_labels[which(is.na(names_labels[,2])), 1]
+  }, error=function(e){})
+  varIndx <- which(names_labels[[1]] %in% names(data))
+  v_lbls <- names_labels[varIndx, ]
+  colnames(v_lbls) <- c("var", "label")
+  v_lbls$index <- varIndx
+  tryCatch({
+    varNIndx <- which(!names(data) %in% names_labels[[1]])
+    v_Nlbls <- cbind.data.frame(colnames(data)[varNIndx], colnames(data)[varNIndx])
+    colnames(v_Nlbls) <- c("var", "label")
+    v_Nlbls$index <- varNIndx
+    v_lbls <- rbind(v_lbls, v_Nlbls)
+    v_lbls <- v_lbls[order(v_lbls$index),]
+  }, error=function(e){})
+  for (i in 1:nrow(v_lbls)) attr(data[[v_lbls[[1]][i]]], "label") <- v_lbls[[2]][i]
+  return(data)
+}
+
 #' Check the entered data against the data dictionary
 #'
 #' This function compares the data in the data entry table against the
@@ -349,14 +397,15 @@ readExcelData <- function(excelFile,dictionary,dataSheet='DataEntry',saveWarning
 #' Prior to reading in the data, the dictionary must be imported using
 #' readDataDict and the data must be imported using readExcelData.
 #'
-#' The function will check all variables in the dictionary.
-#' If variables are missing from the dictionary an error will occur.
-#' If variables are missing from the data table a warning will be shown.
+#' The function will check all variables in the dictionary. If variables are
+#' missing from the dictionary an error will occur. If variables are missing
+#' from the data table a warning will be shown.
 #'
 #'
 #' @param dictionary A data frame returned by readDataDict
 #' @param data A data frame returned by readExcelData
-#' @param id String indicating the ID variable, to display errors by ID instead of row number
+#' @param id String indicating the ID variable, to display errors by ID instead
+#'   of row number
 #' @return A list with various reports of errors and duplicates
 #' \itemize{
 #'   \item errors_by_row - A data frame with errors by rownumber, or ID if supplied
@@ -476,14 +525,14 @@ checkData <-function(dictionary,data,id){
 
 #' Create factor variables from data dictionary
 #'
-#' This function will replace the code and category variables
-#' with factors based on the factor levels provided in the data
-#' dictionary. The original variables are retained with the suffix
-#' '_orig'
+#' This function will replace the code and category variables with factors based
+#' on the factor levels provided in the data dictionary. The original variables
+#' are retained with the suffix '_orig'
 #'
 #' @param data A data frame returned by readExcelData
 #' @param dictionary A data frame returned by readDataDict
-#' @param keepOriginal Boolean indicating if the original character variables should be kept, default is TRUE with _original appended to variable names
+#' @param keepOriginal Boolean indicating if the original character variables
+#'   should be kept, default is TRUE with _original appended to variable names
 #' @return A data frame with the updated factor variables
 #' @importFrom utils capture.output
 #' @export
@@ -575,10 +624,14 @@ importCodes<-function(labelStr,delim=','){
 #' This function will create survival and recoded variables according to the
 #' rules in the dictionary.xlsm file. See the Example sheet for an example.
 #'
-#' @param data A data frame data returned by the importExcelData or readExcelData functions
-#' @param dictionary A data frame returned by the importExcelData or readDataDict functions
-#' @param timeUnit String containing the desired unit of time for survival variables
-#' @return A data frame with the calculated variables as specified by the dictionary
+#' @param data A data frame data returned by the importExcelData or
+#'   readExcelData functions
+#' @param dictionary A data frame returned by the importExcelData or
+#'   readDataDict functions
+#' @param timeUnit String containing the desired unit of time for survival
+#'   variables
+#' @return A data frame with the calculated variables as specified by the
+#'   dictionary
 #' @export
 #' @examples
 #' \dontrun{
@@ -666,10 +719,13 @@ createCalculated<-function(data,dictionary,timeUnit='month'){
 #' This function will create survival variables from an existing start variable
 #' date of event variable and last date followed variable
 #'
-#' @param data A data frame returned by the importExcelData or readExcelData functions
-#' @param newVarName the name of the new survival variable. The status variable will be suffixed with '_status'
+#' @param data A data frame returned by the importExcelData or readExcelData
+#'   functions
+#' @param newVarName the name of the new survival variable. The status variable
+#'   will be suffixed with '_status'
 #' @param survVars In order the start date, event date and date of last followup
-#' @param timeUnit Character, the unit of time to calculate survival variables for (ex: 'day' 'week' 'month' 'year')
+#' @param timeUnit Character, the unit of time to calculate survival variables
+#'   for (ex: 'day' 'week' 'month' 'year')
 #' @importFrom lubridate time_length interval
 createSurvVar <- function(data,newVarName,survVars,timeUnit='month'){
 
@@ -708,17 +764,19 @@ createSurvVar <- function(data,newVarName,survVars,timeUnit='month'){
 #' This function will create survival variables from an existing start variable
 #' date of event variable and last date followed variable
 #'
-#' The instructions are contained in the Levels column of the data dictionary and should be in the format:
+#' The instructions are contained in the Levels column of the data dictionary
+#' and should be in the format:
 #'
 #' original_varname,newCode1=oldcode1,oldCode2,...,newCode2=oldCode3,..
 #'
-#' For Example:
-#' instructions="T_Stage,T0=T0,T1up=T1,T2,T3,T4"
+#' For Example: instructions="T_Stage,T0=T0,T1up=T1,T2,T3,T4"
 #'
 #' will recode T1-T4 as T1up and retain T0 as is
 #'
-#' @param data is data returned by the importExcelData or readExcelData functions
-#' @param dictionary is the data dictionary returned by importExcelData or readDataDict functions
+#' @param data is data returned by the importExcelData or readExcelData
+#'   functions
+#' @param dictionary is the data dictionary returned by importExcelData or
+#'   readDataDict functions
 #' @param newVarName the name of the new variable.
 #' @param instructions are from the data dictionary
 #' @importFrom utils capture.output
@@ -858,9 +916,11 @@ createCombinedVar <- function(data,dictionary,newVarName,varsToCombine,responseV
 
 #' Create categories from continuous data
 #'
-#' This function will create categories based on the ranges provided in the instructions
+#' This function will create categories based on the ranges provided in the
+#' instructions
 #'
-#' @param data is data returned by the importExcelData or readExcelData functions
+#' @param data is data returned by the importExcelData or readExcelData
+#'   functions
 #' @param newVarName the name of the new  variable. Must be empty in data
 #' @param instructions category names and bounds
 #' @importFrom stats aggregate
@@ -920,11 +980,13 @@ WriteToLog <- function(msg,append=T,timestamp=F){
 #' This function should be run as the final step after the data have been
 #' imported, checked and the factor variables created.
 #' @param data A data frame containing the variables to be plotted
-#' @param dictionary Optional, the data dictionary returned by importExcelData or readDataDict functions to provide plot titles
-#' @param IDvar Optional string indicating the name of an identifying variable to highlight outliers
+#' @param dictionary Optional, the data dictionary returned by importExcelData
+#'   or readDataDict functions to provide plot titles
+#' @param IDvar Optional string indicating the name of an identifying variable
+#'   to highlight outliers
 #' @param vars Optional,  vector of the names of variables to plot
 #' @param showOutliers Boolean, Defaults to TRUE. Should outliers be labelled?
-#' Outliers are defined by the 1.5xIQR rule (as with boxplots)
+#'   Outliers are defined by the 1.5xIQR rule (as with boxplots)
 #' @import ggplot2
 #' @importFrom scales date_format
 #' @importFrom graphics boxplot

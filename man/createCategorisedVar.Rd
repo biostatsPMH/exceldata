@@ -7,12 +7,14 @@
 createCategorisedVar(data, newVarName, instructions)
 }
 \arguments{
-\item{data}{is data returned by the importExcelData or readExcelData functions}
+\item{data}{is data returned by the importExcelData or readExcelData
+functions}
 
 \item{newVarName}{the name of the new  variable. Must be empty in data}
 
 \item{instructions}{category names and bounds}
 }
 \description{
-This function will create categories based on the ranges provided in the instructions
+This function will create categories based on the ranges provided in the
+instructions
 }

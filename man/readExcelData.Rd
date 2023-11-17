@@ -10,6 +10,7 @@ readExcelData(
   dataSheet = "DataEntry",
   saveWarnings = FALSE,
   setErrorsMissing = FALSE,
+  use_labels = TRUE,
   range,
   origin
 )
@@ -19,15 +20,23 @@ readExcelData(
 
 \item{dictionary}{A data frame returned by readDataDict}
 
-\item{dataSheet}{name of the data entry sheet within the file, defaults to 'DataEntry'}
+\item{dataSheet}{name of the data entry sheet within the file, defaults to
+'DataEntry'}
 
-\item{saveWarnings}{Boolean, if TRUE and there are any warnings then the function will return a list with the data frame and the import warnings}
+\item{saveWarnings}{Boolean, if TRUE and there are any warnings then the
+function will return a list with the data frame and the import warnings}
 
-\item{setErrorsMissing}{Boolean, if TRUE all values out of range will be set to NA}
+\item{setErrorsMissing}{Boolean, if TRUE all values out of range will be set
+to NA}
 
-\item{range}{Optional, Range of Excel sheet to restrict import to (ie. range="A1:F6")}
+\item{use_labels}{should variable descriptions be added as variable label
+attributes, default is TRUE}
 
-\item{origin}{Optional, the date origin of Excel dates, defaults to 30 December 1899}
+\item{range}{Optional, Range of Excel sheet to restrict import to (ie.
+range="A1:F6")}
+
+\item{origin}{Optional, the date origin of Excel dates, defaults to 30
+December 1899}
 }
 \value{
 A data frame containing the imported data
@@ -40,14 +49,13 @@ template file according to the specifications in the dictionary
 Prior to reading in the data, the dictionary file must be imported using
 readDataDict.
 
-Warning: If SetErrorsMissing = TRUE then a subsequent call to checkData will not return any errors, because the errors have been set to missing.
+Warning: If SetErrorsMissing = TRUE then a subsequent call to checkData will
+not return any errors, because the errors have been set to missing.
 
 NOTE: This function will only read in those columns present in the dictionary
 }
 \examples{
-\dontrun{
 exampleDataFile <- system.file("extdata", "exampleData.xlsx", package = "exceldata")
 dictionary <- readDataDict(exampleDataFile, dictionarySheet = 'DataDictionary')
 data <- readExcelData(exampleDataFile,dictionary,dataSheet='DataEntry')
-}
 }

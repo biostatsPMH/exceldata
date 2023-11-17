@@ -9,9 +9,11 @@ plotVariables(data, dictionary, IDvar, vars, showOutliers = TRUE)
 \arguments{
 \item{data}{A data frame containing the variables to be plotted}
 
-\item{dictionary}{Optional, the data dictionary returned by importExcelData or readDataDict functions to provide plot titles}
+\item{dictionary}{Optional, the data dictionary returned by importExcelData
+or readDataDict functions to provide plot titles}
 
-\item{IDvar}{Optional string indicating the name of an identifying variable to highlight outliers}
+\item{IDvar}{Optional string indicating the name of an identifying variable
+to highlight outliers}
 
 \item{vars}{Optional,  vector of the names of variables to plot}
 

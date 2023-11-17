@@ -11,16 +11,16 @@ addFactorVariables(data, dictionary, keepOriginal = TRUE)
 
 \item{dictionary}{A data frame returned by readDataDict}
 
-\item{keepOriginal}{Boolean indicating if the original character variables should be kept, default is TRUE with _original appended to variable names}
+\item{keepOriginal}{Boolean indicating if the original character variables
+should be kept, default is TRUE with _original appended to variable names}
 }
 \value{
 A data frame with the updated factor variables
 }
 \description{
-This function will replace the code and category variables
-with factors based on the factor levels provided in the data
-dictionary. The original variables are retained with the suffix
-'_orig'
+This function will replace the code and category variables with factors based
+on the factor levels provided in the data dictionary. The original variables
+are retained with the suffix '_orig'
 }
 \examples{
 \dontrun{

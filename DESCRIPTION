@@ -1,7 +1,7 @@
 Package: exceldata
 Type: Package
 Title: Streamline Data Import, Cleaning and Recoding from 'Excel' 
-Version: 0.1.1.2
+Version: 0.1.1.3
 Authors@R: 
     person("Lisa", "Avery", , "lisa.avery@uhn.ca", role = c("aut", "cre","cph"),
            comment = c(ORCID = "0000-0002-8431-5143"))

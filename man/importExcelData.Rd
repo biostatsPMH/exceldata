@@ -11,6 +11,7 @@ importExcelData(
   id,
   saveWarnings = TRUE,
   setErrorsMissing = TRUE,
+  use_labels = TRUE,
   range,
   colnames,
   origin,
@@ -18,31 +19,44 @@ importExcelData(
 )
 }
 \arguments{
-\item{excelFile}{path and filename of the data file containing the data and dictionary}
+\item{excelFile}{path and filename of the data file containing the data and
+dictionary}
 
-\item{dictionarySheet}{name of the sheet containing the data dictionary, defaults to 'DataDictionary'}
+\item{dictionarySheet}{name of the sheet containing the data dictionary,
+defaults to 'DataDictionary'}
 
-\item{dataSheet}{name of the data entry sheet within the file, defaults to 'DataEntry'}
+\item{dataSheet}{name of the data entry sheet within the file, defaults to
+'DataEntry'}
 
-\item{id}{String indicating the ID variable, to display errors by ID instead of row number}
+\item{id}{String indicating the ID variable, to display errors by ID instead
+of row number}
 
-\item{saveWarnings}{Boolean, if TRUE and there are any warnings then the function will return a list with the data frame and the import warnings}
+\item{saveWarnings}{Boolean, if TRUE and there are any warnings then the
+function will return a list with the data frame and the import warnings}
 
-\item{setErrorsMissing}{Boolean, if TRUE all values out of range will be set to NA}
+\item{setErrorsMissing}{Boolean, if TRUE all values out of range will be set
+to NA}
 
-\item{range}{Optional, Range of Excel sheet to restrict import to (ie. range="A1:F6")}
+\item{use_labels}{should variable descriptions be added as variable label
+attributes, default is TRUE}
 
-\item{colnames}{Optional, Column names of the dictionary,
-defaults to those used in the Excel template:
- c('VariableName', 'Description (optional)', 'Type', 'Minimum', 'Maximum', 'Levels')}
+\item{range}{Optional, Range of Excel sheet to restrict import to (ie.
+range="A1:F6")}
 
-\item{origin}{Optional, the date origin of Excel dates, defaults to 30 December 1899}
+\item{colnames}{Optional, Column names of the dictionary, defaults to those
+used in the Excel template: c('VariableName', 'Description (optional)',
+'Type', 'Minimum', 'Maximum', 'Levels')}
+
+\item{origin}{Optional, the date origin of Excel dates, defaults to 30
+December 1899}
 
 \item{timeUnit}{Character specifying the unit of time that should be used
-when creating survival type variables. Allowed values are from lubridate (ex: 'day' 'week' 'month' 'year')}
+when creating survival type variables. Allowed values are from lubridate
+(ex: 'day' 'week' 'month' 'year')}
 }
 \value{
-A list containing two data frames: the data dictionary and the data table
+A list containing two data frames: the data dictionary and the data
+  table
 \itemize{
   \item dictionary - A data frame with entries for each variable
   \item data - A data frame containing the imported data
@@ -65,7 +79,8 @@ data frame
 Warning: If SetErrorsMissing = TRUE then a subsequent call to checkData will
 not return any errors, because the errors have already been set to missing.
 
-NOTE: This function will only read in those columns present in the DataDictionary
+NOTE: This function will only read in those columns present in the
+DataDictionary
 }
 \examples{
 exampleDataFile <- system.file("extdata", "exampleData.xlsx", package = "exceldata")

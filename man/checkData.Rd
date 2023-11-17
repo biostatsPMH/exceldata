@@ -11,7 +11,8 @@ checkData(dictionary, data, id)
 
 \item{data}{A data frame returned by readExcelData}
 
-\item{id}{String indicating the ID variable, to display errors by ID instead of row number}
+\item{id}{String indicating the ID variable, to display errors by ID instead
+of row number}
 }
 \value{
 A list with various reports of errors and duplicates
@@ -31,9 +32,9 @@ specifications in the dictionary
 Prior to reading in the data, the dictionary must be imported using
 readDataDict and the data must be imported using readExcelData.
 
-The function will check all variables in the dictionary.
-If variables are missing from the dictionary an error will occur.
-If variables are missing from the data table a warning will be shown.
+The function will check all variables in the dictionary. If variables are
+missing from the dictionary an error will occur. If variables are missing
+from the data table a warning will be shown.
 }
 \examples{
 \dontrun{
