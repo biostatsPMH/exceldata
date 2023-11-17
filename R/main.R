@@ -722,6 +722,7 @@ createSurvVar <- function(data,newVarName,survVars,timeUnit='month'){
 #' @param newVarName the name of the new variable.
 #' @param instructions are from the data dictionary
 #' @importFrom utils capture.output
+#' @importFrom stats na.omit
 createRecodedVar <- function(data,dictionary,newVarName,instructions){
   originalVar <- instructions[1]
 
@@ -736,23 +737,23 @@ createRecodedVar <- function(data,dictionary,newVarName,instructions){
 
   # If the variable is a codes variable, then we may need the original entered levels
   if (dictionary[["Type"]][dictionary[['VariableName']]==originalVar]=='codes') {
-    factorLevels = try(exceldata:::importCodes(dictionary[["Levels"]][dictionary[['VariableName']]==originalVar]),silent = T)
+    factorLevels = try(importCodes(dictionary[["Levels"]][dictionary[['VariableName']]==originalVar]),silent = T)
 
     if (class(factorLevels)[1]=='try-error'){
       warning(paste('Data codes for',originalVar,'could not be extracted,', newVarName,'not created.'))
     } else {
       if (length(setdiff(y$code,factorLevels$code)) < length(setdiff(y$code,factorLevels$label))){
         lu <- merge(y,factorLevels,by='code',all=T)
-        lu <- na.omit(lu[order(lu$fct_order),])
+        lu <- stats::na.omit(lu[order(lu$fct_order),])
         recoded = droplevels(factor(data[[originalVar]],levels = lu$label,labels=lu$newlabel))
       } else  {
         lu <- merge(y,factorLevels,by.x='code',by.y='label',all=T)
-        lu <- na.omit(lu[order(lu$fct_order),])
+        lu <- stats::na.omit(lu[order(lu$fct_order),])
         recoded = droplevels(factor(data[[originalVar]],levels = lu$code,labels=lu$newlabel))
       }
     }
   } else{
-    factorLevels <- na.omit(data.frame(code=unique(data[[originalVar]]),label=unique(data[[originalVar]])))
+    factorLevels <- stats::na.omit(data.frame(code=unique(data[[originalVar]]),label=unique(data[[originalVar]])))
     lu <- merge(y,factorLevels,by='code',all=T)
     recoded = droplevels(factor(data[[originalVar]],levels = lu$label,labels=lu$newlabel))
 

@@ -1,12 +1,12 @@
 
 
- 2022-09-27 12:12:13 Log File Created
+ 2023-11-17 10:19:41 Log File Created
 
-  Data Dictionary imported from:  C:/Program Files/R/R-4.2.1/library/exceldata/extdata/exampleData.xlsx from sheet:  DataDictionary
+  Data Dictionary imported from:  C:/Program Files/R/R-4.2.2/library/exceldata/extdata/exampleData.xlsx from sheet:  DataDictionary
 
-  Data read in from Excel file : C:/Program Files/R/R-4.2.1/library/exceldata/extdata/exampleData.xlsx  from sheet:  DataEntry
+  Data read in from Excel file : C:/Program Files/R/R-4.2.2/library/exceldata/extdata/exampleData.xlsx  from sheet:  DataEntry
 
-  Data read in from Excel file : C:/Program Files/R/R-4.2.1/library/exceldata/extdata/exampleData.xlsx  from sheet:  DataEntry
+  Data read in from Excel file : C:/Program Files/R/R-4.2.2/library/exceldata/extdata/exampleData.xlsx  from sheet:  DataEntry
 
   Factor structure added for:  Gender
 

@@ -12,6 +12,7 @@ status](https://www.r-pkg.org/badges/version/exceldata)](https://CRAN.R-project.
 [![metacran
 downloads](https://cranlogs.r-pkg.org/badges/grand-total/exceldata)](https://cran.r-project.org/package=exceldata)
 [![R-CMD-check](https://github.com/biostatsPMH/exceldata/workflows/R-CMD-check/badge.svg)](https://github.com/biostatsPMH/exceldata/actions)
+
 <!-- badges: end -->
 
 The goal of exceldata is to facilitate the use of Excel as a data entry
@@ -23,11 +24,11 @@ checking.
 
 To download the Excel Template [Click
 Here](https://github.com/biostatsPMH/exceldata/blob/main/images/DataDictionary0.9.1.xlsm)
-and then click on `Download`
+and then click the download button ![](images/download_btn.png)
 
 To view data in the required format without macros [Click
 Here](https://github.com/biostatsPMH/exceldata/blob/main/inst/extdata/exampleData.xlsx)
-and then click on `Download`
+and download
 
 ## Installation
 
@@ -69,7 +70,7 @@ library(exceldata)
 exampleDataFile <- system.file("extdata", "exampleData.xlsx", package = "exceldata")
 import <- importExcelData(exampleDataFile,dictionarySheet = 'DataDictionary',dataSheet = 'DataEntry')
 #> No errors in data.
-#> File import complete. Details of variables created are in the logfile:  exampleData27Sep22.log
+#> File import complete. Details of variables created are in the logfile:  exampleData17Nov23.log
 
 # The imported data dictionary 
 dictionary <- import$dictionary
