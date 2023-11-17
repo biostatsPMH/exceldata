@@ -38,7 +38,7 @@ to facilitate clean data entry including validation rules for live data
 checking.
 
 To download the Excel Template [Click
-Here](https://github.com/biostatsPMH/exceldata/blob/main/images/DataDictionary0.9.1.xlsm)
+Here](https://github.com/biostatsPMH/exceldata/blob/main/DataDictionary0.1.0.xlsm)
 and then click the download button ![](images/download_btn.png)
 
 To view data in the required format without macros [Click
