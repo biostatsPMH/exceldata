@@ -12,9 +12,11 @@ Description: A small group of functions to read in a data dictionary and the
     on the GitHub site, but works with any similarly-formatted 'Excel' data.
 License: MIT + file LICENSE
 Encoding: UTF-8
+URL: https://github.com/biostatsPMH/exceldata
+BugReports: https://github.com/biostatsPMH/exceldata/issues
 LazyData: true
 RoxygenNote: 7.2.3
-Imports: 
+Imports:
     dplyr,
     ggplot2,
     graphics,
@@ -22,6 +24,6 @@ Imports:
     readxl,
     scales,
     stats
-Suggests: 
+Suggests:
     knitr,
     rmarkdown
